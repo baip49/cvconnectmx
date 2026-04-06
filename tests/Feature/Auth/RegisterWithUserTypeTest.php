@@ -83,3 +83,27 @@ test('registration fails with invalid user type', function () {
     $response->assertSessionHasErrors('user_type');
     assertDatabaseMissing(User::class, ['email' => 'john@example.com']);
 });
+
+test('registration fails when attempting to register as admin', function () {
+    $response = $this->post('/register', [
+        'name' => 'Hacker User',
+        'email' => 'hacker@example.com',
+        'password' => 'Password@123',
+        'password_confirmation' => 'Password@123',
+        'user_type' => 'admin',
+    ]);
+
+    $response->assertSessionHasErrors('user_type');
+    assertDatabaseMissing(User::class, ['email' => 'hacker@example.com']);
+});
+
+test('admin user can be created only via seeder', function () {
+    $admin = User::factory()
+        ->admin()
+        ->create([
+            'email' => 'admin@example.com',
+        ]);
+
+    $this->assertTrue($admin->isAdmin());
+    $this->assertEquals('admin', $admin->user_type->value);
+});

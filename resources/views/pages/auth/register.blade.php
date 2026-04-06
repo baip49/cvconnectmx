@@ -16,7 +16,19 @@
                 required
                 autofocus
                 autocomplete="name"
-                :placeholder="__('Full name')"
+                :placeholder="__('Name')"
+            />
+
+            <!-- Last Name -->
+            <flux:input
+                name="last_name"
+                :label="__('Last name')"
+                :value="old('last_name')"
+                type="text"
+                required
+                autofocus
+                autocomplete="name"
+                :placeholder="__('Last name')"
             />
 
             <!-- Email Address -->

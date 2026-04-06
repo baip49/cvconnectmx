@@ -2,21 +2,22 @@
 
 namespace App\Models;
 
+use Database\Factories\CandidateFactory;
 use App\Enums\Sex;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Candidate extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
-        'name',
-        'last_name',
-        'email',
         'phone',
         'age',
         'sex',
-        'address'
+        'address',
     ];
 
     protected function casts(): array

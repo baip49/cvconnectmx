@@ -15,8 +15,9 @@ use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use App\Enums\UserType;
 
-#[Fillable(['name', 'email', 'password', 'user_type'])]
+#[Fillable(['name', 'last_name', 'email', 'password', 'user_type'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
+// Solo admin se puede crear mediante seeders o directamente en BD, nunca desde registro
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -32,7 +33,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'user_type'=> UserType::class,
+            'user_type' => UserType::class,
         ];
     }
 
@@ -44,13 +45,30 @@ class User extends Authenticatable
         return Str::of($this->name)
             ->explode(' ')
             ->take(2)
-            ->map(fn ($word) => Str::substr($word, 0, 1))
+            ->map(fn($word) => Str::substr($word, 0, 1))
             ->implode('');
     }
 
     // Relación con Candidate
-    public function candidates(): HasOne
+    public function candidate(): HasOne
     {
         return $this->hasOne(Candidate::class);
+    }
+
+    // Relación con Agency
+    public function agency(): HasOne
+    {
+        return $this->hasOne(Agency::class);
+    }
+
+    // Relación con Contractor
+    public function contractor(): HasOne
+    {
+        return $this->hasOne(Contractor::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->user_type === UserType::Admin;
     }
 }

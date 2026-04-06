@@ -2,8 +2,10 @@
 
 namespace App\Actions\Fortify;
 
+use App\Agency;
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
+use App\Contractor;
 use App\Enums\UserType;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
@@ -27,11 +29,21 @@ class CreateNewUser implements CreatesNewUsers
             'user_type' => ['required', Rule::enum(UserType::class)],
         ])->validate();
 
-        return User::create([
+        $user = User::create([
             'name' => $input['name'],
+            'last_name' => $input['last_name'],
             'email' => $input['email'],
             'password' => $input['password'],
             'user_type' => $input['user_type'],
         ]);
+
+        // Crear registro según el tipo de usuario
+        match ($input['user_type']) {
+            'candidate' => $user->candidate()->create(),
+            'agency' => $user->agency()->create(),
+            'contractor' => $user->contractor()->create(),
+        };
+
+        return $user;
     }
 }

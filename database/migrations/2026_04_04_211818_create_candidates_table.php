@@ -14,13 +14,10 @@ return new class extends Migration
         Schema::create('candidates', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Relación con la tabla de usuarios
-            $table->string('name', 255); // Nombre/s
-            $table->string('last_name', 255); // Apellido/s
-            $table->string('email', 255)->unique(); // Correo electrónico
-            $table->string('phone', 20); // Teléfono
-            $table->string('age', 3); // Edad
-            $table->enum('sex', ['M', 'F']); // Sexo (Se castea como $candidate->sex->label() :"Masculino/Femenino" o $candidate->sex->value :"M/F")
-            $table->string('address', 255); // Dirección
+            $table->string('phone', 20)->nullable(); // Teléfono
+            $table->integer('age')->nullable(); // Edad
+            $table->enum('sex', ['M', 'F'])->default('M'); // Sexo (Se castea como $candidate->sex->label() :"Masculino/Femenino" o $candidate->sex->value :"M/F")
+            $table->string('address', 255)->nullable(); // Dirección
             $table->integer('scoring')->default(0); // Scoring (Puntaje de evaluación)
             $table->timestamps();
         });

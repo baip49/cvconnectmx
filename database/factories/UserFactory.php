@@ -26,10 +26,12 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'last_name' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'user_type' => fake()->randomElement(['candidate', 'agency', 'contractor']),
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
@@ -55,6 +57,46 @@ class UserFactory extends Factory
             'two_factor_secret' => encrypt('secret'),
             'two_factor_recovery_codes' => encrypt(json_encode(['recovery-code-1'])),
             'two_factor_confirmed_at' => now(),
+        ]);
+    }
+
+    /**
+     * Create a candidate user.
+     */
+    public function candidate(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'user_type' => 'candidate',
+        ]);
+    }
+
+    /**
+     * Create an agency user.
+     */
+    public function agency(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'user_type' => 'agency',
+        ]);
+    }
+
+    /**
+     * Create a contractor user.
+     */
+    public function contractor(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'user_type' => 'contractor',
+        ]);
+    }
+
+    /**
+     * Create an admin user (security: should only be used in seeders).
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'user_type' => 'admin',
         ]);
     }
 }
