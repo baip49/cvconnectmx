@@ -52,6 +52,19 @@
                 viewable
             />
 
+            <!-- User Type -->
+            <flux:select
+                name="user_type"
+                :label="__('Account type')"
+                :value="old('user_type')"
+                required
+                :placeholder="__('Select account type')"
+            >
+                <option value="candidate">{{ __('Candidate') }}</option>
+                <option value="agency">{{ __('Agency') }}</option>
+                <option value="contractor">{{ __('Contractor') }}</option>
+            </flux:select>
+
             <div class="flex items-center justify-end">
                 <flux:button type="submit" variant="primary" class="w-full" data-test="register-user-button">
                     {{ __('Create account') }}
