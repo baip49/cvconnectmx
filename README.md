@@ -125,7 +125,7 @@ php artisan test --compact
 - Ejecutar formatter/lint de PHP (Pint):
 
 ```bash
-vendor/bin/pint --format agent
+vendor/bin/pint --dirty --format agent
 ```
 
 - Build de frontend:
