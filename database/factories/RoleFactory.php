@@ -2,12 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Contractor>
+ * @extends Factory<Role>
  */
-class ContractorFactory extends Factory
+class RoleFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +18,9 @@ class ContractorFactory extends Factory
     public function definition(): array
     {
         return [
-            // Contractors table only has user_id, timestamps
+            'name' => $this->faker->unique()->word(),
+            'description' => $this->faker->sentence(),
+            'active' => true,
         ];
     }
 }

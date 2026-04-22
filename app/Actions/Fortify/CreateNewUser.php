@@ -2,10 +2,8 @@
 
 namespace App\Actions\Fortify;
 
-use App\Agency;
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
-use App\Contractor;
 use App\Enums\UserType;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;

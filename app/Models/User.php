@@ -4,24 +4,30 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
-use App\Enums\UserType;
 
-#[Fillable(['name', 'last_name', 'email', 'password', 'user_type'])]
-#[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
-// Solo admin se puede crear mediante seeders o directamente en BD, nunca desde registro
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable, SoftDeletes, TwoFactorAuthenticatable;
+
+    protected $fillable = [
+        'email',
+        'password',
+        'uuid',
+        'role_id',
+        'name',
+        'last_name',
+        'failed_login_attempts',
+        'locked_until',
+        'is_active',
+    ];
 
     /**
      * Get the attributes that should be cast.
@@ -33,8 +39,14 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'user_type' => UserType::class,
+            'locked_until' => 'datetime',
+            'is_active' => 'boolean',
         ];
+    }
+
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class);
     }
 
     /**
@@ -45,30 +57,7 @@ class User extends Authenticatable
         return Str::of($this->name)
             ->explode(' ')
             ->take(2)
-            ->map(fn($word) => Str::substr($word, 0, 1))
+            ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
-    }
-
-    // Relación con Candidate
-    public function candidate(): HasOne
-    {
-        return $this->hasOne(Candidate::class);
-    }
-
-    // Relación con Agency
-    public function agency(): HasOne
-    {
-        return $this->hasOne(Agency::class);
-    }
-
-    // Relación con Contractor
-    public function contractor(): HasOne
-    {
-        return $this->hasOne(Contractor::class);
-    }
-
-    public function isAdmin(): bool
-    {
-        return $this->user_type === UserType::Admin;
     }
 }

@@ -6,6 +6,7 @@ use App\Models\Contractor;
 use App\Models\User;
 use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 
 uses(RefreshDatabase::class);
 
@@ -66,5 +67,5 @@ test('admin user credentials are correct for login', function () {
 
     $admin = User::where('user_type', 'admin')->first();
     expect($admin)->not->toBeNull();
-    expect(\Illuminate\Support\Facades\Hash::check('123456789', $admin->password))->toBeTrue();
+    expect(Hash::check('123456789', $admin->password))->toBeTrue();
 });
