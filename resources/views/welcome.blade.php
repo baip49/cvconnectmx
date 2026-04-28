@@ -24,8 +24,15 @@
             @if (Route::has('login'))
                 <nav class="flex items-center justify-end gap-4">
                     @auth
+                        @php
+                            $dashboardRoute = match (auth()->user()->role?->name) {
+                                'admin' => route('filament.admin.pages.dashboard'),
+                                'company' => route('filament.company.pages.dashboard'),
+                                default => route('filament.candidate.pages.dashboard'),
+                            };
+                        @endphp
                         <a
-                            href="{{ route('dashboard') }}"
+                            href="{{ $dashboardRoute }}"
                             class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal"
                         >
                             Dashboard

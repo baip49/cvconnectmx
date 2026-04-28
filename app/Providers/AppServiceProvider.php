@@ -2,11 +2,21 @@
 
 namespace App\Providers;
 
+use App\Models\Application;
+use App\Models\Candidate;
+use App\Models\Company;
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Vacancy;
+use App\Observers\AuditObserver;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Laravel\Fortify\Contracts\LoginResponse;
+use Laravel\Fortify\Contracts\RegisterResponse;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +25,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(
+            LoginResponse::class,
+            \App\Http\Responses\LoginResponse::class
+        );
+        $this->app->singleton(
+            RegisterResponse::class,
+            \App\Http\Responses\RegisterResponse::class
+        );
     }
 
     /**
@@ -24,6 +41,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+
+        User::observe(AuditObserver::class);
+        Candidate::observe(AuditObserver::class);
+        Company::observe(AuditObserver::class);
+        Vacancy::observe(AuditObserver::class);
+        Application::observe(AuditObserver::class);
+        Role::observe(AuditObserver::class);
+        Permission::observe(AuditObserver::class);
     }
 
     /**

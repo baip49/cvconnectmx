@@ -5,9 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'welcome')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
-    Route::view('documents', 'pages/documents')->name('documents');
-    Route::view('notifications', 'pages/notifications')->name('notifications');
+    // Portals are handled by Filament Panel Providers
 });
 
 require __DIR__.'/settings.php';

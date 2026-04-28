@@ -2,18 +2,17 @@
 
 namespace App\Actions\Fortify;
 
-use App\Concerns\PasswordValidationRules;
-use App\Concerns\ProfileValidationRules;
-use App\Enums\UserType;
+use App\Models\Candidate;
+use App\Models\Company;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 
 class CreateNewUser implements CreatesNewUsers
 {
-    use PasswordValidationRules, ProfileValidationRules;
-
     /**
      * Validate and create a newly registered user.
      *
@@ -22,25 +21,40 @@ class CreateNewUser implements CreatesNewUsers
     public function create(array $input): User
     {
         Validator::make($input, [
-            ...$this->profileRules(),
-            'password' => $this->passwordRules(),
-            'user_type' => ['required', Rule::enum(UserType::class)],
+            'name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique(User::class),
+            ],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'user_type' => ['required', Rule::in(['candidate', 'company'])],
         ])->validate();
 
+        $roleName = $input['user_type'] === 'company' ? 'company' : 'candidate';
+        $role = Role::firstOrCreate(['name' => $roleName], ['description' => ucfirst($roleName), 'active' => true]);
+
         $user = User::create([
+            'uuid' => (string) Str::uuid(),
             'name' => $input['name'],
             'last_name' => $input['last_name'],
             'email' => $input['email'],
             'password' => $input['password'],
-            'user_type' => $input['user_type'],
+            'role_id' => $role->id,
+            'is_active' => true,
         ]);
 
-        // Crear registro según el tipo de usuario
-        match ($input['user_type']) {
-            'candidate' => $user->candidate()->create(),
-            'agency' => $user->agency()->create(),
-            'contractor' => $user->contractor()->create(),
-        };
+        if ($roleName === 'candidate') {
+            Candidate::create(['user_id' => $user->id]);
+        } else {
+            Company::create([
+                'user_id' => $user->id,
+                'name' => $input['name'].' '.$input['last_name'],
+            ]);
+        }
 
         return $user;
     }

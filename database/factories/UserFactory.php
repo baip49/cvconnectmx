@@ -22,9 +22,9 @@ class UserFactory extends Factory
         return [
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => bcrypt('password'),
+            'password' => 'password',
             'uuid' => Str::uuid(),
-            'role_id' => Role::factory(),
+            'role_id' => fn () => Role::firstOrCreate(['name' => 'candidate'], ['description' => 'Candidate role', 'active' => true])->id,
             'name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
             'failed_login_attempts' => 0,
@@ -44,6 +44,44 @@ class UserFactory extends Factory
                 )->id,
                 'is_active' => true,
             ];
+        });
+    }
+
+    public function company(): self
+    {
+        return $this->state(function () {
+            return [
+                'role_id' => Role::firstOrCreate(
+                    ['name' => 'company'],
+                    ['description' => 'Company role', 'active' => true]
+                )->id,
+            ];
+        })->afterCreating(function (User $user) {
+            $user->company()->create([
+                'name' => $user->name.' Enterprise',
+                'sector' => 'Technology',
+                'city' => 'Tuxtla Gutiérrez',
+                'state' => 'Chiapas',
+            ]);
+        });
+    }
+
+    public function candidate(): self
+    {
+        return $this->state(function () {
+            return [
+                'role_id' => Role::firstOrCreate(
+                    ['name' => 'candidate'],
+                    ['description' => 'Candidate role', 'active' => true]
+                )->id,
+            ];
+        })->afterCreating(function (User $user) {
+            $user->candidate()->create([
+                'professional_title' => 'Candidato Jr',
+                'summary' => 'Candidato de prueba para CVConnectMX',
+                'phone_encrypted' => '9611234567',
+                'city' => 'Tuxtla Gutiérrez',
+            ]);
         });
     }
 
