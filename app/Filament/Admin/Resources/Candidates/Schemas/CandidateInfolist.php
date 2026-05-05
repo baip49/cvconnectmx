@@ -29,6 +29,11 @@ class CandidateInfolist
                                     ->label('Ciudad'),
                                 TextEntry::make('professional_title')
                                     ->label('Título Profesional'),
+                                TextEntry::make('is_blocked')
+                                    ->label('Estado')
+                                    ->badge()
+                                    ->formatStateUsing(fn (bool $state) => $state ? 'Bloqueado' : 'Activo')
+                                    ->color(fn (bool $state) => $state ? 'danger' : 'success'),
                             ]),
                     ]),
 

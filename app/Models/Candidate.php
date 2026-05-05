@@ -13,6 +13,10 @@ class Candidate extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'is_blocked' => 'boolean',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

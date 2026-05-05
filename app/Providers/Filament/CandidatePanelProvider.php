@@ -10,6 +10,7 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets\AccountWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -23,6 +24,10 @@ class CandidatePanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->renderHook(
+                PanelsRenderHook::PAGE_HEADER_WIDGETS_BEFORE,
+                fn () => view('filament.candidate.components.blocked-banner')
+            )
             ->id('candidate')
             ->path('dashboard')
             ->colors([

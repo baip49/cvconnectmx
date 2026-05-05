@@ -63,6 +63,7 @@ class VacanciesTable
                     ->modalHeading('Confirmar Postulación')
                     ->modalDescription('¿Estás seguro de que deseas postularte a esta vacante?')
                     ->hidden(fn (Vacancy $record) => $record->applications()->where('candidate_id', Auth::user()->candidate?->id)->exists())
+                    ->disabled(fn () => Auth::user()->candidate?->is_blocked)
                     ->action(function (Vacancy $record) {
                         $candidate = Auth::user()->candidate;
 
@@ -70,6 +71,16 @@ class VacanciesTable
                             Notification::make()
                                 ->title('Error')
                                 ->body('Debes completar tu perfil antes de postularte.')
+                                ->danger()
+                                ->send();
+
+                            return;
+                        }
+
+                        if ($candidate->is_blocked) {
+                            Notification::make()
+                                ->title('Acción denegada')
+                                ->body('Tu cuenta ha sido bloqueada. No puedes postularte a vacantes.')
                                 ->danger()
                                 ->send();
 
