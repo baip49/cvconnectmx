@@ -125,10 +125,10 @@ class ApplicationInfolist
                 Section::make('Documentos Adjuntos')
                     ->schema([
                         RepeatableEntry::make('candidate.documents')
-                            ->label('')
+                            ->hiddenLabel()
                             ->schema([
                                 TextEntry::make('name')
-                                    ->label('')
+                                    ->hiddenLabel()
                                     ->icon('heroicon-o-document')
                                     ->weight('bold')
                                     ->url(fn ($record) => route('document.show', ['slug' => $record->slug]), shouldOpenInNewTab: true)

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Application;
 use App\Models\Candidate;
+use App\Models\CandidateDocument;
 use App\Models\Company;
 use App\Models\Permission;
 use App\Models\Role;
@@ -49,6 +50,7 @@ class AppServiceProvider extends ServiceProvider
         Application::observe(AuditObserver::class);
         Role::observe(AuditObserver::class);
         Permission::observe(AuditObserver::class);
+        CandidateDocument::observe(AuditObserver::class);
     }
 
     /**

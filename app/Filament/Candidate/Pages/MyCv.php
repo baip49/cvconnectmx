@@ -7,6 +7,7 @@ use App\Models\CandidateDocument;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -67,6 +68,7 @@ class MyCv extends Page implements HasForms
                         Repeater::make('work_experiences')
                             ->label('')
                             ->schema([
+                                Hidden::make('id'),
                                 TextInput::make('company_name')
                                     ->label('Empresa')
                                     ->required(),
@@ -86,6 +88,7 @@ class MyCv extends Page implements HasForms
                         Repeater::make('educations')
                             ->label('')
                             ->schema([
+                                Hidden::make('id'),
                                 TextInput::make('institution')
                                     ->label('Institución')
                                     ->required(),
@@ -101,6 +104,7 @@ class MyCv extends Page implements HasForms
                         Repeater::make('skills')
                             ->label('')
                             ->schema([
+                                Hidden::make('id'),
                                 TextInput::make('name')
                                     ->label('Habilidad')
                                     ->required(),
@@ -172,27 +176,37 @@ class MyCv extends Page implements HasForms
         // But Filament repeaters with relationship() work best inside Resources.
         // I will simplify and handle them via the candidate model relationships.
 
-        $candidate->workExperiences()->delete();
+        // Sincronizar Experiencia Laboral
+        $currentWorkIds = collect($data['work_experiences'])->pluck('id')->filter()->toArray();
+        $candidate->workExperiences()->whereNotIn('id', $currentWorkIds)->delete();
         foreach ($data['work_experiences'] as $exp) {
-            $candidate->workExperiences()->create($exp);
+            $candidate->workExperiences()->updateOrCreate(['id' => $exp['id'] ?? null], $exp);
         }
 
-        $candidate->educations()->delete();
+        // Sincronizar Educación
+        $currentEduIds = collect($data['educations'])->pluck('id')->filter()->toArray();
+        $candidate->educations()->whereNotIn('id', $currentEduIds)->delete();
         foreach ($data['educations'] as $edu) {
-            $candidate->educations()->create($edu);
+            $candidate->educations()->updateOrCreate(['id' => $edu['id'] ?? null], $edu);
         }
 
-        $candidate->skills()->delete();
+        // Sincronizar Habilidades
+        $currentSkillIds = collect($data['skills'])->pluck('id')->filter()->toArray();
+        $candidate->skills()->whereNotIn('id', $currentSkillIds)->delete();
         foreach ($data['skills'] as $skill) {
-            $candidate->skills()->create($skill);
+            $candidate->skills()->updateOrCreate(['id' => $skill['id'] ?? null], $skill);
         }
 
-        foreach ($candidate->documents as $document) {
-            $document->delete();
-        }
+        // Sincronizar Documentos (Crucial para no borrar archivos del disco)
+        $newDocPaths = collect($data['documents'])->pluck('file_path')->filter()->toArray();
+        // Borrar solo los que ya no están en la lista (esto activará el observer para borrar el archivo del disco de los eliminados)
+        $candidate->documents()->whereNotIn('file_path', $newDocPaths)->delete();
 
         foreach ($data['documents'] as $doc) {
-            $candidate->documents()->create($doc);
+            $candidate->documents()->updateOrCreate(
+                ['file_path' => $doc['file_path']],
+                ['name' => $doc['name']]
+            );
         }
 
         Notification::make()
