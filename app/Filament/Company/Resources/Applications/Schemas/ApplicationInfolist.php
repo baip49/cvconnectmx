@@ -2,6 +2,8 @@
 
 namespace App\Filament\Company\Resources\Applications\Schemas;
 
+use Carbon\Carbon;
+use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -70,65 +72,71 @@ class ApplicationInfolist
 
                 Section::make('Experiencia Laboral')
                     ->schema([
-                        TextEntry::make('candidate.workExperiences')
+                        RepeatableEntry::make('candidate.workExperiences')
                             ->label('')
+                            ->schema([
+                                Grid::make(2)
+                                    ->schema([
+                                        TextEntry::make('job_title')
+                                            ->label('Puesto')
+                                            ->weight('bold'),
+                                        TextEntry::make('company_name')
+                                            ->label('Empresa'),
+                                        TextEntry::make('start_date')
+                                            ->label('Desde')
+                                            ->date(),
+                                        TextEntry::make('end_date')
+                                            ->label('Hasta')
+                                            ->formatStateUsing(fn ($state) => $state ? Carbon::parse($state)->format('Y-m-d') : 'Actualidad'),
+                                    ]),
+                            ])
                             ->columnSpanFull()
-                            ->formatStateUsing(function ($record) {
-                                $experiences = $record->candidate->workExperiences;
-
-                                if ($experiences->isEmpty()) {
-                                    return 'Sin experiencia laboral registrada';
-                                }
-
-                                return $experiences->map(function ($exp) {
-                                    $dates = $exp->start_date
-                                        ? $exp->start_date.' → '.($exp->end_date ?? 'Actualidad')
-                                        : '';
-
-                                    return "**{$exp->job_title}** en {$exp->company_name}".($dates ? " ({$dates})" : '');
-                                })->implode("\n\n");
-                            })
-                            ->markdown(),
+                            ->grid(2),
                     ]),
 
                 Section::make('Educación')
                     ->schema([
-                        TextEntry::make('candidate.educations')
+                        RepeatableEntry::make('candidate.educations')
                             ->label('')
+                            ->schema([
+                                Grid::make(2)
+                                    ->schema([
+                                        TextEntry::make('degree')
+                                            ->label('Grado / Título')
+                                            ->weight('bold'),
+                                        TextEntry::make('institution')
+                                            ->label('Institución'),
+                                    ]),
+                            ])
                             ->columnSpanFull()
-                            ->formatStateUsing(function ($record) {
-                                $educations = $record->candidate->educations;
-
-                                if ($educations->isEmpty()) {
-                                    return 'Sin educación registrada';
-                                }
-
-                                return $educations->map(function ($edu) {
-                                    return "**{$edu->degree}** — {$edu->institution}";
-                                })->implode("\n\n");
-                            })
-                            ->markdown(),
+                            ->grid(2),
                     ]),
 
                 Section::make('Habilidades')
                     ->schema([
-                        TextEntry::make('candidate.skills')
+                        TextEntry::make('skills')
                             ->label('')
                             ->columnSpanFull()
-                            ->formatStateUsing(function ($record) {
-                                $skills = $record->candidate->skills;
+                            ->badge()
+                            ->state(fn ($record) => $record->candidate->skills->map(fn ($skill) => "{$skill->name} ({$skill->level})"))
+                            ->color('info'),
+                    ]),
 
-                                if ($skills->isEmpty()) {
-                                    return 'Sin habilidades registradas';
-                                }
-
-                                return $skills->map(function ($skill) {
-                                    return $skill->level
-                                        ? "• **{$skill->name}** ({$skill->level})"
-                                        : "• {$skill->name}";
-                                })->implode("\n");
-                            })
-                            ->markdown(),
+                Section::make('Documentos Adjuntos')
+                    ->schema([
+                        RepeatableEntry::make('candidate.documents')
+                            ->label('')
+                            ->schema([
+                                TextEntry::make('name')
+                                    ->label('')
+                                    ->icon('heroicon-o-document')
+                                    ->weight('bold')
+                                    ->url(fn ($record) => route('document.show', ['slug' => $record->slug]), shouldOpenInNewTab: true)
+                                    ->color('primary')
+                                    ->extraAttributes(['class' => 'hover:underline']),
+                            ])
+                            ->columnSpanFull()
+                            ->grid(3),
                     ]),
             ]);
     }

@@ -44,10 +44,6 @@ class ApplicationsTable
             ])
             ->recordActions([
                 ViewAction::make(),
-                Action::make('view_cv')
-                    ->label('Ver CV')
-                    ->icon('heroicon-o-document-magnifying-glass')
-                    ->url(fn (Application $record) => route('filament.company.resources.candidates.view', $record->candidate_id)),
                 Action::make('change_status')
                     ->label('Cambiar Estado')
                     ->icon('heroicon-o-chevron-up-down')

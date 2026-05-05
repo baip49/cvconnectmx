@@ -25,6 +25,11 @@ class CandidateResource extends Resource
 
     protected static ?string $navigationLabel = 'Candidatos';
 
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return CandidateForm::configure($schema);

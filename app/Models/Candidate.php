@@ -46,4 +46,9 @@ class Candidate extends Model
     {
         return $this->hasMany(CvAccess::class);
     }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(CandidateDocument::class);
+    }
 }

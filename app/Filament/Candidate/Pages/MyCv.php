@@ -3,8 +3,10 @@
 namespace App\Filament\Candidate\Pages;
 
 use App\Models\Candidate;
+use App\Models\CandidateDocument;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -41,6 +43,7 @@ class MyCv extends Page implements HasForms
                 'work_experiences' => $candidate->workExperiences->toArray(),
                 'educations' => $candidate->educations->toArray(),
                 'skills' => $candidate->skills->toArray(),
+                'documents' => $candidate->documents->toArray(),
             ]);
         }
     }
@@ -106,6 +109,40 @@ class MyCv extends Page implements HasForms
                             ])
                             ->columns(2),
                     ]),
+
+                Section::make('Documentos Adjuntos')
+                    ->description('Sube tu CV, certificados u otros archivos relevantes.')
+                    ->schema([
+                        Repeater::make('documents')
+                            ->hiddenLabel()
+                            ->compact()
+                            ->schema([
+                                TextInput::make('name')
+                                    ->label('Nombre del Documento')
+                                    ->placeholder('Ej: Certificado de Inglés, CV 2024')
+                                    ->required(),
+                                FileUpload::make('file_path')
+                                    ->label('Archivo')
+                                    ->disk('local')
+                                    ->directory('candidate-documents')
+                                    ->visibility('private')
+                                    ->required()
+                                    ->extraAttributes(['class' => 'mb-0'])
+                                    ->hintAction(
+                                        fn ($state, $record, $component) => $state ? Action::make('preview')
+                                            ->label('Ver archivo actual')
+                                            ->icon('heroicon-o-eye')
+                                            ->url(function () use ($component) {
+                                                $data = $component->getContainer()->getRawState();
+                                                $document = CandidateDocument::where('file_path', $data['file_path'] ?? null)->first();
+
+                                                return $document ? route('document.show', $document->slug) : null;
+                                            }, shouldOpenInNewTab: true)
+                                            ->visible(fn () => ! empty($state)) : null
+                                    ),
+                            ])
+                            ->columns(2),
+                    ]),
             ])
             ->statePath('data');
     }
@@ -148,6 +185,14 @@ class MyCv extends Page implements HasForms
         $candidate->skills()->delete();
         foreach ($data['skills'] as $skill) {
             $candidate->skills()->create($skill);
+        }
+
+        foreach ($candidate->documents as $document) {
+            $document->delete();
+        }
+
+        foreach ($data['documents'] as $doc) {
+            $candidate->documents()->create($doc);
         }
 
         Notification::make()
