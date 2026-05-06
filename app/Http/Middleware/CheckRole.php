@@ -20,7 +20,7 @@ class CheckRole
         }
 
         if ($request->user()->role?->name !== $role) {
-            abort(403, 'Unauthorized access.');
+            return redirect()->route('home');
         }
 
         return $next($request);
