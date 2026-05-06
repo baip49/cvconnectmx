@@ -37,17 +37,30 @@ class Offers extends Page implements HasTable
                 TextColumn::make('vacancy.title')
                     ->label('Vacante')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->url(fn (Application $record): string => route('filament.candidate.resources.vacancies.view', ['record' => $record->vacancy_id]))
+                    ->color('primary')
+                    ->weight('bold'),
                 TextColumn::make('vacancy.company.name')
                     ->label('Empresa')
                     ->searchable(),
                 TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'offered' => 'Ofertado',
+                        'accepted' => 'Aceptado',
+                        'rejected' => 'Rechazado',
+                        'pending' => 'Pendiente',
+                        'interview' => 'Entrevista',
+                        default => $state,
+                    })
                     ->color(fn (string $state): string => match ($state) {
                         'offered' => 'info',
                         'accepted' => 'success',
                         'rejected' => 'danger',
+                        'pending' => 'warning',
+                        'interview' => 'primary',
                         default => 'gray',
                     }),
                 TextColumn::make('created_at')
@@ -61,6 +74,10 @@ class Offers extends Page implements HasTable
                     ->color('success')
                     ->icon('heroicon-o-check')
                     ->visible(fn (Application $record) => $record->status === 'offered')
+                    ->requiresConfirmation()
+                    ->modalHeading('Aceptar Oferta')
+                    ->modalDescription('¿Estás seguro de que deseas aceptar esta oferta de trabajo? Al hacerlo, la empresa será notificada.')
+                    ->modalSubmitActionLabel('Sí, aceptar')
                     ->action(function (Application $record) {
                         $record->update(['status' => 'accepted']);
                         Notification::make()
@@ -74,6 +91,9 @@ class Offers extends Page implements HasTable
                     ->icon('heroicon-o-x-mark')
                     ->visible(fn (Application $record) => $record->status === 'offered')
                     ->requiresConfirmation()
+                    ->modalHeading('Rechazar Oferta')
+                    ->modalDescription('¿Estás seguro de que deseas rechazar esta oferta de trabajo? Esta acción no se puede deshacer.')
+                    ->modalSubmitActionLabel('Sí, rechazar')
                     ->action(function (Application $record) {
                         $record->update(['status' => 'rejected']);
                         Notification::make()

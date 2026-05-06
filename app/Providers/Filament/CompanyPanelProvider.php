@@ -36,7 +36,7 @@ class CompanyPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Company/Widgets'), for: 'App\Filament\Company\Widgets')
             ->widgets([
-                AccountWidget::class,
+                // Los widgets se descubren automáticamente en app/Filament/Company/Widgets
             ])
             ->middleware([
                 EncryptCookies::class,

@@ -24,19 +24,21 @@ class ApplicationInfolist
                                 TextEntry::make('status')
                                     ->label('Estado')
                                     ->badge()
-                                    ->color(fn (string $state): string => match ($state) {
-                                        'pending' => 'warning',
-                                        'interview' => 'info',
-                                        'accepted' => 'success',
-                                        'rejected' => 'danger',
-                                        default => 'gray',
-                                    })
                                     ->formatStateUsing(fn (string $state): string => match ($state) {
                                         'pending' => 'Pendiente',
                                         'interview' => 'Entrevista',
                                         'accepted' => 'Aceptado',
                                         'rejected' => 'Rechazado',
+                                        'offered' => 'Ofertado',
                                         default => $state,
+                                    })
+                                    ->color(fn (string $state): string => match ($state) {
+                                        'pending' => 'warning',
+                                        'interview' => 'info',
+                                        'accepted' => 'success',
+                                        'rejected' => 'danger',
+                                        'offered' => 'primary',
+                                        default => 'gray',
                                     }),
                                 TextEntry::make('created_at')
                                     ->label('Fecha de Postulación')

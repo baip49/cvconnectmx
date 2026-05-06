@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class ApplicationsOverview extends StatsOverviewWidget
 {
+    protected int | array | null $columns = 4;
+
     protected function getStats(): array
     {
-        $candidateId = Auth::user()->candidate?->id;
+        $candidate = Auth::user()->candidate;
+        $candidateId = $candidate?->id;
 
         if (! $candidateId) {
             return [];
@@ -30,6 +33,10 @@ class ApplicationsOverview extends StatsOverviewWidget
                 ->description('Candidaturas con progreso')
                 ->descriptionIcon('heroicon-m-check-circle')
                 ->color('success'),
+            Stat::make('Rating IA Actual', ($candidate->ai_rating ?? 0) . '/100')
+                ->description('Calificación de tu perfil')
+                ->descriptionIcon('heroicon-m-cpu-chip')
+                ->color($candidate->ai_rating >= 80 ? 'success' : ($candidate->ai_rating >= 50 ? 'warning' : 'danger')),
         ];
     }
 }

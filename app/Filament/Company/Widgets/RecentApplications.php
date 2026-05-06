@@ -1,37 +1,43 @@
 <?php
 
-namespace App\Filament\Candidate\Widgets\Candidate;
+namespace App\Filament\Company\Widgets;
 
 use App\Models\Application;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Widgets\TableWidget;
+use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Support\Facades\Auth;
 
-class RecentApplications extends TableWidget
+class RecentApplications extends BaseWidget
 {
-    protected int|string|array $columnSpan = 'full';
-
-    protected static ?string $heading = 'Mis Postulaciones Recientes';
+    protected static ?int $sort = 2;
+    protected int | string | array $columnSpan = 'full';
+    protected static ?string $heading = 'Postulaciones Recientes';
 
     public function table(Table $table): Table
     {
-        $candidateId = Auth::user()->candidate?->id;
+        $companyId = Auth::user()->company?->id;
 
         return $table
             ->query(
                 Application::query()
-                    ->where('candidate_id', $candidateId)
+                    ->whereHas('vacancy', fn($q) => $q->where('company_id', $companyId))
                     ->latest()
                     ->limit(5)
             )
             ->columns([
-                TextColumn::make('vacancy.title')
+                Tables\Columns\TextColumn::make('vacancy.title')
                     ->label('Vacante')
                     ->searchable(),
-                TextColumn::make('vacancy.company.name')
-                    ->label('Empresa'),
-                TextColumn::make('status')
+                Tables\Columns\TextColumn::make('candidate.user.name')
+                    ->label('Candidato')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('candidate.ai_rating')
+                    ->label('Rating IA')
+                    ->badge()
+                    ->color(fn ($state) => $state >= 80 ? 'success' : ($state >= 50 ? 'warning' : 'danger'))
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
@@ -50,10 +56,11 @@ class RecentApplications extends TableWidget
                         'offered' => 'primary',
                         default => 'gray',
                     }),
-                TextColumn::make('created_at')
+                Tables\Columns\TextColumn::make('created_at')
                     ->label('Fecha')
                     ->dateTime()
-                    ->since(),
+                    ->since()
+                    ->sortable(),
             ]);
     }
 }

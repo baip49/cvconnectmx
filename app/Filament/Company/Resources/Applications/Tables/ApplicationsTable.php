@@ -27,11 +27,20 @@ class ApplicationsTable
                 TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'pending' => 'Pendiente',
+                        'interview' => 'Entrevista',
+                        'accepted' => 'Aceptado',
+                        'rejected' => 'Rechazado',
+                        'offered' => 'Ofertado',
+                        default => $state,
+                    })
                     ->color(fn (string $state): string => match ($state) {
                         'pending' => 'warning',
                         'interview' => 'info',
                         'accepted' => 'success',
                         'rejected' => 'danger',
+                        'offered' => 'primary',
                         default => 'gray',
                     }),
                 TextColumn::make('created_at')
@@ -55,6 +64,7 @@ class ApplicationsTable
                                 'interview' => 'Entrevista',
                                 'accepted' => 'Aceptado',
                                 'rejected' => 'Rechazado',
+                                'offered' => 'Ofertado',
                             ])
                             ->required(),
                     ])

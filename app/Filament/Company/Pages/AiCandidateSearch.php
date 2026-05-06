@@ -71,17 +71,24 @@ class AiCandidateSearch extends Page implements HasForms, HasTable
         return $table
             ->query(
                 Candidate::query()
-                    ->when(isset($this->aiFilters['skills']), function (Builder $query) {
-                        foreach ($this->aiFilters['skills'] as $skill) {
-                            $query->whereHas('skills', fn($q) => $q->where('name', 'like', "%{$skill}%"));
-                        }
-                    })
-                    ->when(isset($this->aiFilters['keywords']), function (Builder $query) {
-                        $query->where(function ($q) {
-                            foreach ($this->aiFilters['keywords'] as $keyword) {
-                                $q->orWhere('summary', 'like', "%{$keyword}%")
-                                  ->orWhere('professional_title', 'like', "%{$keyword}%");
-                            }
+                    ->where(function (Builder $query) {
+                        $query->when(!empty($this->aiFilters['skills']), function (Builder $q) {
+                            $q->whereHas('skills', function ($skillQuery) {
+                                $skillQuery->whereIn('name', $this->aiFilters['skills']);
+                                // O búsqueda parcial si no son nombres exactos
+                                foreach ($this->aiFilters['skills'] as $skill) {
+                                    $skillQuery->orWhere('name', 'like', "%{$skill}%");
+                                }
+                            });
+                        });
+
+                        $query->when(!empty($this->aiFilters['keywords']), function (Builder $q) {
+                            $q->orWhere(function ($keywordGroup) {
+                                foreach ($this->aiFilters['keywords'] as $keyword) {
+                                    $keywordGroup->orWhere('summary', 'like', "%{$keyword}%")
+                                                 ->orWhere('professional_title', 'like', "%{$keyword}%");
+                                }
+                            });
                         });
                     })
             )

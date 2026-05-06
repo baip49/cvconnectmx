@@ -28,10 +28,16 @@ class VacanciesTable
                 TextColumn::make('work_model')
                     ->label('Modalidad')
                     ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'remote' => 'Remoto',
+                        'hybrid' => 'Híbrido',
+                        'on_site', 'on-site' => 'Presencial',
+                        default => $state,
+                    })
                     ->color(fn (string $state): string => match ($state) {
                         'remote' => 'success',
                         'hybrid' => 'warning',
-                        'on_site' => 'info',
+                        'on_site', 'on-site' => 'info',
                         default => 'gray',
                     }),
                 TextColumn::make('max_salary')
