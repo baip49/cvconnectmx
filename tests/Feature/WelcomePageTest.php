@@ -12,8 +12,8 @@ test('welcome page shows the CVConnectMX branding and entry links', function () 
     $response
         ->assertOk()
         ->assertSee('CVConnectMX')
-        ->assertSee('Log in')
-        ->assertSee('Register');
+        ->assertSee(__('messages.Log in'))
+        ->assertSee(__('messages.Register'));
 });
 
 test('authenticated users see the dashboard entry on the welcome page', function () {
@@ -23,8 +23,8 @@ test('authenticated users see the dashboard entry on the welcome page', function
 
     $response
         ->assertOk()
-        ->assertSee('Dashboard')
-        ->assertDontSee('Log in');
+        ->assertSee(__('messages.Dashboard'))
+        ->assertDontSee(__('messages.Log in'));
 });
 
 test('users with an incorrect role are redirected to the home page', function () {

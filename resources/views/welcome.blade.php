@@ -10,8 +10,9 @@
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Spinnaker&display=swap" rel="stylesheet" />
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
@@ -22,29 +23,22 @@
 
         <div class="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col px-6 py-6 sm:px-8 lg:px-10">
             @if (Route::has('login'))
-                @php
-                    $dashboardRoute = match (auth()->user()?->role?->name) {
-                        'admin' => '/admin',
-                        'company' => '/company',
-                        default => '/dashboard',
-                    };
-                @endphp
 
                 <header class="flex items-center justify-end">
                     <nav class="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-3 backdrop-blur-xl z-20">
-                        @auth
+                        @if ($isAuthenticated)
                             <a
                                 href="{{ $dashboardRoute }}"
                                 class="inline-flex items-center rounded-full border border-white/15 bg-white px-5 py-2 text-sm font-semibold text-slate-950 transition hover:bg-orange-50"
                             >
-                                Dashboard
+                                {{ __('messages.Dashboard') }}
                             </a>
                         @else
                             <a
                                 href="/login"
                                 class="inline-flex items-center rounded-full border border-white/10 px-5 py-2 text-sm font-semibold text-white transition hover:border-white/25 hover:bg-white/10"
                             >
-                                Log in
+                                {{ __('messages.Log in') }}
                             </a>
 
                             @if (Route::has('register'))
@@ -52,10 +46,10 @@
                                             href="/register"
                                             class="inline-flex items-center rounded-full border border-orange-300/30 bg-orange-400/15 px-5 py-2 text-sm font-semibold text-orange-50 transition hover:bg-orange-400/25"
                                         >
-                                            Register
+                                            {{ __('messages.Register') }}
                                         </a>
                             @endif
-                        @endauth
+                        @endif
                     </nav>
                 </header>
             @endif
@@ -70,28 +64,28 @@
                         <div class="space-y-4">
                             <p class="text-sm font-semibold uppercase tracking-[0.35em] text-orange-200/90">CVConnectMX</p>
                             <h1 class="text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                                Talento, vacantes y expedientes en un solo lugar.
+                                {{ __('messages.Talento, vacantes y expedientes en un solo lugar.') }}
                             </h1>
                             <p class="mx-auto max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
-                                Una puerta de entrada clara para candidatos, empresas y administradores. Entra a tu panel, publica oportunidades y da seguimiento sin perder contexto.
+                                {{ __('messages.Una puerta de entrada clara para candidatos, empresas y administradores. Entra a tu panel, publica oportunidades y da seguimiento sin perder contexto.') }}
                             </p>
                         </div>
 
                         @if (Route::has('login'))
                             <div class="flex flex-col items-center gap-3 sm:flex-row">
-                                @auth
+                                @if ($isAuthenticated)
                                     <a
                                         href="{{ $dashboardRoute }}"
                                         class="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-orange-50"
                                     >
-                                        Ir al dashboard
+                                        {{ __('messages.Ir al dashboard') }}
                                     </a>
                                 @else
                                     <a
                                         href="/login"
                                         class="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-orange-50"
                                     >
-                                        Log in
+                                        {{ __('messages.Log in') }}
                                     </a>
 
                                     @if (Route::has('register'))
@@ -99,28 +93,28 @@
                                             href="/register"
                                             class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
                                         >
-                                            Register
+                                            {{ __('messages.Register') }}
                                         </a>
                                     @endif
-                                @endauth
+                                @endif
                             </div>
                         @endif
                     </div>
 
                     <div class="grid gap-4 md:grid-cols-3">
                         <div class="rounded-3xl border border-white/10 bg-white/5 p-5 text-left backdrop-blur-xl">
-                            <p class="text-sm font-semibold uppercase tracking-[0.3em] text-orange-200/80">Candidatos</p>
-                            <p class="mt-3 text-base leading-7 text-slate-300">Perfiles y documentos organizados para avanzar mas rapido en cada proceso.</p>
+                            <p class="text-sm font-semibold uppercase tracking-[0.3em] text-orange-200/80">{{ __('messages.Candidatos') }}</p>
+                            <p class="mt-3 text-base leading-7 text-slate-300">{{ __('messages.Perfiles y documentos organizados para avanzar mas rapido en cada proceso.') }}</p>
                         </div>
 
                         <div class="rounded-3xl border border-white/10 bg-white/5 p-5 text-left backdrop-blur-xl">
-                            <p class="text-sm font-semibold uppercase tracking-[0.3em] text-sky-200/80">Empresas</p>
-                            <p class="mt-3 text-base leading-7 text-slate-300">Vacantes, revisiones y acceso a talento con una experiencia limpia y directa.</p>
+                            <p class="text-sm font-semibold uppercase tracking-[0.3em] text-sky-200/80">{{ __('messages.Empresas') }}</p>
+                            <p class="mt-3 text-base leading-7 text-slate-300">{{ __('messages.Vacantes, revisiones y acceso a talento con una experiencia limpia y directa.') }}</p>
                         </div>
 
                         <div class="rounded-3xl border border-white/10 bg-white/5 p-5 text-left backdrop-blur-xl">
-                            <p class="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-200/80">Control</p>
-                            <p class="mt-3 text-base leading-7 text-slate-300">Un centro de operaciones para administrar accesos y mantener el flujo bajo control.</p>
+                            <p class="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-200/80">{{ __('messages.Control') }}</p>
+                            <p class="mt-3 text-base leading-7 text-slate-300">{{ __('messages.Un centro de operaciones para administrar accesos y mantener el flujo bajo control.') }}</p>
                         </div>
                     </div>
                 </section>

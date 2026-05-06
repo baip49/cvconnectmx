@@ -6,7 +6,21 @@ use Laravel\Fortify\Features;
 test('login screen can be rendered', function () {
     $response = $this->get(route('login'));
 
-    $response->assertOk();
+    $response
+        ->assertOk()
+        ->assertSee(__('Log in to your account'))
+        ->assertSee(__('Forgot your password?'))
+        ->assertSee(__('Log in'));
+});
+
+test('register screen can be rendered', function () {
+    $response = $this->get(route('register'));
+
+    $response
+        ->assertOk()
+        ->assertSee(__('Create an account'))
+        ->assertSee(__('Last name'))
+        ->assertSee(__('Create account'));
 });
 
 test('users can authenticate using the login screen', function () {
