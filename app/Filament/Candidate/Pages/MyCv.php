@@ -4,6 +4,7 @@ namespace App\Filament\Candidate\Pages;
 
 use App\Models\Candidate;
 use App\Models\CandidateDocument;
+use App\Services\AiService;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -54,6 +55,7 @@ class MyCv extends Page implements HasForms
         return $schema
             ->schema([
                 Section::make('Resumen Profesional')
+                    ->description(fn() => Auth::user()->candidate->ai_rating ? "Tu perfil tiene una calificación de IA de " . Auth::user()->candidate->ai_rating . "/100" : "Analiza tu perfil para obtener una calificación de IA.")
                     ->schema([
                         Textarea::make('summary')
                             ->label('Sobre mí')
@@ -61,6 +63,26 @@ class MyCv extends Page implements HasForms
                         TextInput::make('phone_encrypted')
                             ->label('Teléfono')
                             ->tel(),
+                    ])
+                    ->headerActions([
+                        Action::make('analyze_cv')
+                            ->label('Analizar con IA')
+                            ->icon('heroicon-o-sparkles')
+                            ->action(function (AiService $aiService) {
+                                $candidate = Auth::user()->candidate;
+                                $result = $aiService->analyzeCandidate($candidate);
+                                
+                                $candidate->update([
+                                    'ai_rating' => $result['rating'],
+                                    'ai_analysis_summary' => $result['summary'],
+                                ]);
+
+                                Notification::make()
+                                    ->title('Análisis completado')
+                                    ->body("Tu perfil ha sido calificado con un " . $result['rating'] . "/100")
+                                    ->success()
+                                    ->send();
+                            })
                     ]),
 
                 Section::make('Experiencia Laboral')

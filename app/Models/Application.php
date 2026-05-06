@@ -12,6 +12,10 @@ class Application extends Model
     use HasFactory;
 
     protected $guarded = [];
+    
+    protected $casts = [
+        'is_offer' => 'boolean',
+    ];
 
     public function candidate(): BelongsTo
     {

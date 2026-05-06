@@ -15,6 +15,7 @@ class Candidate extends Model
 
     protected $casts = [
         'is_blocked' => 'boolean',
+        'ai_rating' => 'integer',
     ];
 
     public function user(): BelongsTo
