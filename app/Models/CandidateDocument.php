@@ -26,8 +26,10 @@ class CandidateDocument extends Model
         });
 
         static::deleting(function ($document) {
-            if ($document->file_path && Storage::disk('local')->exists($document->file_path)) {
-                Storage::disk('local')->delete($document->file_path);
+            foreach (['s3', 'local'] as $disk) {
+                if ($document->file_path && Storage::disk($disk)->exists($document->file_path)) {
+                    Storage::disk($disk)->delete($document->file_path);
+                }
             }
         });
     }

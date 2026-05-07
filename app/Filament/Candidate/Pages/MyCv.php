@@ -19,6 +19,8 @@ use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class MyCv extends Page implements HasForms
 {
@@ -67,15 +69,15 @@ class MyCv extends Page implements HasForms
                             ->maxSize(5120) // 5MB
                             ->live()
                             ->afterStateUpdated(function ($state) {
-                                if ($state instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
-                                    \Illuminate\Support\Facades\Log::info("MyCv: Storing file to S3 manually...");
+                                if ($state instanceof TemporaryUploadedFile) {
+                                    Log::info('MyCv: Storing file to S3 manually...');
                                     $path = $state->store('candidate-cvs', 's3');
-                                    
+
                                     $candidate = Auth::user()->candidate;
                                     if ($candidate) {
                                         $candidate->cv_url = $path;
                                         $candidate->save();
-                                        \Illuminate\Support\Facades\Log::info("MyCv: Candidate updated with permanent S3 path: {$path}");
+                                        Log::info("MyCv: Candidate updated with permanent S3 path: {$path}");
                                         Notification::make()->title('CV subido y guardado en la nube')->success()->send();
                                     }
                                 }
@@ -87,10 +89,10 @@ class MyCv extends Page implements HasForms
                                     ->action(function (AiService $aiService) {
                                         $candidate = Auth::user()->candidate;
                                         $state = $candidate->cv_url;
-                                        
+
                                         // $state es la ruta relativa en el disco (S3)
-                                        $result = $aiService->analyzeCandidate($candidate, $state, 's3');
-                                        
+                                        $result = $aiService->analyzeCandidate($candidate);
+
                                         $candidate->update([
                                             'ai_rating' => $result['rating'],
                                             'ai_analysis_summary' => $result['summary'],
@@ -98,7 +100,7 @@ class MyCv extends Page implements HasForms
 
                                         Notification::make()
                                             ->title('Análisis completado')
-                                            ->body("Tu perfil ha sido calificado con un " . $result['rating'] . "/100")
+                                            ->body('Tu perfil ha sido calificado con un '.$result['rating'].'/100')
                                             ->success()
                                             ->send();
                                     }) : null
@@ -106,7 +108,7 @@ class MyCv extends Page implements HasForms
                     ]),
 
                 Section::make('Resumen Profesional')
-                    ->description(fn() => Auth::user()->candidate->ai_rating ? "Tu perfil tiene una calificación de IA de " . Auth::user()->candidate->ai_rating . "/100" : "Analiza tu CV principal para obtener una calificación de IA.")
+                    ->description(fn () => Auth::user()->candidate->ai_rating ? 'Tu perfil tiene una calificación de IA de '.Auth::user()->candidate->ai_rating.'/100' : 'Analiza tu CV principal para obtener una calificación de IA.')
                     ->schema([
                         Textarea::make('summary')
                             ->label('Sobre mí')
@@ -186,14 +188,14 @@ class MyCv extends Page implements HasForms
                                     ->required()
                                     ->live()
                                     ->afterStateUpdated(function ($state, $get) {
-                                        if ($state instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile && $get('name')) {
+                                        if ($state instanceof TemporaryUploadedFile && $get('name')) {
                                             $path = $state->store('candidate-documents', 's3');
-                                            
+
                                             Auth::user()->candidate->documents()->updateOrCreate(
                                                 ['file_path' => $path],
                                                 ['name' => $get('name')]
                                             );
-                                            Notification::make()->title('Documento guardado en la nube')->success()->send();
+                                            Notification::make()->title('Documento guardado correctamente')->success()->send();
                                         }
                                     })
                                     ->extraAttributes(['class' => 'mb-0'])
