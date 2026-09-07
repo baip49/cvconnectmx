@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Application;
+use App\Models\Candidate;
 use App\Models\CvAccess;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +21,9 @@ class CvAccessFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'candidate_id' => Candidate::factory(),
+            'accessed_by' => User::factory()->company(),
+            'application_id' => Application::factory(),
         ];
     }
 }

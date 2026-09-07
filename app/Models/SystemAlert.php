@@ -12,6 +12,11 @@ class SystemAlert extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'is_resolved' => 'boolean',
+        'resolved_at' => 'datetime',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

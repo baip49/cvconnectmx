@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Candidate;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class CandidateSeeder extends Seeder
@@ -11,6 +13,10 @@ class CandidateSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        if (Candidate::query()->exists()) {
+            return;
+        }
+
+        User::factory(5)->candidate()->create();
     }
 }

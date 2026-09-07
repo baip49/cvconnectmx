@@ -12,6 +12,10 @@ class LoginAttempt extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'is_successful' => 'boolean',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

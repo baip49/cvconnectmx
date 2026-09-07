@@ -53,16 +53,16 @@
         {{-- Header --}}
         <header class="flex h-20 items-center justify-between">
             <div class="flex items-center gap-2">
-                <x-app-logo-icon class="h-9 w-auto text-[#0a66c2]" />
-                <span class="text-2xl font-bold tracking-tight text-[#0a66c2]">CVConnect<span
+                <x-app-logo-icon class="h-8 w-auto text-[#0a66c2] sm:h-9" />
+                <span class="text-xl font-bold tracking-tight text-[#0a66c2] sm:text-2xl">CVConnect<span
                         class="text-slate-800">MX</span></span>
             </div>
 
             @if (Route::has('login'))
-                <nav class="flex items-center gap-2 sm:gap-4">
+                <nav class="flex items-center gap-1 sm:gap-4">
                     @if ($isAuthenticated)
                         <a href="{{ $dashboardRoute }}"
-                            class="rounded-full btn-primary px-6 py-2.5 text-sm font-semibold text-white shadow-sm">
+                            class="rounded-full btn-primary px-3 py-2.5 text-sm font-semibold text-white shadow-sm sm:px-6">
                             Ir a mi panel
                         </a>
                     @else
@@ -70,12 +70,12 @@
                             class="hidden rounded-full px-6 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-200/50 sm:block">
                             Iniciar sesión
                         </a>
-                        <a href="/login" class="rounded-full btn-outline px-6 py-2.5 text-sm font-semibold sm:hidden">
+                        <a href="/login" class="rounded-full btn-outline px-3 py-2.5 text-sm font-semibold sm:hidden">
                             Iniciar sesión
                         </a>
                         @if (Route::has('register'))
                             <a href="/register"
-                                class="rounded-full btn-primary px-6 py-2.5 text-sm font-semibold text-white shadow-sm">
+                                class="rounded-full btn-primary px-3 py-2.5 text-sm font-semibold text-white shadow-sm sm:px-6">
                                 Unirse ahora
                             </a>
                         @endif
@@ -113,7 +113,7 @@
 
                 <div class="relative hidden justify-end lg:flex">
                     <div
-                        class="relative h-[480px] w-[480px] overflow-hidden rounded-full border-[12px] border-white shadow-2xl">
+                        class="relative h-120 w-120 overflow-hidden rounded-full border-12 border-white shadow-2xl">
                         <img src="/images/hero.png" alt="Candidato Profesional" class="h-full w-full object-cover">
                     </div>
                 </div>

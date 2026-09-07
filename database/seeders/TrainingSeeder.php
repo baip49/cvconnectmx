@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Training;
 use Illuminate\Database\Seeder;
 
 class TrainingSeeder extends Seeder
@@ -11,6 +12,10 @@ class TrainingSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        if (Training::query()->exists()) {
+            return;
+        }
+
+        Training::factory(6)->create();
     }
 }

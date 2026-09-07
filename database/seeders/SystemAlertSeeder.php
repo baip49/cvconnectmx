@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\SystemAlert;
 use Illuminate\Database\Seeder;
 
 class SystemAlertSeeder extends Seeder
@@ -11,6 +12,8 @@ class SystemAlertSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        if (! SystemAlert::query()->exists()) {
+            SystemAlert::factory(10)->create();
+        }
     }
 }

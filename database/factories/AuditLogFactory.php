@@ -13,7 +13,7 @@ class AuditLogFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
+            'user_id' => User::query()->inRandomOrder()->value('id'),
             'action' => $this->faker->randomElement(['login', 'logout', 'create_user', 'update_profile', 'delete_vacancy']),
             'entity_type' => $this->faker->randomElement(['User', 'Vacancy', 'Candidate', 'Company']),
             'entity_id' => $this->faker->randomNumber(2),

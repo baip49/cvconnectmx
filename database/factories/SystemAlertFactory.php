@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\SystemAlert;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,12 @@ class SystemAlertFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'type' => $this->faker->randomElement(['security', 'maintenance', 'system']),
+            'level' => $this->faker->randomElement(['info', 'warning', 'critical']),
+            'message' => $this->faker->sentence(12),
+            'user_id' => User::query()->inRandomOrder()->value('id'),
+            'is_resolved' => false,
+            'reviewed_by' => null,
         ];
     }
 }

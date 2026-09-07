@@ -4,8 +4,12 @@ namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
+use App\Models\LoginAttempt;
+use Illuminate\Auth\Events\Failed;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -29,6 +33,7 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
+        $this->configureLoginLogging();
     }
 
     /**
@@ -67,6 +72,30 @@ class FortifyServiceProvider extends ServiceProvider
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
 
             return Limit::perMinute(5)->by($throttleKey);
+        });
+    }
+
+    private function configureLoginLogging(): void
+    {
+        Event::listen(Login::class, function (Login $event): void {
+            LoginAttempt::create([
+                'email' => $event->user->email,
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+                'is_successful' => true,
+            ]);
+        });
+
+        Event::listen(Failed::class, function (Failed $event): void {
+            $username = config('fortify.username', 'email');
+
+            LoginAttempt::create([
+                'email' => (string) ($event->credentials[$username] ?? ''),
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+                'is_successful' => false,
+                'failure_reason' => 'Credenciales inválidas',
+            ]);
         });
     }
 }

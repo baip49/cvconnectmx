@@ -13,6 +13,11 @@ class Incident extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'evidence' => 'array',
+        'detected_at' => 'datetime',
+    ];
+
     public function affectedUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'affected_user_id');

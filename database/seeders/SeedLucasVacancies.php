@@ -36,6 +36,10 @@ class SeedLucasVacancies extends Seeder
             return;
         }
 
+        if ($company->vacancies()->exists()) {
+            return;
+        }
+
         $vacancies = [
             [
                 'title' => 'Desarrollador FullStack Laravel y React',

@@ -18,7 +18,10 @@ class LoginAttemptFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'email' => $this->faker->safeEmail(),
+            'ip_address' => $this->faker->ipv4(),
+            'is_successful' => $this->faker->boolean(75),
+            'failure_reason' => $this->faker->optional()->randomElement(['invalid_credentials', 'locked_account', 'inactive_account']),
         ];
     }
 }
