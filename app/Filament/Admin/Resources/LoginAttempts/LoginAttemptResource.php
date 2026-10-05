@@ -2,11 +2,8 @@
 
 namespace App\Filament\Admin\Resources\LoginAttempts;
 
-use App\Filament\Admin\Resources\LoginAttempts\Pages\CreateLoginAttempt;
-use App\Filament\Admin\Resources\LoginAttempts\Pages\EditLoginAttempt;
 use App\Filament\Admin\Resources\LoginAttempts\Pages\ListLoginAttempts;
 use App\Filament\Admin\Resources\LoginAttempts\Pages\ViewLoginAttempt;
-use App\Filament\Admin\Resources\LoginAttempts\Schemas\LoginAttemptForm;
 use App\Filament\Admin\Resources\LoginAttempts\Schemas\LoginAttemptInfolist;
 use App\Filament\Admin\Resources\LoginAttempts\Tables\LoginAttemptsTable;
 use App\Models\LoginAttempt;
@@ -26,11 +23,6 @@ class LoginAttemptResource extends Resource
     protected static ?string $navigationLabel = 'Intentos de Acceso';
 
     protected static string|UnitEnum|null $navigationGroup = 'Seguridad';
-
-    public static function form(Schema $schema): Schema
-    {
-        return LoginAttemptForm::configure($schema);
-    }
 
     public static function infolist(Schema $schema): Schema
     {
@@ -53,9 +45,7 @@ class LoginAttemptResource extends Resource
     {
         return [
             'index' => ListLoginAttempts::route('/'),
-            'create' => CreateLoginAttempt::route('/create'),
             'view' => ViewLoginAttempt::route('/{record}'),
-            'edit' => EditLoginAttempt::route('/{record}/edit'),
         ];
     }
 }

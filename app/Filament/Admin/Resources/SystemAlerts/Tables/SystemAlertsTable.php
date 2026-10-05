@@ -33,6 +33,16 @@ class SystemAlertsTable
                         'security' => 'Seguridad',
                         'maintenance' => 'Mantenimiento',
                         'system' => 'Sistema',
+                        'system.memory' => 'Memoria',
+                        'system.cpu' => 'CPU',
+                        'system.disk' => 'Disco',
+                        'system.queue' => 'Cola',
+                        default => $state,
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'security' => 'Seguridad',
+                        'maintenance' => 'Mantenimiento',
+                        'system' => 'Sistema',
                         default => $state,
                     })
                     ->searchable()

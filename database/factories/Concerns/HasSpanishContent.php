@@ -81,6 +81,19 @@ trait HasSpanishContent
         'Se documentó la evidencia del incidente.',
     ];
 
+    protected static array $spanishTicketTitles = [
+        'No puedo subir mi CV a la plataforma',
+        'Error al postularme a una vacante',
+        'Mi calificación IA no se actualiza',
+        'No recibo notificaciones por correo',
+        'Ayuda para recuperar mi contraseña',
+        'Mi perfil aparece como restringido',
+        'No puedo editar mi experiencia laboral',
+        'La página de ofertas no carga los resultados',
+        'Quiero hacer mi perfil privado',
+        'Duda con los datos de mi empresa',
+    ];
+
     protected function spanish(array $pool): string
     {
         return $this->faker->randomElement($pool);

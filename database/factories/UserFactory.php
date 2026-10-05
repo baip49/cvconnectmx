@@ -47,6 +47,19 @@ class UserFactory extends Factory
         });
     }
 
+    public function support(): self
+    {
+        return $this->state(function () {
+            return [
+                'role_id' => Role::firstOrCreate(
+                    ['name' => 'support'],
+                    ['description' => 'Rol de asistencia', 'active' => true]
+                )->id,
+                'is_active' => true,
+            ];
+        });
+    }
+
     public function company(): self
     {
         return $this->state(function () {

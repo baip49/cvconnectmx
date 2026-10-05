@@ -19,6 +19,18 @@ class PermissionSeeder extends Seeder
             ['code' => 'vacancies.manage', 'name' => 'Administrar vacantes', 'description' => 'Permite administrar vacantes'],
             ['code' => 'applications.manage', 'name' => 'Administrar postulaciones', 'description' => 'Permite administrar postulaciones'],
             ['code' => 'audit.view', 'name' => 'Ver auditoría', 'description' => 'Permite consultar registros de auditoría'],
+            ['code' => 'candidates.view', 'name' => 'Ver candidatos', 'description' => 'Permite consultar candidatos'],
+            ['code' => 'candidates.manage', 'name' => 'Administrar candidatos', 'description' => 'Permite editar candidatos'],
+            ['code' => 'tickets.view', 'name' => 'Ver tickets', 'description' => 'Permite consultar tickets de ayuda'],
+            ['code' => 'tickets.create', 'name' => 'Crear tickets', 'description' => 'Permite abrir tickets de ayuda'],
+            ['code' => 'tickets.reply', 'name' => 'Responder tickets', 'description' => 'Permite responder en tickets de ayuda'],
+            ['code' => 'tickets.edit', 'name' => 'Editar tickets', 'description' => 'Permite editar título, tipo y nivel de tickets'],
+            ['code' => 'tickets.reopen', 'name' => 'Reabrir tickets', 'description' => 'Permite reabrir tickets cerrados dentro de 30 días'],
+            ['code' => 'tickets.claim', 'name' => 'Reclamar tickets', 'description' => 'Permite reclamar tickets sin atender'],
+            ['code' => 'tickets.join', 'name' => 'Unirse a tickets', 'description' => 'Permite unirse como segundo asistente'],
+            ['code' => 'tickets.assign', 'name' => 'Asignar tickets', 'description' => 'Permite asignar tickets a asistentes'],
+            ['code' => 'tickets.close', 'name' => 'Cerrar tickets', 'description' => 'Permite cerrar tickets de ayuda'],
+            ['code' => 'tickets.manage', 'name' => 'Administrar tickets', 'description' => 'Permite administrar tickets de ayuda'],
         ];
 
         foreach ($permissions as $attributes) {

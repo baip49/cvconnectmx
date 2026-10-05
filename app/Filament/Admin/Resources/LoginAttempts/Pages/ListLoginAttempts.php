@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources\LoginAttempts\Pages;
 
 use App\Filament\Admin\Resources\LoginAttempts\LoginAttemptResource;
-use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListLoginAttempts extends ListRecords
@@ -12,8 +11,6 @@ class ListLoginAttempts extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [
-            CreateAction::make(),
-        ];
+        return [];
     }
 }

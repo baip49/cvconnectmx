@@ -50,11 +50,31 @@ class UserSeeder extends Seeder
             ]);
         }
 
+        // 3b. Usuario de Soporte de Prueba (atiende tickets en /support)
+        if (! User::query()->where('email', 'soporte@unach.mx')->exists()) {
+            User::factory()->support()->create([
+                'email' => 'soporte@unach.mx',
+                'password' => bcrypt('123456789'),
+                'name' => 'Mariana',
+                'last_name' => 'López Hernández',
+            ]);
+        }
+
         $this->seedCandidateProfile($diana->candidate);
 
-        // 4. Generar 5 Empresas adicionales con vacantes
+        // 3b. Agente de Soporte de Prueba
+        if (! User::query()->where('email', 'soporte@unach.mx')->exists()) {
+            User::factory()->support()->create([
+                'email' => 'soporte@unach.mx',
+                'password' => bcrypt('123456789'),
+                'name' => 'Soporte',
+                'last_name' => 'CVConnect',
+            ]);
+        }
+
+        // 4. Generar Empresas adicionales con vacantes
         $companyRoleId = Role::query()->where('name', 'company')->value('id');
-        $companiesToCreate = max(0, 6 - User::query()->where('role_id', $companyRoleId)->count());
+        $companiesToCreate = max(0, 8 - User::query()->where('role_id', $companyRoleId)->count());
 
         User::factory($companiesToCreate)
             ->company()
@@ -65,9 +85,9 @@ class UserSeeder extends Seeder
                 ]);
             });
 
-        // 5. Generar 5 Candidatos adicionales con perfiles y postulaciones
+        // 5. Generar Candidatos adicionales con perfiles y postulaciones
         $candidateRoleId = Role::query()->where('name', 'candidate')->value('id');
-        $candidatesToCreate = max(0, 6 - User::query()->where('role_id', $candidateRoleId)->count());
+        $candidatesToCreate = max(0, 8 - User::query()->where('role_id', $candidateRoleId)->count());
 
         User::factory($candidatesToCreate)
             ->candidate()

@@ -3,14 +3,18 @@
 namespace App\Providers;
 
 use App\Models\Application;
+use App\Models\BackupLog;
 use App\Models\Candidate;
 use App\Models\CandidateDocument;
 use App\Models\Company;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\Ticket;
+use App\Models\TicketReply;
 use App\Models\User;
 use App\Models\Vacancy;
 use App\Observers\AuditObserver;
+use App\Observers\UserObserver;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -44,6 +48,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
 
         User::observe(AuditObserver::class);
+        User::observe(UserObserver::class);
         Candidate::observe(AuditObserver::class);
         Company::observe(AuditObserver::class);
         Vacancy::observe(AuditObserver::class);
@@ -51,6 +56,9 @@ class AppServiceProvider extends ServiceProvider
         Role::observe(AuditObserver::class);
         Permission::observe(AuditObserver::class);
         CandidateDocument::observe(AuditObserver::class);
+        Ticket::observe(AuditObserver::class);
+        TicketReply::observe(AuditObserver::class);
+        BackupLog::observe(AuditObserver::class);
     }
 
     /**

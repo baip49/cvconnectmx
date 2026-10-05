@@ -168,31 +168,63 @@ class SystemCpuLoadCheck extends Check
 
         $output = shell_exec('wmic cpu get LoadPercentage,NumberOfLogicalProcessors /Value');
 
+        if (is_string($output)
+            && preg_match_all('/LoadPercentage=(\d+)/i', $output, $loadMatches)
+            && ! empty($loadMatches[1])
+        ) {
+            $percentage = (int) $loadMatches[1][0];
+
+            preg_match_all('/NumberOfLogicalProcessors=(\d+)/i', $output, $coreMatches);
+
+            $cores = ! empty($coreMatches[1])
+                ? array_sum(array_map('intval', $coreMatches[1]))
+                : null;
+
+            if ($cores === null) {
+                $envCores = getenv('NUMBER_OF_PROCESSORS');
+                $cores = $envCores !== false ? (int) $envCores : null;
+            }
+
+            return [
+                'percentage' => $percentage,
+                'cores' => $cores,
+                'source' => 'wmic',
+                'message' => "CPU load is {$percentage}%.",
+            ];
+        }
+
+        return $this->resolveWindowsCpuUsageViaPowershell();
+    }
+
+    /**
+     * wmic was removed from recent Windows versions, fall back to CIM cmdlets.
+     *
+     * @return array{percentage: int, source: string, message?: string, cores?: int}|null
+     */
+    private function resolveWindowsCpuUsageViaPowershell(): ?array
+    {
+        if (! function_exists('shell_exec')) {
+            return null;
+        }
+
+        $output = shell_exec('powershell -NoProfile -Command "(Get-CimInstance Win32_Processor | Measure-Object -Property LoadPercentage -Average).Average; (Get-CimInstance Win32_ComputerSystem).NumberOfLogicalProcessors"');
+
         if (! is_string($output)) {
             return null;
         }
 
-        if (! preg_match_all('/LoadPercentage=(\d+)/i', $output, $loadMatches) || empty($loadMatches[1])) {
+        $lines = array_values(array_filter(array_map('trim', preg_split('/\r?\n/', $output))));
+
+        if (count($lines) < 2 || (int) $lines[1] <= 0) {
             return null;
         }
 
-        $percentage = (int) $loadMatches[1][0];
-
-        preg_match_all('/NumberOfLogicalProcessors=(\d+)/i', $output, $coreMatches);
-
-        $cores = ! empty($coreMatches[1])
-            ? array_sum(array_map('intval', $coreMatches[1]))
-            : null;
-
-        if ($cores === null) {
-            $envCores = getenv('NUMBER_OF_PROCESSORS');
-            $cores = $envCores !== false ? (int) $envCores : null;
-        }
+        $percentage = max(0, (int) $lines[0]);
 
         return [
             'percentage' => $percentage,
-            'cores' => $cores,
-            'source' => 'wmic',
+            'cores' => (int) $lines[1],
+            'source' => 'powershell',
             'message' => "CPU load is {$percentage}%.",
         ];
     }

@@ -2,11 +2,13 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\AvatarProviders\InitialsAvatarProvider;
 use App\Filament\Candidate\Pages\Dashboard;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -32,6 +34,13 @@ class CandidatePanelProvider extends PanelProvider
             ->path('dashboard')
             ->viteTheme('resources/css/filament/candidate/theme.css')
             ->brandName('CVConnectMX')
+            ->defaultAvatarProvider(InitialsAvatarProvider::class)
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label('Perfil')
+                    ->url(fn (): string => route('profile.edit'))
+                    ->icon('heroicon-o-user-circle'),
+            ])
             ->brandLogo(asset('images/candidate-logo.svg'))
             ->brandLogoHeight('2.5rem')
             ->favicon(asset('favicon.ico'))
@@ -43,6 +52,7 @@ class CandidatePanelProvider extends PanelProvider
                 'Inicio',
                 'Perfil',
                 'Oportunidades',
+                'Soporte',
             ])
             ->pages([
                 Dashboard::class,

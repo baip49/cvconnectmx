@@ -4,6 +4,7 @@ use App\Health\Checks\SystemCpuLoadCheck;
 use App\Health\Checks\SystemMemoryUsageCheck;
 use App\Notifications\HealthCheckNotifiable;
 use App\Notifications\HealthCheckTelegramNotification;
+use App\Services\SystemMonitorService;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -14,8 +15,17 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
+Artisan::command('system:monitor', function () {
+    $result = app(SystemMonitorService::class)->run();
+
+    $this->info("Monitoreo completado: {$result['alerts_created']} alertas creadas, {$result['resolved']} resueltas.");
+
+    return 0;
+})->purpose('Check server resources every 15 minutes, record alerts and notify Telegram.');
+
 Schedule::command(RunHealthChecksCommand::class)->everyMinute();
 Schedule::command('backup:run-scheduled')->everyMinute();
+Schedule::command('system:monitor')->everyFifteenMinutes();
 
 Artisan::command('health:telegram-test', function () {
     $chatId = config('services.telegram.chat_id');

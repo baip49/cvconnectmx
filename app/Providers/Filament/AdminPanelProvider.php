@@ -2,10 +2,12 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\AvatarProviders\InitialsAvatarProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -25,7 +27,15 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->id('admin')
             ->path('admin')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->brandName('CVConnectMX')
+            ->defaultAvatarProvider(InitialsAvatarProvider::class)
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label('Perfil')
+                    ->url(fn (): string => route('profile.edit'))
+                    ->icon('heroicon-o-user-circle'),
+            ])
             ->brandLogo(asset('images/admin-logo.svg'))
             ->brandLogoHeight('2.5rem')
             ->favicon(asset('favicon.ico'))

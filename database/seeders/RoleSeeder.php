@@ -28,6 +28,11 @@ class RoleSeeder extends Seeder
                 'description' => 'Rol de empresa para contratar personal',
                 'active' => true,
             ],
+            [
+                'name' => 'support',
+                'description' => 'Rol de asistencia para atender tickets de ayuda',
+                'active' => true,
+            ],
         ];
 
         foreach ($roles as $role) {

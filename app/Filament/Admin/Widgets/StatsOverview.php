@@ -6,8 +6,8 @@ use App\Models\Application;
 use App\Models\AuditLog;
 use App\Models\Candidate;
 use App\Models\Company;
-use App\Models\Incident;
 use App\Models\SystemAlert;
+use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Vacancy;
 use Filament\Widgets\StatsOverviewWidget;
@@ -30,7 +30,7 @@ class StatsOverview extends StatsOverviewWidget
         $totalApplications = Application::count();
         $pendingApplications = Application::where('status', 'pending')->count();
         $acceptedApplications = Application::where('status', 'accepted')->count();
-        $openIncidents = Incident::whereIn('status', ['open', 'in_progress'])->count();
+        $openTickets = Ticket::whereIn('status', ['open', 'in_progress'])->count();
         $unresolvedAlerts = SystemAlert::where('is_resolved', false)->count();
         $todayLogs = AuditLog::whereDate('created_at', today())->count();
 
@@ -55,10 +55,10 @@ class StatsOverview extends StatsOverviewWidget
                 ->descriptionIcon('heroicon-m-document-text')
                 ->color('warning'),
 
-            Stat::make('Incidentes abiertos', $openIncidents)
+            Stat::make('Tickets abiertos', $openTickets)
                 ->description('Requieren atención')
-                ->descriptionIcon('heroicon-m-exclamation-triangle')
-                ->color($openIncidents > 0 ? 'danger' : 'success'),
+                ->descriptionIcon('heroicon-m-lifebuoy')
+                ->color($openTickets > 0 ? 'danger' : 'success'),
 
             Stat::make('Alertas pendientes', $unresolvedAlerts)
                 ->description('Sin resolver')

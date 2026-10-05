@@ -86,8 +86,9 @@ class BackupLogInfolist
                             TextEntry::make('checksum_sha256')
                                 ->label('Checksum SHA256')
                                 ->fontFamily(FontFamily::Mono)
-                                ->limit(32)
-                                ->tooltip(fn ($record) => $record->checksum_sha256),
+                                ->copyable()
+                                ->columnSpanFull()
+                                ->extraAttributes(['class' => 'break-all']),
                             TextEntry::make('created_at')
                                 ->label('Fecha de Ejecución')
                                 ->dateTime('d/m/Y H:i:s'),

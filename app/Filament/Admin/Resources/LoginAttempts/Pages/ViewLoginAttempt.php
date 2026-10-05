@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources\LoginAttempts\Pages;
 
 use App\Filament\Admin\Resources\LoginAttempts\LoginAttemptResource;
-use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewLoginAttempt extends ViewRecord
@@ -12,8 +11,6 @@ class ViewLoginAttempt extends ViewRecord
 
     protected function getHeaderActions(): array
     {
-        return [
-            EditAction::make(),
-        ];
+        return [];
     }
 }

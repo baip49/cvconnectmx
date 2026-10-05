@@ -2,3 +2,6 @@
 
 @source '../../../../app/Filament/Candidate/**/*';
 @source '../../../../resources/views/filament/candidate/**/*';
+
+@source '../../../../resources/views/livewire/**/*';
+

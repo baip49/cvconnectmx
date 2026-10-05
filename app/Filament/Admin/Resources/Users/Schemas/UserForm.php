@@ -19,6 +19,9 @@ class UserForm
                             ->label('Nombre')
                             ->required()
                             ->maxLength(255),
+                        TextInput::make('last_name')
+                            ->label('Apellido')
+                            ->maxLength(255),
                         TextInput::make('email')
                             ->label('Correo Electrónico')
                             ->email()
@@ -29,7 +32,8 @@ class UserForm
                             ->label('Contraseña')
                             ->password()
                             ->dehydrated(fn ($state) => filled($state))
-                            ->required(fn (string $context): bool => $context === 'create'),
+                            ->required(false)
+                            ->helperText('Si se deja vacío, se genera una contraseña aleatoria al crear.'),
                         Select::make('role_id')
                             ->label('Rol')
                             ->relationship('role', 'name')

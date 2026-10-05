@@ -3,8 +3,8 @@
 namespace App\Filament\Admin\Pages;
 
 use App\Filament\Admin\Widgets\RecentAuditLogs;
-use App\Filament\Admin\Widgets\RecentIncidents;
 use App\Filament\Admin\Widgets\RecentSystemAlerts;
+use App\Filament\Admin\Widgets\RecentTickets;
 use App\Filament\Admin\Widgets\StatsOverview;
 use Filament\Pages\Dashboard as BaseDashboard;
 
@@ -28,7 +28,7 @@ class Dashboard extends BaseDashboard
         return [
             StatsOverview::class,
             RecentAuditLogs::class,
-            RecentIncidents::class,
+            RecentTickets::class,
             RecentSystemAlerts::class,
         ];
     }

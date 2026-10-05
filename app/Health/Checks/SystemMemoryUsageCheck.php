@@ -172,32 +172,54 @@ class SystemMemoryUsageCheck extends Check
 
         $output = shell_exec('wmic OS get FreePhysicalMemory,TotalVisibleMemorySize /Value');
 
+        if (is_string($output)
+            && preg_match('/FreePhysicalMemory=(\d+)/i', $output, $freeMatch)
+            && preg_match('/TotalVisibleMemorySize=(\d+)/i', $output, $totalMatch)
+            && (int) $totalMatch[1] > 0
+        ) {
+            $totalBytes = ((int) $totalMatch[1]) * 1024;
+            $freeBytes = ((int) $freeMatch[1]) * 1024;
+
+            return [
+                'used' => max(0, $totalBytes - $freeBytes),
+                'total' => $totalBytes,
+                'source' => 'wmic',
+            ];
+        }
+
+        return $this->resolveWindowsMemoryUsageViaPowershell();
+    }
+
+    /**
+     * wmic was removed from recent Windows versions, fall back to CIM cmdlets.
+     *
+     * @return array{used: int, total: int, source: string}|null
+     */
+    private function resolveWindowsMemoryUsageViaPowershell(): ?array
+    {
+        if (! function_exists('shell_exec')) {
+            return null;
+        }
+
+        $output = shell_exec('powershell -NoProfile -Command "(Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory; (Get-CimInstance Win32_OperatingSystem).TotalVisibleMemorySize"');
+
         if (! is_string($output)) {
             return null;
         }
 
-        if (! preg_match('/FreePhysicalMemory=(\d+)/i', $output, $freeMatch)) {
+        $lines = array_values(array_filter(array_map('trim', preg_split('/\r?\n/', $output))));
+
+        if (count($lines) < 2 || (int) $lines[1] <= 0) {
             return null;
         }
 
-        if (! preg_match('/TotalVisibleMemorySize=(\d+)/i', $output, $totalMatch)) {
-            return null;
-        }
-
-        $freeKb = (int) $freeMatch[1];
-        $totalKb = (int) $totalMatch[1];
-
-        if ($totalKb <= 0) {
-            return null;
-        }
-
-        $totalBytes = $totalKb * 1024;
-        $freeBytes = $freeKb * 1024;
+        $totalBytes = ((int) $lines[1]) * 1024;
+        $freeBytes = ((int) $lines[0]) * 1024;
 
         return [
             'used' => max(0, $totalBytes - $freeBytes),
             'total' => $totalBytes,
-            'source' => 'wmic',
+            'source' => 'powershell',
         ];
     }
 
