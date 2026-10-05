@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             IncidentSeeder::class,
             IncidentActionSeeder::class,
             SystemAlertSeeder::class,
+            BackupScheduleSeeder::class,
             BackupLogSeeder::class,
             UserPermissionSeeder::class,
         ]);

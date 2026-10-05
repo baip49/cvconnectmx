@@ -24,7 +24,7 @@ class RunDatabaseBackup implements ShouldQueue
 
     public int $timeout = 1800;
 
-    public function __construct(public int $backupLogId) {}
+    public function __construct(public int $backupLogId, public string $scope = 'database') {}
 
     public function handle(DatabaseBackupService $backups, TelegramNotifier $telegram): void
     {
@@ -33,17 +33,19 @@ class RunDatabaseBackup implements ShouldQueue
         $telegram->send(
             '🔄 <b>Respaldo iniciado</b>'."\n"
             .'Tipo: '.e($backupLog->type)."\n"
+            .'Alcance: '.$this->scopeLabel()."\n"
             .'Solicitado por: '.e($backupLog->executedBy?->name ?? 'sistema')
         );
 
         try {
-            $result = $backups->run();
+            $result = $backups->run($this->scope);
 
             $backupLog->update([
                 'destination_path' => $result['relative_path'],
                 'size_bytes' => $result['size_bytes'],
                 'checksum_sha256' => $result['checksum_sha256'],
                 'is_encrypted' => true,
+                'scope' => $this->scope,
                 'status' => 'success',
             ]);
 
@@ -52,6 +54,7 @@ class RunDatabaseBackup implements ShouldQueue
             $telegram->send(
                 '✅ <b>Respaldo completado</b>'."\n"
                 .'Tipo: '.e($backupLog->type)."\n"
+                .'Alcance: '.$this->scopeLabel()."\n"
                 ."Tamaño: {$sizeMb} MB\n"
                 .'Destino: '.e($result['relative_path'])
             );
@@ -63,8 +66,18 @@ class RunDatabaseBackup implements ShouldQueue
             $telegram->send(
                 '🚨 <b>Respaldo fallido</b>'."\n"
                 .'Tipo: '.e($backupLog->type)."\n"
+                .'Alcance: '.$this->scopeLabel()."\n"
                 .'Error: '.e(mb_substr($e->getMessage(), 0, 300))
             );
         }
+    }
+
+    protected function scopeLabel(): string
+    {
+        return match ($this->scope) {
+            'files' => 'Archivos',
+            'both' => 'Base de datos y archivos',
+            default => 'Base de datos',
+        };
     }
 }

@@ -13,6 +13,11 @@ class BackupLog extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'is_encrypted' => 'boolean',
+        'restoration_tested' => 'boolean',
+    ];
+
     protected static function booted(): void
     {
         static::deleting(function (BackupLog $backupLog): void {
@@ -31,5 +36,10 @@ class BackupLog extends Model
     public function executedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'executed_by');
+    }
+
+    public function schedule(): BelongsTo
+    {
+        return $this->belongsTo(BackupSchedule::class, 'schedule_id');
     }
 }

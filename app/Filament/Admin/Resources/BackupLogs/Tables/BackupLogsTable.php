@@ -21,6 +21,12 @@ class BackupLogsTable
                     ->label('Tipo')
                     ->badge()
                     ->color('gray')
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'full' => 'Completo',
+                        'incremental' => 'Incremental',
+                        'differential' => 'Diferencial',
+                        default => $state,
+                    })
                     ->searchable()
                     ->sortable(),
 
@@ -43,7 +49,25 @@ class BackupLogsTable
 
                 TextColumn::make('frequency')
                     ->label('Frecuencia')
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'manual' => 'Manual',
+                        'daily' => 'Diario',
+                        'weekly' => 'Semanal',
+                        'monthly' => 'Mensual',
+                        default => $state,
+                    })
                     ->searchable(),
+
+                TextColumn::make('scope')
+                    ->label('Alcance')
+                    ->badge()
+                    ->color('gray')
+                    ->formatStateUsing(fn (?string $state): string => match ($state) {
+                        'database' => 'Base de datos',
+                        'files' => 'Archivos',
+                        'both' => 'Base de datos y archivos',
+                        default => $state ?? 'Base de datos',
+                    }),
 
                 TextColumn::make('destination_path')
                     ->label('Destino')

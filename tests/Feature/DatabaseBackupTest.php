@@ -42,10 +42,10 @@ test('running a backup from the list enqueues the job without waiting', function
     Queue::fake();
 
     Livewire::test(ListBackupLogs::class)
-        ->callAction('run_backup', ['type' => 'full', 'retention_days' => 30])
+        ->callAction('run_backup', ['type' => 'full', 'scope' => 'database', 'retention_days' => 30])
         ->assertHasNoErrors();
 
-    assertDatabaseHas('backup_logs', ['type' => 'full', 'status' => 'in_progress']);
+    assertDatabaseHas('backup_logs', ['type' => 'full', 'scope' => 'database', 'status' => 'in_progress']);
     Queue::assertPushed(RunDatabaseBackup::class);
 });
 
@@ -186,4 +186,34 @@ test('deleting a pending backup log does not fail', function () {
     $backupLog->delete();
 
     expect(BackupLog::query()->whereKey($backupLog->id)->exists())->toBeFalse();
+});
+
+test('backup job dumps candidate files into an encrypted zip', function () {
+    Storage::fake('local');
+    fakeTelegram();
+
+    Storage::disk('local')->put('candidate-cvs/cv.pdf', '%PDF-1.4 fake');
+
+    $backupLog = BackupLog::create([
+        'type' => 'full',
+        'frequency' => 'manual',
+        'scope' => 'files',
+        'destination_path' => 'pending',
+        'size_bytes' => 0,
+        'checksum_sha256' => '',
+        'is_encrypted' => false,
+        'status' => 'in_progress',
+        'retention_days' => 30,
+        'executed_by' => null,
+    ]);
+
+    app()->call([new RunDatabaseBackup($backupLog->id, 'files'), 'handle']);
+
+    $backupLog->refresh();
+
+    $decrypted = Crypt::decryptString((string) Storage::disk('local')->get($backupLog->destination_path));
+
+    expect($backupLog->status)->toBe('success')
+        ->and($backupLog->scope)->toBe('files')
+        ->and($decrypted)->toStartWith('PK');
 });

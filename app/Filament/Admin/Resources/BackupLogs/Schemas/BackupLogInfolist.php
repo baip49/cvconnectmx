@@ -20,7 +20,13 @@ class BackupLogInfolist
                         Grid::make(3)->schema([
                             TextEntry::make('type')
                                 ->label('Tipo')
-                                ->badge(),
+                                ->badge()
+                                ->formatStateUsing(fn (string $state): string => match ($state) {
+                                    'full' => 'Completo',
+                                    'incremental' => 'Incremental',
+                                    'differential' => 'Diferencial',
+                                    default => $state,
+                                }),
                             TextEntry::make('status')
                                 ->label('Estado')
                                 ->badge()
@@ -37,7 +43,23 @@ class BackupLogInfolist
                                     default => 'gray',
                                 }),
                             TextEntry::make('frequency')
-                                ->label('Frecuencia'),
+                                ->label('Frecuencia')
+                                ->formatStateUsing(fn (string $state): string => match ($state) {
+                                    'manual' => 'Manual',
+                                    'daily' => 'Diario',
+                                    'weekly' => 'Semanal',
+                                    'monthly' => 'Mensual',
+                                    default => $state,
+                                }),
+                            TextEntry::make('scope')
+                                ->label('Alcance')
+                                ->badge()
+                                ->formatStateUsing(fn (?string $state): string => match ($state) {
+                                    'database' => 'Base de datos',
+                                    'files' => 'Archivos',
+                                    'both' => 'Base de datos y archivos',
+                                    default => $state ?? 'Base de datos',
+                                }),
                             TextEntry::make('destination_path')
                                 ->label('Destino')
                                 ->columnSpanFull(),

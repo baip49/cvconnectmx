@@ -15,6 +15,7 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command(RunHealthChecksCommand::class)->everyMinute();
+Schedule::command('backup:run-scheduled')->everyMinute();
 
 Artisan::command('health:telegram-test', function () {
     $chatId = config('services.telegram.chat_id');

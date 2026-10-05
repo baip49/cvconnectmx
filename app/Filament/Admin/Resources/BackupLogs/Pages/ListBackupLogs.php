@@ -33,6 +33,15 @@ class ListBackupLogs extends ListRecords
                         ])
                         ->default('full')
                         ->required(),
+                    Select::make('scope')
+                        ->label('Qué respaldar')
+                        ->options([
+                            'database' => 'Base de datos',
+                            'files' => 'Archivos',
+                            'both' => 'Base de datos y archivos',
+                        ])
+                        ->default('database')
+                        ->required(),
                     TextInput::make('retention_days')
                         ->label('Retención (días)')
                         ->numeric()
@@ -41,19 +50,24 @@ class ListBackupLogs extends ListRecords
                         ->required(),
                 ])
                 ->action(function (array $data): void {
-                    $backupLog = BackupLog::create([
-                        'type' => $data['type'],
-                        'frequency' => 'manual',
-                        'destination_path' => 'pending',
-                        'size_bytes' => 0,
-                        'checksum_sha256' => '',
-                        'is_encrypted' => false,
-                        'status' => 'in_progress',
-                        'retention_days' => (int) $data['retention_days'],
-                        'executed_by' => Auth::id(),
-                    ]);
+                    $scopes = $data['scope'] === 'both' ? ['database', 'files'] : [$data['scope']];
 
-                    RunDatabaseBackup::dispatch($backupLog->id);
+                    foreach ($scopes as $scope) {
+                        $backupLog = BackupLog::create([
+                            'type' => $data['type'],
+                            'frequency' => 'manual',
+                            'scope' => $scope,
+                            'destination_path' => 'pending',
+                            'size_bytes' => 0,
+                            'checksum_sha256' => '',
+                            'is_encrypted' => false,
+                            'status' => 'in_progress',
+                            'retention_days' => (int) $data['retention_days'],
+                            'executed_by' => Auth::id(),
+                        ]);
+
+                        RunDatabaseBackup::dispatch($backupLog->id, $scope);
+                    }
 
                     Notification::make()
                         ->title('Respaldo encolado')

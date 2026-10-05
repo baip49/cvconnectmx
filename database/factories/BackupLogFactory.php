@@ -19,8 +19,9 @@ class BackupLogFactory extends Factory
     public function definition(): array
     {
         return [
-            'type' => 'database',
+            'type' => $this->faker->randomElement(['full', 'incremental', 'differential']),
             'frequency' => $this->faker->randomElement(['daily', 'weekly', 'monthly']),
+            'scope' => $this->faker->randomElement(['database', 'files', 'both']),
             'destination_path' => 'backups/'.now()->format('Y/m/d').'.sql.gz',
             'size_bytes' => $this->faker->numberBetween(100000, 5000000),
             'checksum_sha256' => hash('sha256', $this->faker->uuid()),

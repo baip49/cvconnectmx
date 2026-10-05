@@ -38,6 +38,8 @@ class TelegramNotifier
                 return false;
             }
 
+            Log::info('TelegramNotifier: aviso enviado correctamente.');
+
             return true;
         } catch (Throwable $e) {
             Log::warning('TelegramNotifier: no se pudo contactar a Telegram: '.$e->getMessage());
