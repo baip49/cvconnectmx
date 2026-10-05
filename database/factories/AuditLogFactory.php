@@ -14,13 +14,13 @@ class AuditLogFactory extends Factory
     {
         return [
             'user_id' => User::query()->inRandomOrder()->value('id'),
-            'action' => $this->faker->randomElement(['login', 'logout', 'create_user', 'update_profile', 'delete_vacancy']),
+            'action' => $this->faker->randomElement(['created', 'updated', 'deleted']),
             'entity_type' => $this->faker->randomElement(['User', 'Vacancy', 'Candidate', 'Company']),
             'entity_id' => $this->faker->randomNumber(2),
             'old_data' => null,
             'new_data' => ['status' => 'updated'],
             'ip_address' => $this->faker->ipv4(),
-            'result' => 'success',
+            'result' => $this->faker->randomElement(['success', 'failure']),
         ];
     }
 }

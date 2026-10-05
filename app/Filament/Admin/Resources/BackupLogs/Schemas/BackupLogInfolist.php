@@ -7,6 +7,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\FontFamily;
 
 class BackupLogInfolist
 {
@@ -62,7 +63,7 @@ class BackupLogInfolist
                                 ->placeholder('Sistema'),
                             TextEntry::make('checksum_sha256')
                                 ->label('Checksum SHA256')
-                                ->font('mono')
+                                ->fontFamily(FontFamily::Mono)
                                 ->limit(32)
                                 ->tooltip(fn ($record) => $record->checksum_sha256),
                             TextEntry::make('created_at')

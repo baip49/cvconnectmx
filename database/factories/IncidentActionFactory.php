@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Incident;
 use App\Models\IncidentAction;
 use App\Models\User;
+use Database\Factories\Concerns\HasSpanishContent;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class IncidentActionFactory extends Factory
 {
+    use HasSpanishContent;
+
     /**
      * Define the model's default state.
      *
@@ -21,7 +24,7 @@ class IncidentActionFactory extends Factory
     {
         return [
             'incident_id' => Incident::factory(),
-            'action' => $this->faker->sentence(8),
+            'action' => $this->spanish(self::$spanishActionTexts),
             'phase' => $this->faker->randomElement(['detection', 'containment', 'recovery']),
             'performed_by' => User::query()->inRandomOrder()->value('id'),
         ];

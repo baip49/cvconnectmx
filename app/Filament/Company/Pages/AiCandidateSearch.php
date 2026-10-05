@@ -2,18 +2,18 @@
 
 namespace App\Filament\Company\Pages;
 
-use App\Models\Candidate;
 use App\Models\Application;
+use App\Models\Candidate;
 use App\Models\Vacancy;
 use App\Services\AiService;
-use Filament\Forms\Components\TextInput;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Schemas\Schema;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use Filament\Actions\Action;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -35,6 +35,7 @@ class AiCandidateSearch extends Page implements HasForms, HasTable
     protected string $view = 'filament.company.pages.ai-candidate-search';
 
     public ?string $searchQuery = '';
+
     public array $aiFilters = [];
 
     public function form(Schema $schema): Schema
@@ -57,13 +58,27 @@ class AiCandidateSearch extends Page implements HasForms, HasTable
         }
 
         $this->aiFilters = $aiService->searchCandidates($this->searchQuery);
-        
+
         Notification::make()
             ->title('Búsqueda procesada por IA')
             ->success()
             ->send();
-            
+
         $this->resetTable();
+    }
+
+    public function resetAiSearch(): void
+    {
+        $this->searchQuery = '';
+        $this->aiFilters = [];
+
+        $this->resetTable();
+
+        Notification::make()
+            ->title('Filtros reiniciados')
+            ->body('Mostrando todos los candidatos ordenados por calificación IA.')
+            ->success()
+            ->send();
     }
 
     public function table(Table $table): Table
@@ -71,8 +86,9 @@ class AiCandidateSearch extends Page implements HasForms, HasTable
         return $table
             ->query(
                 Candidate::query()
+                    ->orderByRaw('ai_rating IS NULL, ai_rating DESC')
                     ->where(function (Builder $query) {
-                        $query->when(!empty($this->aiFilters['skills']), function (Builder $q) {
+                        $query->when(! empty($this->aiFilters['skills']), function (Builder $q) {
                             $q->whereHas('skills', function ($skillQuery) {
                                 $skillQuery->whereIn('name', $this->aiFilters['skills']);
                                 // O búsqueda parcial si no son nombres exactos
@@ -82,11 +98,13 @@ class AiCandidateSearch extends Page implements HasForms, HasTable
                             });
                         });
 
-                        $query->when(!empty($this->aiFilters['keywords']), function (Builder $q) {
+                        $query->when(! empty($this->aiFilters['keywords']), function (Builder $q) {
                             $q->orWhere(function ($keywordGroup) {
                                 foreach ($this->aiFilters['keywords'] as $keyword) {
-                                    $keywordGroup->orWhere('summary', 'like', "%{$keyword}%")
-                                                 ->orWhere('professional_title', 'like', "%{$keyword}%");
+                                    $keywordGroup
+                                        ->orWhere('summary', 'like', "%{$keyword}%")
+                                        ->orWhere('professional_title', 'like', "%{$keyword}%")
+                                        ->orWhereHas('skills', fn ($skillQuery) => $skillQuery->where('name', 'like', "%{$keyword}%"));
                                 }
                             });
                         });
@@ -116,7 +134,7 @@ class AiCandidateSearch extends Page implements HasForms, HasTable
                     ->form([
                         Select::make('vacancy_id')
                             ->label('Seleccionar Vacante')
-                            ->options(fn() => Vacancy::where('company_id', Auth::user()->company->id)->pluck('title', 'id'))
+                            ->options(fn () => Vacancy::where('company_id', Auth::user()->company->id)->pluck('title', 'id'))
                             ->required(),
                     ])
                     ->action(function (Candidate $record, array $data) {

@@ -30,6 +30,7 @@ class CandidatePanelProvider extends PanelProvider
             )
             ->id('candidate')
             ->path('dashboard')
+            ->viteTheme('resources/css/filament/candidate/theme.css')
             ->brandName('CVConnectMX')
             ->brandLogo(asset('images/candidate-logo.svg'))
             ->brandLogoHeight('2.5rem')

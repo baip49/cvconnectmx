@@ -58,11 +58,11 @@ class MyCv extends Page implements HasForms
         return $schema
             ->schema([
                 Section::make('CV Principal')
-                    ->description('Sube tu currículum en formato PDF para que nuestra IA (AWS) evalúe tu perfil.')
+                    ->description('Sube tu currículum en formato PDF para que nuestra IA local evalúe tu perfil.')
                     ->schema([
                         FileUpload::make('cv_url')
                             ->label('Archivo CV')
-                            ->disk('s3')
+                            ->disk('local')
                             ->directory('candidate-cvs')
                             ->visibility('private')
                             ->acceptedFileTypes(['application/pdf'])
@@ -71,7 +71,7 @@ class MyCv extends Page implements HasForms
                             ->afterStateUpdated(function ($state) {
                                 if ($state instanceof TemporaryUploadedFile) {
                                     Log::info('MyCv: Storing file to S3 manually...');
-                                    $path = $state->store('candidate-cvs', 's3');
+                                    $path = $state->store('candidate-cvs', 'local');
 
                                     $candidate = Auth::user()->candidate;
                                     if ($candidate) {
@@ -182,14 +182,14 @@ class MyCv extends Page implements HasForms
                                     ->required(),
                                 FileUpload::make('file_path')
                                     ->label('Archivo')
-                                    ->disk('s3')
+                                    ->disk('local')
                                     ->directory('candidate-documents')
                                     ->visibility('private')
                                     ->required()
                                     ->live()
                                     ->afterStateUpdated(function ($state, $get) {
                                         if ($state instanceof TemporaryUploadedFile && $get('name')) {
-                                            $path = $state->store('candidate-documents', 's3');
+                                            $path = $state->store('candidate-documents', 'local');
 
                                             Auth::user()->candidate->documents()->updateOrCreate(
                                                 ['file_path' => $path],

@@ -33,6 +33,13 @@ return [
         'key' => env('GOOGLE_AI_API_KEY'),
     ],
 
+    'ollama' => [
+        'url' => env('OLLAMA_URL', 'http://127.0.0.1:11434'),
+        'model' => env('OLLAMA_MODEL'),
+        'vision_model' => env('OLLAMA_VISION_MODEL'),
+        'timeout' => env('OLLAMA_TIMEOUT', 120),
+    ],
+
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
@@ -50,6 +57,10 @@ return [
         'token' => env('TELEGRAM_BOT_TOKEN'),
         'chat_id' => env('TELEGRAM_CHAT_ID'),
         // 'base_uri' => env('TELEGRAM_API_BASE_URI'),
+    ],
+
+    'backup' => [
+        'mysqldump_path' => env('MYSQLDUMP_PATH'),
     ],
 
 ];

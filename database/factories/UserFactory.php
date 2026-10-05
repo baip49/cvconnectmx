@@ -24,7 +24,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => 'password',
             'uuid' => Str::uuid(),
-            'role_id' => fn () => Role::firstOrCreate(['name' => 'candidate'], ['description' => 'Candidate role', 'active' => true])->id,
+            'role_id' => fn () => Role::firstOrCreate(['name' => 'candidate'], ['description' => 'Rol de candidato', 'active' => true])->id,
             'name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
             'failed_login_attempts' => 0,
@@ -40,7 +40,7 @@ class UserFactory extends Factory
             return [
                 'role_id' => Role::firstOrCreate(
                     ['name' => 'admin'],
-                    ['description' => 'Administrator role', 'active' => true]
+                    ['description' => 'Rol de administrador', 'active' => true]
                 )->id,
                 'is_active' => true,
             ];
@@ -53,13 +53,13 @@ class UserFactory extends Factory
             return [
                 'role_id' => Role::firstOrCreate(
                     ['name' => 'company'],
-                    ['description' => 'Company role', 'active' => true]
+                    ['description' => 'Rol de empresa', 'active' => true]
                 )->id,
             ];
         })->afterCreating(function (User $user) {
             $user->company()->create([
-                'name' => $user->name.' Enterprise',
-                'sector' => 'Technology',
+                'name' => fake()->company(),
+                'sector' => fake()->randomElement(['Tecnología', 'Salud', 'Finanzas', 'Educación', 'Manufactura']),
                 'city' => 'Tuxtla Gutiérrez',
                 'state' => 'Chiapas',
             ]);
@@ -72,7 +72,7 @@ class UserFactory extends Factory
             return [
                 'role_id' => Role::firstOrCreate(
                     ['name' => 'candidate'],
-                    ['description' => 'Candidate role', 'active' => true]
+                    ['description' => 'Rol de candidato', 'active' => true]
                 )->id,
             ];
         })->afterCreating(function (User $user) {

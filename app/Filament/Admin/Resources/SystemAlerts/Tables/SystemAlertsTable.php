@@ -29,6 +29,12 @@ class SystemAlertsTable
                     ->label('Tipo')
                     ->badge()
                     ->color('gray')
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'security' => 'Seguridad',
+                        'maintenance' => 'Mantenimiento',
+                        'system' => 'Sistema',
+                        default => $state,
+                    })
                     ->searchable()
                     ->sortable(),
 

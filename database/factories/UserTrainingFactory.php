@@ -22,7 +22,7 @@ class UserTrainingFactory extends Factory
         return [
             'user_id' => User::factory(),
             'training_id' => Training::factory(),
-            'status' => $this->faker->randomElement(['assigned', 'in_progress', 'completed', 'expired']),
+            'status' => $this->faker->randomElement(['pending', 'in_progress', 'completed', 'expired']),
             'score' => $this->faker->optional()->randomFloat(2, 60, 100),
             'completed_at' => null,
             'expires_at' => now()->addDays(90),

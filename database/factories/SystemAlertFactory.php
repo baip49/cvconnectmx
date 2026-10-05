@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\SystemAlert;
 use App\Models\User;
+use Database\Factories\Concerns\HasSpanishContent;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class SystemAlertFactory extends Factory
 {
+    use HasSpanishContent;
+
     /**
      * Define the model's default state.
      *
@@ -21,7 +24,7 @@ class SystemAlertFactory extends Factory
         return [
             'type' => $this->faker->randomElement(['security', 'maintenance', 'system']),
             'level' => $this->faker->randomElement(['info', 'warning', 'critical']),
-            'message' => $this->faker->sentence(12),
+            'message' => $this->spanish(self::$spanishAlertMessages),
             'user_id' => User::query()->inRandomOrder()->value('id'),
             'is_resolved' => false,
             'reviewed_by' => null,

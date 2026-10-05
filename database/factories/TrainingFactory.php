@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Role;
 use App\Models\Training;
+use Database\Factories\Concerns\HasSpanishContent;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class TrainingFactory extends Factory
 {
+    use HasSpanishContent;
+
     /**
      * Define the model's default state.
      *
@@ -19,7 +22,7 @@ class TrainingFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence(4),
+            'title' => $this->spanish(self::$spanishTrainingTitles),
             'type' => $this->faker->randomElement(['security', 'technical', 'compliance']),
             'target_role_id' => Role::query()->inRandomOrder()->value('id'),
             'validity_days' => $this->faker->randomElement([30, 90, 365]),

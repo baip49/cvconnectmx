@@ -2,11 +2,8 @@
 
 namespace App\Filament\Admin\Resources\BackupLogs;
 
-use App\Filament\Admin\Resources\BackupLogs\Pages\CreateBackupLog;
-use App\Filament\Admin\Resources\BackupLogs\Pages\EditBackupLog;
 use App\Filament\Admin\Resources\BackupLogs\Pages\ListBackupLogs;
 use App\Filament\Admin\Resources\BackupLogs\Pages\ViewBackupLog;
-use App\Filament\Admin\Resources\BackupLogs\Schemas\BackupLogForm;
 use App\Filament\Admin\Resources\BackupLogs\Schemas\BackupLogInfolist;
 use App\Filament\Admin\Resources\BackupLogs\Tables\BackupLogsTable;
 use App\Models\BackupLog;
@@ -26,11 +23,6 @@ class BackupLogResource extends Resource
     protected static ?string $navigationLabel = 'Logs de Respaldo';
 
     protected static string|UnitEnum|null $navigationGroup = 'Seguridad';
-
-    public static function form(Schema $schema): Schema
-    {
-        return BackupLogForm::configure($schema);
-    }
 
     public static function infolist(Schema $schema): Schema
     {
@@ -53,9 +45,7 @@ class BackupLogResource extends Resource
     {
         return [
             'index' => ListBackupLogs::route('/'),
-            'create' => CreateBackupLog::route('/create'),
             'view' => ViewBackupLog::route('/{record}'),
-            'edit' => EditBackupLog::route('/{record}/edit'),
         ];
     }
 }

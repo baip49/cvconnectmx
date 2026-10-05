@@ -40,6 +40,12 @@ class LoginAttemptsTable
                 TextColumn::make('failure_reason')
                     ->label('Razón del fallo')
                     ->placeholder('N/A')
+                    ->formatStateUsing(fn (?string $state): string => match ($state) {
+                        'invalid_credentials' => 'Credenciales inválidas',
+                        'locked_account' => 'Cuenta bloqueada',
+                        'inactive_account' => 'Cuenta inactiva',
+                        default => $state ?? 'N/A',
+                    })
                     ->limit(40)
                     ->tooltip(fn ($record) => $record->failure_reason),
 

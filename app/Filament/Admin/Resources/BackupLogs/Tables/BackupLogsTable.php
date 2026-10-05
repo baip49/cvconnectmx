@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources\BackupLogs\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
@@ -85,6 +86,10 @@ class BackupLogsTable
             ->defaultSort('created_at', 'desc')
             ->recordActions([
                 ViewAction::make(),
+                DeleteAction::make()
+                    ->label('Eliminar')
+                    ->modalHeading('Eliminar respaldo')
+                    ->modalDescription('Se eliminará el registro y el archivo del respaldo. Esta acción no se puede deshacer. ¿Deseas continuar?'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

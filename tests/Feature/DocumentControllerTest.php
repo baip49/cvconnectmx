@@ -10,13 +10,13 @@ use function Pest\Laravel\get;
 
 uses(RefreshDatabase::class);
 
-test('candidate can view a document stored in s3 through the public route', function () {
-    Storage::fake('s3');
+test('candidate can view a document stored locally through the public route', function () {
+    Storage::fake('local');
 
     $user = User::factory()->candidate()->create();
     $documentPath = 'candidate-documents/prueba.pdf';
 
-    Storage::disk('s3')->put($documentPath, '%PDF-1.4 fake pdf content');
+    Storage::disk('local')->put($documentPath, '%PDF-1.4 fake pdf content');
 
     $document = CandidateDocument::create([
         'candidate_id' => $user->candidate->id,

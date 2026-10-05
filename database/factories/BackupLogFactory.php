@@ -25,7 +25,7 @@ class BackupLogFactory extends Factory
             'size_bytes' => $this->faker->numberBetween(100000, 5000000),
             'checksum_sha256' => hash('sha256', $this->faker->uuid()),
             'is_encrypted' => true,
-            'status' => $this->faker->randomElement(['completed', 'failed']),
+            'status' => $this->faker->randomElement(['success', 'failed', 'in_progress']),
             'restoration_tested' => $this->faker->boolean(70),
             'retention_days' => $this->faker->randomElement([7, 30, 90]),
             'executed_by' => User::query()->inRandomOrder()->value('id'),

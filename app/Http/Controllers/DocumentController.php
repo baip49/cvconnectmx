@@ -57,12 +57,12 @@ class DocumentController extends Controller
 
     private function resolveDisk(string $path): string
     {
-        if (Storage::disk('s3')->exists($path)) {
-            return 's3';
-        }
-
         if (Storage::disk('local')->exists($path)) {
             return 'local';
+        }
+
+        if (Storage::disk('s3')->exists($path)) {
+            return 's3';
         }
 
         abort(404, 'Archivo no encontrado');

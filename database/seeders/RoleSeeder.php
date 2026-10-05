@@ -15,17 +15,17 @@ class RoleSeeder extends Seeder
         $roles = [
             [
                 'name' => 'admin',
-                'description' => 'Administrator role with full access',
+                'description' => 'Rol de administrador con acceso total',
                 'active' => true,
             ],
             [
                 'name' => 'candidate',
-                'description' => 'Candidate role for job seekers',
+                'description' => 'Rol de candidato para buscar empleo',
                 'active' => true,
             ],
             [
                 'name' => 'company',
-                'description' => 'Company role for employers',
+                'description' => 'Rol de empresa para contratar personal',
                 'active' => true,
             ],
         ];
