@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\TicketNotifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -140,6 +141,8 @@ class Ticket extends Model
         $this->update(['claimed_by' => $user->id, 'status' => 'in_progress']);
 
         $this->recordSystemEvent("{$user->name} tomó el ticket y te atenderá ahora.");
+
+        app(TicketNotifier::class)->claimed($this->refresh(), $user);
     }
 
     public function joinAsSecond(User $user): void
@@ -149,6 +152,8 @@ class Ticket extends Model
         $this->update(['secondary_assistant_id' => $user->id]);
 
         $this->recordSystemEvent("{$user->name} se unió como segundo asistente.");
+
+        app(TicketNotifier::class)->joined($this->refresh(), $user);
     }
 
     /**
@@ -162,6 +167,7 @@ class Ticket extends Model
         if ($this->secondary_assistant_id === $user->id) {
             $this->update(['secondary_assistant_id' => null]);
             $this->recordSystemEvent("{$user->name} abandonó el ticket.", true);
+            app(TicketNotifier::class)->released($this->refresh(), $user);
 
             return;
         }
@@ -173,6 +179,7 @@ class Ticket extends Model
         ]);
 
         $this->recordSystemEvent("{$user->name} abandonó el ticket.", true);
+        app(TicketNotifier::class)->released($this->refresh(), $user);
     }
 
     public function addReply(User $user, string $message): TicketReply
@@ -188,6 +195,8 @@ class Ticket extends Model
             $this->update(['status' => 'in_progress']);
         }
 
+        app(TicketNotifier::class)->replyReceived($this->refresh(), $user);
+
         return $reply;
     }
 
@@ -202,6 +211,8 @@ class Ticket extends Model
         ]);
 
         $this->recordSystemEvent("Ticket cerrado por {$user->name}.");
+
+        app(TicketNotifier::class)->closed($this->refresh(), $user);
     }
 
     public function reopen(User $user): void
@@ -215,6 +226,19 @@ class Ticket extends Model
         ]);
 
         $this->recordSystemEvent("Ticket reabierto por {$user->name}.");
+
+        app(TicketNotifier::class)->reopened($this->refresh(), $user);
+    }
+
+    public function assignTo(User $assignee, User $assigner): void
+    {
+        abort_unless($assigner->hasPermission('tickets.assign'), 403);
+
+        $this->update(['claimed_by' => $assignee->id, 'status' => 'in_progress']);
+
+        $this->recordSystemEvent("{$assignee->name} fue asignado al ticket.");
+
+        app(TicketNotifier::class)->assigned($this->refresh(), $assignee);
     }
 
     protected function recordSystemEvent(string $message, bool $internal = false): TicketReply

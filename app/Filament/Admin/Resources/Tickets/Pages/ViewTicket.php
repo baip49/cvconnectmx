@@ -53,7 +53,10 @@ class ViewTicket extends ViewRecord
                         ->required(),
                 ])
                 ->action(function (Ticket $record, array $data): void {
-                    $record->update(['claimed_by' => $data['claimed_by'], 'status' => 'in_progress']);
+                    $record->assignTo(
+                        User::query()->findOrFail($data['claimed_by']),
+                        Auth::user()
+                    );
 
                     Notification::make()->title('Ticket asignado')->success()->send();
                 }),

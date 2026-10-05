@@ -31,11 +31,48 @@ class PermissionSeeder extends Seeder
             ['code' => 'tickets.assign', 'name' => 'Asignar tickets', 'description' => 'Permite asignar tickets a asistentes'],
             ['code' => 'tickets.close', 'name' => 'Cerrar tickets', 'description' => 'Permite cerrar tickets de ayuda'],
             ['code' => 'tickets.manage', 'name' => 'Administrar tickets', 'description' => 'Permite administrar tickets de ayuda'],
+            ['code' => 'roles.manage', 'name' => 'Administrar roles', 'description' => 'Permite administrar roles y sus permisos'],
+            ['code' => 'permissions.manage', 'name' => 'Administrar permisos', 'description' => 'Permite administrar permisos del sistema'],
         ];
 
         foreach ($permissions as $attributes) {
             $permission = Permission::updateOrCreate(['code' => $attributes['code']], $attributes);
             Role::query()->whereIn('name', ['admin'])->first()?->permissions()->syncWithoutDetaching($permission);
+        }
+
+        $this->syncRolePermissions();
+    }
+
+    /**
+     * Default permission sets per role. Admin keeps everything through
+     * the sync above; administrative permissions stay exclusive to admin.
+     */
+    protected function syncRolePermissions(): void
+    {
+        $matrix = [
+            'candidate' => [
+                'tickets.view', 'tickets.create', 'tickets.reply', 'tickets.close', 'tickets.reopen',
+            ],
+            'company' => [
+                'tickets.view', 'tickets.create', 'tickets.reply', 'tickets.close', 'tickets.reopen',
+                'vacancies.manage', 'applications.manage',
+            ],
+            'support' => [
+                'tickets.view', 'tickets.create', 'tickets.reply', 'tickets.close', 'tickets.reopen',
+                'tickets.edit', 'tickets.claim', 'tickets.join',
+            ],
+        ];
+
+        foreach ($matrix as $roleName => $codes) {
+            $role = Role::query()->where('name', $roleName)->first();
+
+            if (! $role) {
+                continue;
+            }
+
+            $ids = Permission::query()->whereIn('code', $codes)->pluck('id')->all();
+
+            $role->permissions()->syncWithoutDetaching($ids);
         }
     }
 }

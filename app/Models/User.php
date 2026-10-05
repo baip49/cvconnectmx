@@ -123,6 +123,16 @@ class User extends Authenticatable implements HasAvatar
         return $this->hasMany(Ticket::class, 'claimed_by');
     }
 
+    public function panelPath(): string
+    {
+        return match ($this->role?->name) {
+            'admin' => '/admin',
+            'company' => '/company',
+            'support' => '/support',
+            default => '/dashboard',
+        };
+    }
+
     public function isAdmin(): bool
     {
         return $this->role?->name === 'admin';

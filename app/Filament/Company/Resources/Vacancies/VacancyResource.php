@@ -16,6 +16,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class VacancyResource extends Resource
@@ -29,6 +30,26 @@ class VacancyResource extends Resource
     protected static ?string $pluralModelLabel = 'Vacantes';
 
     protected static ?string $modelLabel = 'Vacante';
+
+    public static function canViewAny(): bool
+    {
+        return (bool) Auth::user()?->hasPermission('vacancies.manage');
+    }
+
+    public static function canCreate(): bool
+    {
+        return (bool) Auth::user()?->hasPermission('vacancies.manage');
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return (bool) Auth::user()?->hasPermission('vacancies.manage');
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return (bool) Auth::user()?->hasPermission('vacancies.manage');
+    }
 
     public static function form(Schema $schema): Schema
     {

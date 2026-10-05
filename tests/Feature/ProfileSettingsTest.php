@@ -83,3 +83,19 @@ test('support menu shows the profile entry', function () {
 
     get('/support')->assertOk()->assertSee('Perfil', false);
 });
+
+test('user panel paths resolve by role', function () {
+    expect(User::factory()->admin()->create()->panelPath())->toBe('/admin')
+        ->and(User::factory()->company()->create()->panelPath())->toBe('/company')
+        ->and(User::factory()->support()->create()->panelPath())->toBe('/support')
+        ->and(User::factory()->candidate()->create()->panelPath())->toBe('/dashboard');
+});
+
+test('settings sidebar shows branding and a link back to the role panel', function () {
+    actingAs(User::factory()->candidate()->create());
+
+    get(route('profile.edit'))
+        ->assertOk()
+        ->assertSee('CVConnectMX', false)
+        ->assertSee('Ir al panel', false);
+});

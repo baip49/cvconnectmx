@@ -13,6 +13,7 @@ use App\Models\Ticket;
 use App\Models\TicketReply;
 use App\Models\User;
 use App\Models\Vacancy;
+use App\Observers\ApplicationObserver;
 use App\Observers\AuditObserver;
 use App\Observers\UserObserver;
 use Carbon\CarbonImmutable;
@@ -59,6 +60,7 @@ class AppServiceProvider extends ServiceProvider
         Ticket::observe(AuditObserver::class);
         TicketReply::observe(AuditObserver::class);
         BackupLog::observe(AuditObserver::class);
+        Application::observe(ApplicationObserver::class);
     }
 
     /**

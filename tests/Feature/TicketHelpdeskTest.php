@@ -15,6 +15,8 @@ use Database\Seeders\RoleSeeder;
 use Database\Seeders\TicketReplySeeder;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -347,6 +349,23 @@ test('user avatars default to colored initials without external services', funct
 
     expect($user->avatarColorHex())->toMatch('/^#[0-9a-f]{6}$/')
         ->and($user->avatarColorHex())->toBe($user->avatarColorHex());
+});
+
+test('chat shows the uploaded profile photo instead of initials', function () {
+    Storage::fake('public');
+
+    $reporter = makeTicketReporter();
+    $support = User::factory()->support()->create();
+    $support->update(['avatar_path' => UploadedFile::fake()->image('cara.jpg')->store('avatars', 'public')]);
+
+    $ticket = makeTicket(['created_by' => $reporter->id]);
+    $ticket->claim($support);
+    $ticket->addReply($support, 'Te ayudo con gusto.');
+
+    actingAs($reporter);
+
+    Livewire::test(TicketChat::class, ['ticketId' => $ticket->id])
+        ->assertSee($support->refresh()->avatar_path, false);
 });
 
 test('audit logs list newest entries first', function () {

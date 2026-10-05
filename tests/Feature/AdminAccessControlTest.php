@@ -1,7 +1,11 @@
 <?php
 
 use App\Filament\Admin\Resources\Candidates\CandidateResource;
+use App\Filament\Admin\Resources\Roles\RoleResource;
 use App\Filament\Admin\Resources\Users\Pages\CreateUser;
+use App\Filament\Admin\Resources\Users\UserResource;
+use App\Filament\Company\Resources\Applications\ApplicationResource;
+use App\Filament\Company\Resources\Vacancies\VacancyResource;
 use App\Models\Candidate;
 use App\Models\Role;
 use App\Models\User;
@@ -68,4 +72,43 @@ test('admin creates users with a random password', function () {
     expect($first->password)->not->toBeNull()
         ->and($second->password)->not->toBe($first->password)
         ->and(Hash::check('', $first->password))->toBeFalse();
+});
+
+test('roles carry their default permission sets', function () {
+    $this->seed(RoleSeeder::class);
+    $this->seed(PermissionSeeder::class);
+
+    $codes = fn (string $role): array => Role::query()->where('name', $role)->firstOrFail()
+        ->permissions()->pluck('code')->all();
+
+    expect($codes('candidate'))->toContain('tickets.view')
+        ->and($codes('candidate'))->not->toContain('vacancies.manage')
+        ->and($codes('company'))->toContain('vacancies.manage', 'applications.manage')
+        ->and($codes('support'))->toContain('tickets.claim', 'tickets.join')
+        ->and($codes('support'))->not->toContain('tickets.assign', 'tickets.manage');
+});
+
+test('resources enforce their permissions', function () {
+    $this->seed(RoleSeeder::class);
+    $this->seed(PermissionSeeder::class);
+
+    $candidate = User::factory()->candidate()->create();
+    $company = User::factory()->company()->create();
+    $admin = User::factory()->admin()->create();
+
+    actingAs($candidate);
+
+    expect(UserResource::canViewAny())->toBeFalse()
+        ->and(UserResource::canCreate())->toBeFalse()
+        ->and(VacancyResource::canCreate())->toBeFalse();
+
+    actingAs($company);
+
+    expect(VacancyResource::canCreate())->toBeTrue()
+        ->and(ApplicationResource::canViewAny())->toBeTrue();
+
+    actingAs($admin);
+
+    expect(UserResource::canCreate())->toBeTrue()
+        ->and(RoleResource::canEdit(Role::first()))->toBeTrue();
 });

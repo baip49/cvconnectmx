@@ -48,6 +48,8 @@ class CandidatePanelProvider extends PanelProvider
                 'primary' => Color::Emerald,
             ])
             ->sidebarCollapsibleOnDesktop()
+            ->databaseNotifications()
+            ->databaseNotificationsPolling('30s')
             ->navigationGroups([
                 'Inicio',
                 'Perfil',

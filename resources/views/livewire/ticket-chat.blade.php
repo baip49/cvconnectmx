@@ -105,9 +105,13 @@
 
         <div class="flex items-end gap-2 {{ $descriptionIsMine ? 'justify-end' : 'justify-start' }}">
             @unless ($descriptionIsMine)
-                <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white" style="background-color: {{ $ticket->creator?->avatarColorHex() ?? '#6b7280' }}" title="{{ $ticket->creator?->name ?? 'Sistema' }}">
-                    {{ $ticket->creator?->initials() ?? 'S' }}
-                </div>
+                @if ($ticket->creator?->getFilamentAvatarUrl())
+                    <img src="{{ $ticket->creator->getFilamentAvatarUrl() }}" alt="{{ $ticket->creator->name }}" title="{{ $ticket->creator->name }}" class="h-6 w-6 shrink-0 rounded-full object-cover shadow-sm" />
+                @else
+                    <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white" style="background-color: {{ $ticket->creator?->avatarColorHex() ?? '#6b7280' }}" title="{{ $ticket->creator?->name ?? 'Sistema' }}">
+                        {{ $ticket->creator?->initials() ?? 'S' }}
+                    </div>
+                @endif
             @endunless
             <div class="max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm {{ $descriptionIsMine ? 'rounded-br-sm bg-[#d9fdd3] text-gray-900 dark:bg-[#005c4b] dark:text-gray-100' : 'rounded-bl-sm bg-white text-gray-800 dark:bg-[#1f2c34] dark:text-gray-100' }}">
                 <p class="mb-1 text-[11px] font-semibold {{ $descriptionIsMine ? 'text-emerald-800 dark:text-emerald-300' : 'text-emerald-700 dark:text-emerald-400' }}">
@@ -135,9 +139,13 @@
             @php($isMine = $reply->performed_by === auth()->id())
             <div class="flex items-end gap-2 {{ $isMine ? 'justify-end' : 'justify-start' }}">
                 @unless ($isMine)
-                    <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white" style="background-color: {{ $reply->performedBy->avatarColorHex() }}" title="{{ $reply->performedBy->name }}">
-                        {{ $reply->performedBy->initials() }}
-                    </div>
+                    @if ($reply->performedBy?->getFilamentAvatarUrl())
+                        <img src="{{ $reply->performedBy->getFilamentAvatarUrl() }}" alt="{{ $reply->performedBy->name }}" title="{{ $reply->performedBy->name }}" class="h-6 w-6 shrink-0 rounded-full object-cover shadow-sm" />
+                    @else
+                        <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white" style="background-color: {{ $reply->performedBy?->avatarColorHex() ?? '#6b7280' }}" title="{{ $reply->performedBy?->name ?? 'Sistema' }}">
+                            {{ $reply->performedBy?->initials() ?? 'S' }}
+                        </div>
+                    @endif
                 @endunless
                 <div class="max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm {{ $isMine ? 'rounded-br-sm bg-[#d9fdd3] text-gray-900 dark:bg-[#005c4b] dark:text-gray-100' : 'rounded-bl-sm bg-white text-gray-800 dark:bg-[#1f2c34] dark:text-gray-100' }}">
                     <p class="mb-1 text-[11px] font-semibold {{ $isMine ? 'text-emerald-800 dark:text-emerald-300' : 'text-emerald-700 dark:text-emerald-400' }}">

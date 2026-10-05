@@ -48,7 +48,7 @@ new #[Title('Profile settings')] class extends Component {
             $this->profileRules($user->id),
             [
                 'last_name' => ['nullable', 'string', 'max:255'],
-                'avatar' => ['nullable', 'image', 'max:2048'],
+                'avatar' => ['nullable', 'image', 'max:10240'],
             ]
         ));
 
@@ -102,7 +102,7 @@ new #[Title('Profile settings')] class extends Component {
         $user = Auth::user();
 
         if ($user->hasVerifiedEmail()) {
-            $this->redirectIntended(default: route('dashboard', absolute: false));
+            $this->redirectIntended(default: route('home', absolute: false));
 
             return;
         }
@@ -153,7 +153,41 @@ new #[Title('Profile settings')] class extends Component {
 
             <div>
                 <flux:label>{{ __('Profile picture') }}</flux:label>
-                <input type="file" wire:model="avatar" accept="image/*" class="mt-2 block w-full text-sm" />
+
+                <div
+                    x-data="{ dragging: false }"
+                    x-on:dragover.prevent="dragging = true"
+                    x-on:dragleave.prevent="dragging = false"
+                    x-on:drop.prevent="dragging = false; if ($event.dataTransfer.files.length) { $refs.avatarInput.files = $event.dataTransfer.files; $refs.avatarInput.dispatchEvent(new Event('change', { bubbles: true })); }"
+                    :class="dragging ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-500/10' : 'border-zinc-300 dark:border-zinc-700'"
+                    class="mt-2 rounded-2xl border-2 border-dashed bg-zinc-500/5 px-6 py-8 text-center transition dark:bg-white/5"
+                >
+                    <label for="avatar-upload" class="cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mx-auto h-8 w-8 text-zinc-400">
+                            <path fill-rule="evenodd" d="M10.5 3.75a.75.75 0 01.75-.75h7.5a.75.75 0 01.75.75v5.25a.75.75 0 01-1.5 0V6.31l-5.72 5.72a.75.75 0 01-1.06-1.06l5.72-5.72H11.25a.75.75 0 01-.75-.75zm-4.5 6a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5h-1.5a.75.75 0 01-.75-.75zM5.25 9a.75.75 0 01.75.75v9a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h.75V9.75A.75.75 0 015.25 9zm11.25 3a.75.75 0 01.75.75v5.25a.75.75 0 01-1.5 0v-5.25a.75.75 0 01.75-.75z" clip-rule="evenodd" />
+                            <path d="M12 15.75a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V16.5a.75.75 0 01.75-.75z" />
+                        </svg>
+                        <p class="mt-2 text-sm font-semibold">Drop files here or click to browse</p>
+                        <p class="mt-1 text-xs text-zinc-500">JPG, PNG, GIF up to 10MB</p>
+                    </label>
+                    <input id="avatar-upload" x-ref="avatarInput" type="file" wire:model="avatar" accept="image/*" class="sr-only" />
+                </div>
+
+                @if ($avatar)
+                    <div class="mt-3 flex items-center gap-3 rounded-2xl border border-zinc-200 bg-zinc-500/5 px-3 py-2.5 dark:border-zinc-700 dark:bg-white/5">
+                        <img src="{{ $avatar->temporaryUrl() }}" alt="Preview" class="h-11 w-11 rounded-xl object-cover" />
+                        <div class="min-w-0 flex-1">
+                            <p class="truncate text-sm font-medium">{{ $avatar->getClientOriginalName() }}</p>
+                            <p class="text-xs text-zinc-500">{{ number_format($avatar->getSize() / 1024, 0) }} KB</p>
+                        </div>
+                        <button type="button" wire:click="$set('avatar', null)" aria-label="Remove file" class="rounded-lg p-1.5 text-zinc-500 transition hover:bg-zinc-500/10 hover:text-zinc-800 dark:hover:text-zinc-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4">
+                                <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                            </svg>
+                        </button>
+                    </div>
+                @endif
+
                 @error('avatar')
                     <flux:text class="mt-2 text-sm text-red-600">{{ $message }}</flux:text>
                 @enderror

@@ -37,6 +37,7 @@ class ViewApplication extends ViewRecord
                 ->label('Cambiar Estado')
                 ->color('primary')
                 ->icon('heroicon-o-chevron-up-down')
+                ->visible(fn (): bool => (bool) Auth::user()?->hasPermission('applications.manage'))
                 ->form([
                     Select::make('status')
                         ->label('Nuevo Estado')

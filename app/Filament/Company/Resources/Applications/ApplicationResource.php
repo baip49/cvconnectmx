@@ -28,6 +28,11 @@ class ApplicationResource extends Resource
 
     protected static ?string $modelLabel = 'Postulación';
 
+    public static function canViewAny(): bool
+    {
+        return (bool) Auth::user()?->hasPermission('applications.manage');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return ApplicationForm::configure($schema);

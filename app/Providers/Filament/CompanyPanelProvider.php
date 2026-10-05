@@ -42,6 +42,8 @@ class CompanyPanelProvider extends PanelProvider
                 'primary' => Color::Violet,
             ])
             ->sidebarCollapsibleOnDesktop()
+            ->databaseNotifications()
+            ->databaseNotificationsPolling('30s')
             ->navigationGroups([
                 'Inicio',
                 'Gestión',
