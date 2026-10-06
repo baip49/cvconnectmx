@@ -163,9 +163,8 @@ new #[Title('Profile settings')] class extends Component {
                     class="mt-2 rounded-2xl border-2 border-dashed bg-zinc-500/5 px-6 py-8 text-center transition dark:bg-white/5"
                 >
                     <label for="avatar-upload" class="cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mx-auto h-8 w-8 text-zinc-400">
-                            <path fill-rule="evenodd" d="M10.5 3.75a.75.75 0 01.75-.75h7.5a.75.75 0 01.75.75v5.25a.75.75 0 01-1.5 0V6.31l-5.72 5.72a.75.75 0 01-1.06-1.06l5.72-5.72H11.25a.75.75 0 01-.75-.75zm-4.5 6a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5h-1.5a.75.75 0 01-.75-.75zM5.25 9a.75.75 0 01.75.75v9a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h.75V9.75A.75.75 0 015.25 9zm11.25 3a.75.75 0 01.75.75v5.25a.75.75 0 01-1.5 0v-5.25a.75.75 0 01.75-.75z" clip-rule="evenodd" />
-                            <path d="M12 15.75a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V16.5a.75.75 0 01.75-.75z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-auto h-8 w-8 text-zinc-400">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
                         </svg>
                         <p class="mt-2 text-sm font-semibold">Drop files here or click to browse</p>
                         <p class="mt-1 text-xs text-zinc-500">JPG, PNG, GIF up to 10MB</p>
