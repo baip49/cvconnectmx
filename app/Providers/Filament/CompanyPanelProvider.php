@@ -26,7 +26,6 @@ class CompanyPanelProvider extends PanelProvider
             ->id('company')
             ->path('company')
             ->viteTheme('resources/css/filament/company/theme.css')
-            ->login()
             ->brandName('CVConnectMX')
             ->defaultAvatarProvider(InitialsAvatarProvider::class)
             ->userMenuItems([

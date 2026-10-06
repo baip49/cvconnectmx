@@ -27,7 +27,6 @@ class SupportPanelProvider extends PanelProvider
             ->id('support')
             ->path('support')
             ->viteTheme('resources/css/filament/support/theme.css')
-            ->login()
             ->brandName('CVConnectMX Soporte')
             ->defaultAvatarProvider(InitialsAvatarProvider::class)
             ->userMenuItems([

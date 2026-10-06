@@ -103,7 +103,7 @@ test('support role and ticket permissions are seeded', function () {
 
     expect(Role::query()->where('name', 'support')->exists())->toBeTrue();
 
-    foreach (['tickets.view', 'tickets.create', 'tickets.reply', 'tickets.edit', 'tickets.claim', 'tickets.join', 'tickets.assign', 'tickets.close', 'tickets.manage', 'tickets.reopen'] as $code) {
+    foreach (['tickets.view', 'tickets.create', 'tickets.reply', 'tickets.edit', 'tickets.claim', 'tickets.join', 'tickets.assign', 'tickets.close', 'tickets.manage', 'tickets.reopen', 'roles.manage', 'permissions.manage', 'candidates.view', 'candidates.manage', 'companies.view', 'companies.manage'] as $code) {
         expect(Permission::query()->where('code', $code)->exists())->toBeTrue("missing permission {$code}");
     }
 

@@ -21,6 +21,8 @@ class PermissionSeeder extends Seeder
             ['code' => 'audit.view', 'name' => 'Ver auditoría', 'description' => 'Permite consultar registros de auditoría'],
             ['code' => 'candidates.view', 'name' => 'Ver candidatos', 'description' => 'Permite consultar candidatos'],
             ['code' => 'candidates.manage', 'name' => 'Administrar candidatos', 'description' => 'Permite editar candidatos'],
+            ['code' => 'companies.view', 'name' => 'Ver empresas', 'description' => 'Permite consultar empresas'],
+            ['code' => 'companies.manage', 'name' => 'Administrar empresas', 'description' => 'Permite editar empresas'],
             ['code' => 'tickets.view', 'name' => 'Ver tickets', 'description' => 'Permite consultar tickets de ayuda'],
             ['code' => 'tickets.create', 'name' => 'Crear tickets', 'description' => 'Permite abrir tickets de ayuda'],
             ['code' => 'tickets.reply', 'name' => 'Responder tickets', 'description' => 'Permite responder en tickets de ayuda'],

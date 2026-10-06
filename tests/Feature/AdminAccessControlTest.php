@@ -1,12 +1,14 @@
 <?php
 
 use App\Filament\Admin\Resources\Candidates\CandidateResource;
+use App\Filament\Admin\Resources\Companies\CompanyResource;
 use App\Filament\Admin\Resources\Roles\RoleResource;
 use App\Filament\Admin\Resources\Users\Pages\CreateUser;
 use App\Filament\Admin\Resources\Users\UserResource;
 use App\Filament\Company\Resources\Applications\ApplicationResource;
 use App\Filament\Company\Resources\Vacancies\VacancyResource;
 use App\Models\Candidate;
+use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\PermissionSeeder;
@@ -110,5 +112,25 @@ test('resources enforce their permissions', function () {
     actingAs($admin);
 
     expect(UserResource::canCreate())->toBeTrue()
-        ->and(RoleResource::canEdit(Role::first()))->toBeTrue();
+        ->and(RoleResource::canEdit(Role::first()))->toBeTrue()
+        ->and(CompanyResource::canEdit(Company::first()))->toBeTrue();
+});
+
+test('only the login route exists, panel logins are gone', function () {
+    get('/login')->assertOk();
+    get('/company/login')->assertNotFound();
+    get('/support/login')->assertNotFound();
+});
+
+test('company edition requires the manage permission', function () {
+    $this->seed(RoleSeeder::class);
+    $this->seed(PermissionSeeder::class);
+
+    $company = Company::factory()->create();
+
+    expect(CompanyResource::canEdit($company))->toBeFalse();
+
+    actingAs(User::factory()->admin()->create());
+
+    expect(CompanyResource::canEdit($company))->toBeTrue();
 });
