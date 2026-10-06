@@ -62,6 +62,7 @@ class PermissionSeeder extends Seeder
             'support' => [
                 'tickets.view', 'tickets.create', 'tickets.reply', 'tickets.close', 'tickets.reopen',
                 'tickets.edit', 'tickets.claim', 'tickets.join',
+                'candidates.view', 'candidates.manage', 'companies.view', 'companies.manage',
             ],
         ];
 

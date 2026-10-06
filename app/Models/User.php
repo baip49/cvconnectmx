@@ -5,7 +5,9 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Filament\AvatarProviders\InitialsAvatarProvider;
 use Database\Factories\UserFactory;
+use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -18,7 +20,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-class User extends Authenticatable implements HasAvatar
+class User extends Authenticatable implements FilamentUser, HasAvatar
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, SoftDeletes, TwoFactorAuthenticatable;
@@ -141,6 +143,17 @@ class User extends Authenticatable implements HasAvatar
     public function isSupport(): bool
     {
         return $this->role?->name === 'support';
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return match ($panel->getId()) {
+            'admin' => $this->isAdmin() || $this->isSupport(),
+            'candidate' => $this->role?->name === 'candidate',
+            'company' => $this->role?->name === 'company',
+            'support' => $this->isSupport() || $this->isAdmin(),
+            default => false,
+        };
     }
 
     public function avatarColorHex(): string

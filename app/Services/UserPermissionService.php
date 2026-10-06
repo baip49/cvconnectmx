@@ -21,7 +21,7 @@ class UserPermissionService
         return [
             'candidate' => $base,
             'company' => [...$base, 'vacancies.manage', 'applications.manage'],
-            'support' => [...$base, 'tickets.edit', 'tickets.claim', 'tickets.join'],
+            'support' => [...$base, 'tickets.edit', 'tickets.claim', 'tickets.join', 'candidates.view', 'candidates.manage', 'companies.view', 'companies.manage'],
             'admin' => [],
         ];
     }

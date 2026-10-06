@@ -134,3 +134,26 @@ test('company edition requires the manage permission', function () {
 
     expect(CompanyResource::canEdit($company))->toBeTrue();
 });
+
+test('support staff can access the admin panel and edit directory records', function () {
+    $this->seed(RoleSeeder::class);
+    $this->seed(PermissionSeeder::class);
+
+    $support = User::factory()->support()->create();
+    actingAs($support);
+
+    get('/admin')->assertOk();
+    get('/admin/candidates')->assertOk();
+
+    expect(CandidateResource::canEdit(Candidate::factory()->create()))->toBeTrue()
+        ->and(CompanyResource::canEdit(Company::factory()->create()))->toBeTrue()
+        ->and(UserResource::canCreate())->toBeFalse()
+        ->and(RoleResource::canViewAny())->toBeFalse();
+});
+
+test('candidates cannot enter the admin panel', function () {
+    config()->set('app.env', 'local');
+    actingAs(User::factory()->candidate()->create());
+
+    get('/admin')->assertForbidden();
+});

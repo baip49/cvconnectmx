@@ -13,13 +13,19 @@ class CheckRole
      *
      * @param  Closure(Request): (Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
         if (! $request->user()) {
             return redirect('/login');
         }
 
-        if ($request->user()->role?->name !== $role) {
+        $allowed = collect($roles)
+            ->flatMap(fn (string $role): array => explode(',', $role))
+            ->map(fn (string $role): string => trim($role))
+            ->filter()
+            ->all();
+
+        if (! in_array($request->user()->role?->name, $allowed, true)) {
             return redirect()->route('home');
         }
 
