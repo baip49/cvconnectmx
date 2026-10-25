@@ -68,6 +68,7 @@ class CompanyPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+                'verified',
                 'role:company',
             ]);
     }

@@ -65,6 +65,7 @@ class SupportPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+                'verified',
                 'role:support',
             ]);
     }

@@ -38,6 +38,7 @@ class DatabaseBackupService
             $this->dumpMysql($relativePath);
         }
 
+        // shortcut: the whole dump is held in memory (~3x its size) to encrypt it, stream it once backups pass a few hundred MB.
         $contents = (string) Storage::disk('local')->get($relativePath);
 
         $encryptedContents = Crypt::encryptString($contents);
@@ -61,7 +62,7 @@ class DatabaseBackupService
         }
 
         $disk = Storage::disk('local');
-        $temporaryPath = tempnam(sys_get_temp_dir(), 'backup-files').'.zip';
+        $temporaryPath = tempnam(sys_get_temp_dir(), 'backup-files');
 
         $zip = new \ZipArchive;
 
@@ -70,6 +71,9 @@ class DatabaseBackupService
         }
 
         foreach (['candidate-cvs', 'candidate-documents'] as $directory) {
+            // libzip never writes an archive with no entries, so each folder is always added.
+            $zip->addEmptyDir($directory);
+
             if (! $disk->directoryExists($directory)) {
                 continue;
             }

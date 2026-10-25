@@ -42,6 +42,11 @@ class BackupScheduleResource extends Resource
         return SchedulesTable::configure($table);
     }
 
+    public static function canViewAny(): bool
+    {
+        return (bool) auth()->user()?->isAdmin();
+    }
+
     public static function getRelations(): array
     {
         return [

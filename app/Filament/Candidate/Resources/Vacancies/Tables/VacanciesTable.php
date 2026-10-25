@@ -93,10 +93,10 @@ class VacanciesTable
                             return;
                         }
 
-                        $record->applications()->create([
-                            'candidate_id' => $candidate->id,
-                            'status' => 'pending',
-                        ]);
+                        $record->applications()->firstOrCreate(
+                            ['candidate_id' => $candidate->id],
+                            ['status' => 'pending'],
+                        );
 
                         Notification::make()
                             ->title('Postulación enviada')

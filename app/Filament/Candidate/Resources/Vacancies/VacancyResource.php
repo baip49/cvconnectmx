@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class VacancyResource extends Resource
 {
@@ -39,6 +40,11 @@ class VacancyResource extends Resource
     public static function table(Table $table): Table
     {
         return VacanciesTable::configure($table);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('status', 'published');
     }
 
     public static function getRelations(): array

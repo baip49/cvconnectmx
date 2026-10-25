@@ -23,6 +23,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Contracts\RegisterResponse;
+use Laravel\Fortify\Contracts\VerifyEmailResponse;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -38,6 +39,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(
             RegisterResponse::class,
             \App\Http\Responses\RegisterResponse::class
+        );
+        $this->app->singleton(
+            VerifyEmailResponse::class,
+            \App\Http\Responses\VerifyEmailResponse::class
         );
     }
 

@@ -138,12 +138,10 @@ class AiCandidateSearch extends Page implements HasForms, HasTable
                             ->required(),
                     ])
                     ->action(function (Candidate $record, array $data) {
-                        Application::create([
-                            'candidate_id' => $record->id,
-                            'vacancy_id' => $data['vacancy_id'],
-                            'status' => 'offered',
-                            'is_offer' => true,
-                        ]);
+                        Application::updateOrCreate(
+                            ['candidate_id' => $record->id, 'vacancy_id' => $data['vacancy_id']],
+                            ['status' => 'offered', 'is_offer' => true],
+                        );
 
                         Notification::make()
                             ->title('Oferta enviada')

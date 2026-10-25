@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Filament\AvatarProviders\InitialsAvatarProvider;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-class User extends Authenticatable implements FilamentUser, HasAvatar
+class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, SoftDeletes, TwoFactorAuthenticatable;
@@ -36,6 +36,16 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         'failed_login_attempts',
         'locked_until',
         'is_active',
+    ];
+
+    /**
+     * @var list<string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
     ];
 
     /**
@@ -87,7 +97,8 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 
     public function hasPermission(string $code): bool
     {
-        $direct = $this->permissions()->where('code', $code)->first()?->pivot;
+        // Loaded relations are reused, so a page full of can*() checks costs two queries in total.
+        $direct = $this->permissions->firstWhere('code', $code)?->pivot;
 
         if ($direct && $direct->type === 'denied') {
             return false;
@@ -97,7 +108,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
             return true;
         }
 
-        return (bool) $this->role?->permissions()->where('code', $code)->exists();
+        return (bool) $this->role?->permissions->contains('code', $code);
     }
 
     public function auditLogs(): HasMany

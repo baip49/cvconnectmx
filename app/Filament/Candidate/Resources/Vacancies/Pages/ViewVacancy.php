@@ -24,12 +24,11 @@ class ViewVacancy extends ViewRecord
                 ->modalHeading('Aceptar Oferta de Trabajo')
                 ->modalDescription('¿Estás seguro de que deseas aceptar esta oferta? La empresa será notificada de inmediato.')
                 ->modalSubmitActionLabel('Sí, aceptar oferta')
-                ->visible(fn (Vacancy $record) => 
-                    $record->applications()
-                        ->where('candidate_id', Auth::user()->candidate?->id)
-                        ->where('is_offer', true)
-                        ->where('status', 'offered')
-                        ->exists()
+                ->visible(fn (Vacancy $record) => $record->applications()
+                    ->where('candidate_id', Auth::user()->candidate?->id)
+                    ->where('is_offer', true)
+                    ->where('status', 'offered')
+                    ->exists()
                 )
                 ->action(function (Vacancy $record) {
                     $record->applications()
@@ -52,12 +51,11 @@ class ViewVacancy extends ViewRecord
                 ->modalHeading('Rechazar Oferta')
                 ->modalDescription('¿Estás seguro de que deseas rechazar esta oferta? Esta acción no se puede deshacer.')
                 ->modalSubmitActionLabel('Sí, rechazar')
-                ->visible(fn (Vacancy $record) => 
-                    $record->applications()
-                        ->where('candidate_id', Auth::user()->candidate?->id)
-                        ->where('is_offer', true)
-                        ->where('status', 'offered')
-                        ->exists()
+                ->visible(fn (Vacancy $record) => $record->applications()
+                    ->where('candidate_id', Auth::user()->candidate?->id)
+                    ->where('is_offer', true)
+                    ->where('status', 'offered')
+                    ->exists()
                 )
                 ->action(function (Vacancy $record) {
                     $record->applications()
@@ -79,6 +77,7 @@ class ViewVacancy extends ViewRecord
                 ->modalHeading('Confirmar Postulación')
                 ->modalDescription('¿Estás seguro de que deseas postularte a esta vacante?')
                 ->hidden(fn (Vacancy $record) => $record->applications()->where('candidate_id', Auth::user()->candidate?->id)->exists())
+                ->disabled(fn () => Auth::user()->candidate?->is_blocked)
                 ->action(function (Vacancy $record) {
                     $candidate = Auth::user()->candidate;
 
@@ -92,10 +91,10 @@ class ViewVacancy extends ViewRecord
                         return;
                     }
 
-                    $record->applications()->create([
-                        'candidate_id' => $candidate->id,
-                        'status' => 'pending',
-                    ]);
+                    $record->applications()->firstOrCreate(
+                        ['candidate_id' => $candidate->id],
+                        ['status' => 'pending'],
+                    );
 
                     Notification::make()
                         ->title('Postulación enviada')

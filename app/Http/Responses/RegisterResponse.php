@@ -3,38 +3,21 @@
 namespace App\Http\Responses;
 
 use Filament\Notifications\Notification;
-use Flux\Flux;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
 use Symfony\Component\HttpFoundation\Response;
 
 class RegisterResponse implements RegisterResponseContract
 {
     /**
-     * Create an HTTP response that represents the object.
+     * Redirect the user to the panel of their role.
      *
      * @param  Request  $request
-     * @return Response
      */
-    public function toResponse($request)
+    public function toResponse($request): Response
     {
-        $role = Auth::user()->role?->name ?? '';
+        Notification::make()->title('Registro exitoso. Bienvenido a CVConnectMX.')->success()->send();
 
-        if ($role === 'candidate') {
-            Flux::toast('Registro exitoso. Bienvenido a CVConnectMX.', variant: 'success');
-
-            return redirect()->intended('/dashboard'); // Portal 1
-        } elseif ($role === 'company') {
-            Notification::make()->title('Registro exitoso. Bienvenido a CVConnectMX.')->success()->send();
-
-            return redirect()->intended('/company'); // Portal 2
-        } elseif ($role === 'admin') {
-            Notification::make()->title('Registro exitoso. Bienvenido a CVConnectMX.')->success()->send();
-
-            return redirect()->intended('/admin'); // Portal 3
-        }
-
-        return redirect()->intended(config('fortify.home'));
+        return redirect()->intended($request->user()->panelPath());
     }
 }

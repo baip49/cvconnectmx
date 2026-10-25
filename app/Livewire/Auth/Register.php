@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Fortify\Contracts\RegisterResponse;
@@ -33,6 +34,8 @@ class Register extends Component
         ];
 
         $user = $creator->create($input);
+
+        event(new Registered($user));
 
         Auth::login($user);
 

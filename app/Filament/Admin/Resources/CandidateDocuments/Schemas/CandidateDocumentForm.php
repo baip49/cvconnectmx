@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\CandidateDocuments\Schemas;
 
+use App\Models\CandidateDocument;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -28,6 +29,8 @@ class CandidateDocumentForm
                     ->disk('local')
                     ->directory('candidate-documents')
                     ->visibility('private')
+                    ->acceptedFileTypes(CandidateDocument::ACCEPTED_FILE_TYPES)
+                    ->maxSize(5120) // 5MB
                     ->required(),
             ]);
     }

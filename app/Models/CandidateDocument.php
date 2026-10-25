@@ -8,6 +8,19 @@ use Illuminate\Support\Str;
 
 class CandidateDocument extends Model
 {
+    /**
+     * MIME types candidates may upload as supporting documents.
+     *
+     * @var list<string>
+     */
+    public const ACCEPTED_FILE_TYPES = [
+        'application/pdf',
+        'image/jpeg',
+        'image/png',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ];
+
     protected $fillable = [
         'candidate_id',
         'name',

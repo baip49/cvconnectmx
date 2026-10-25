@@ -28,6 +28,9 @@ class CreateUser extends CreateRecord
 
     protected function afterCreate(): void
     {
+        // Accounts created by an admin are trusted; they skip the email verification step.
+        $this->record->markEmailAsVerified();
+
         if ($this->generatedPassword === null) {
             return;
         }

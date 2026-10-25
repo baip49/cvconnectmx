@@ -158,50 +158,11 @@ class SystemCpuLoadCheck extends Check
     }
 
     /**
-     * @return array{percentage: int, source: string, message?: string, cores?: int}|null
-     */
-    private function resolveWindowsCpuUsage(): ?array
-    {
-        if (! function_exists('shell_exec')) {
-            return null;
-        }
-
-        $output = shell_exec('wmic cpu get LoadPercentage,NumberOfLogicalProcessors /Value');
-
-        if (is_string($output)
-            && preg_match_all('/LoadPercentage=(\d+)/i', $output, $loadMatches)
-            && ! empty($loadMatches[1])
-        ) {
-            $percentage = (int) $loadMatches[1][0];
-
-            preg_match_all('/NumberOfLogicalProcessors=(\d+)/i', $output, $coreMatches);
-
-            $cores = ! empty($coreMatches[1])
-                ? array_sum(array_map('intval', $coreMatches[1]))
-                : null;
-
-            if ($cores === null) {
-                $envCores = getenv('NUMBER_OF_PROCESSORS');
-                $cores = $envCores !== false ? (int) $envCores : null;
-            }
-
-            return [
-                'percentage' => $percentage,
-                'cores' => $cores,
-                'source' => 'wmic',
-                'message' => "CPU load is {$percentage}%.",
-            ];
-        }
-
-        return $this->resolveWindowsCpuUsageViaPowershell();
-    }
-
-    /**
-     * wmic was removed from recent Windows versions, fall back to CIM cmdlets.
+     * Read it through CIM cmdlets; wmic is deprecated and missing on recent Windows.
      *
      * @return array{percentage: int, source: string, message?: string, cores?: int}|null
      */
-    private function resolveWindowsCpuUsageViaPowershell(): ?array
+    private function resolveWindowsCpuUsage(): ?array
     {
         if (! function_exists('shell_exec')) {
             return null;

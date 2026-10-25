@@ -78,6 +78,7 @@ class CandidatePanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+                'verified',
                 'role:candidate',
             ]);
     }

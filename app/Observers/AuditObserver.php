@@ -11,6 +11,7 @@ use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Vacancy;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
@@ -66,8 +67,9 @@ class AuditObserver
             'severity' => $severity,
             'entity_type' => $entityClass,
             'entity_id' => $model->getKey(),
-            'old_data' => $oldData,
-            'new_data' => $newData,
+            // getOriginal()/getChanges() ignore $hidden, so secrets must be stripped here.
+            'old_data' => $oldData === null ? null : Arr::except($oldData, $model->getHidden()),
+            'new_data' => $newData === null ? null : Arr::except($newData, $model->getHidden()),
             'ip_address' => Request::ip(),
             'user_agent' => Request::userAgent(),
             'details' => $details,

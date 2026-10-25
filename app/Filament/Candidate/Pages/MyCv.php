@@ -70,6 +70,13 @@ class MyCv extends Page implements HasForms
                             ->live()
                             ->afterStateUpdated(function ($state) {
                                 if ($state instanceof TemporaryUploadedFile) {
+                                    // The file is stored before form validation runs, so check it here.
+                                    if ($state->getMimeType() !== 'application/pdf' || $state->getSize() > 5120 * 1024) {
+                                        Notification::make()->title('Archivo no permitido')->body('El CV debe ser un PDF de máximo 5MB.')->danger()->send();
+
+                                        return;
+                                    }
+
                                     Log::info('MyCv: Storing file to S3 manually...');
                                     $path = $state->store('candidate-cvs', 'local');
 
@@ -185,10 +192,19 @@ class MyCv extends Page implements HasForms
                                     ->disk('local')
                                     ->directory('candidate-documents')
                                     ->visibility('private')
+                                    ->acceptedFileTypes(CandidateDocument::ACCEPTED_FILE_TYPES)
+                                    ->maxSize(5120) // 5MB
                                     ->required()
                                     ->live()
                                     ->afterStateUpdated(function ($state, $get) {
                                         if ($state instanceof TemporaryUploadedFile && $get('name')) {
+                                            // The file is stored before form validation runs, so check it here.
+                                            if (! in_array($state->getMimeType(), CandidateDocument::ACCEPTED_FILE_TYPES, true) || $state->getSize() > 5120 * 1024) {
+                                                Notification::make()->title('Archivo no permitido')->body('Sube un PDF, imagen o Word de máximo 5MB.')->danger()->send();
+
+                                                return;
+                                            }
+
                                             $path = $state->store('candidate-documents', 'local');
 
                                             Auth::user()->candidate->documents()->updateOrCreate(

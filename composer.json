@@ -9,7 +9,6 @@
         "php": "^8.3",
         "aws/aws-sdk-php": "^3.380",
         "filament/filament": "*",
-        "google/cloud-language": "^1.2",
         "laravel-notification-channels/telegram": "^7.0",
         "laravel/fortify": "^1.34",
         "laravel/framework": "^13.0",

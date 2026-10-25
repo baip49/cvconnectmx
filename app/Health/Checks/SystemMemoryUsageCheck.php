@@ -162,40 +162,11 @@ class SystemMemoryUsageCheck extends Check
     }
 
     /**
-     * @return array{used: int, total: int, source: string}|null
-     */
-    private function resolveWindowsMemoryUsage(): ?array
-    {
-        if (! function_exists('shell_exec')) {
-            return null;
-        }
-
-        $output = shell_exec('wmic OS get FreePhysicalMemory,TotalVisibleMemorySize /Value');
-
-        if (is_string($output)
-            && preg_match('/FreePhysicalMemory=(\d+)/i', $output, $freeMatch)
-            && preg_match('/TotalVisibleMemorySize=(\d+)/i', $output, $totalMatch)
-            && (int) $totalMatch[1] > 0
-        ) {
-            $totalBytes = ((int) $totalMatch[1]) * 1024;
-            $freeBytes = ((int) $freeMatch[1]) * 1024;
-
-            return [
-                'used' => max(0, $totalBytes - $freeBytes),
-                'total' => $totalBytes,
-                'source' => 'wmic',
-            ];
-        }
-
-        return $this->resolveWindowsMemoryUsageViaPowershell();
-    }
-
-    /**
-     * wmic was removed from recent Windows versions, fall back to CIM cmdlets.
+     * Read it through CIM cmdlets; wmic is deprecated and missing on recent Windows.
      *
      * @return array{used: int, total: int, source: string}|null
      */
-    private function resolveWindowsMemoryUsageViaPowershell(): ?array
+    private function resolveWindowsMemoryUsage(): ?array
     {
         if (! function_exists('shell_exec')) {
             return null;

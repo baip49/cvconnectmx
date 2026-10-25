@@ -33,6 +33,14 @@ return [
         'key' => env('GOOGLE_AI_API_KEY'),
     ],
 
+    'azure' => [
+        'key' => env('AZURE_KEY1'),
+        'endpoint' => env('AZURE_ENDPOINT'),
+        'openai_key' => env('AZURE_OPENAI_FOUNDRY_KEY', env('AZURE_OPENAI_KEY')),
+        'openai_endpoint' => env('AZURE_OPENAI_FOUNDRY_ENDPOINT', env('AZURE_OPENAI_ENDPOINT')),
+        'openai_deployment' => env('AZURE_OPENAI_FOUNDRY_DEPLOYMENT', env('AZURE_OPENAI_DEPLOYMENT', 'gpt-4o')),
+    ],
+
     'ollama' => [
         'url' => env('OLLAMA_URL', 'http://127.0.0.1:11434'),
         'model' => env('OLLAMA_MODEL'),

@@ -217,3 +217,25 @@ test('backup job dumps candidate files into an encrypted zip', function () {
         ->and($backupLog->scope)->toBe('files')
         ->and($decrypted)->toStartWith('PK');
 });
+
+test('files backup succeeds when no candidate has uploaded anything', function () {
+    Storage::fake('local');
+    fakeTelegram();
+
+    $backupLog = BackupLog::create([
+        'type' => 'full',
+        'frequency' => 'manual',
+        'scope' => 'files',
+        'destination_path' => 'pending',
+        'size_bytes' => 0,
+        'checksum_sha256' => '',
+        'is_encrypted' => false,
+        'status' => 'in_progress',
+        'retention_days' => 30,
+        'executed_by' => null,
+    ]);
+
+    app()->call([new RunDatabaseBackup($backupLog->id, 'files'), 'handle']);
+
+    expect($backupLog->refresh()->status)->toBe('success');
+});
