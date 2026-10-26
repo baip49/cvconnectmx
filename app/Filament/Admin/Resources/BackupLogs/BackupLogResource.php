@@ -12,7 +12,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class BackupLogResource extends Resource
 {
@@ -20,9 +19,15 @@ class BackupLogResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedServerStack;
 
-    protected static ?string $navigationLabel = 'Logs de Respaldo';
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.backup_logs.logs_de_respaldo');
+    }
 
-    protected static string|UnitEnum|null $navigationGroup = 'Seguridad';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.navigation_groups.seguridad');
+    }
 
     public static function infolist(Schema $schema): Schema
     {

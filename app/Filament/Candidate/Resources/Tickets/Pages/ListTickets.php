@@ -13,7 +13,7 @@ class ListTickets extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()->label('Abrir ticket'),
+            CreateAction::make()->label(__('candidate.tickets.abrir_ticket')),
         ];
     }
 }

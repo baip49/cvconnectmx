@@ -13,29 +13,29 @@ class UserForm
     {
         return $schema
             ->components([
-                Section::make('Información del Usuario')
+                Section::make(__('admin.users.informacion_del_usuario'))
                     ->schema([
                         TextInput::make('name')
-                            ->label('Nombre')
+                            ->label(__('admin.users.nombre'))
                             ->required()
                             ->maxLength(255),
                         TextInput::make('last_name')
-                            ->label('Apellido')
+                            ->label(__('admin.users.apellido'))
                             ->maxLength(255),
                         TextInput::make('email')
-                            ->label('Correo Electrónico')
+                            ->label(__('admin.users.correo_electronico'))
                             ->email()
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
                         TextInput::make('password')
-                            ->label('Contraseña')
+                            ->label(__('admin.users.contrasena'))
                             ->password()
                             ->dehydrated(fn ($state) => filled($state))
                             ->required(false)
-                            ->helperText('Si se deja vacío, se genera una contraseña aleatoria al crear.'),
+                            ->helperText(__('admin.users.si_se_deja_vacio_se_genera_una_contrasen')),
                         Select::make('role_id')
-                            ->label('Rol')
+                            ->label(__('admin.users.rol'))
                             ->relationship('role', 'name')
                             ->required(),
                     ])->columns(2),

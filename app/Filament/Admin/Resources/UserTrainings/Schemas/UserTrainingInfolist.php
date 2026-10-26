@@ -13,21 +13,21 @@ class UserTrainingInfolist
     {
         return $schema
             ->components([
-                Section::make('Detalles de la Asignación')
+                Section::make(__('admin.user_trainings.detalles_de_la_asignacion'))
                     ->schema([
                         Grid::make(3)->schema([
                             TextEntry::make('user.name')
-                                ->label('Usuario'),
+                                ->label(__('admin.user_trainings.usuario')),
                             TextEntry::make('training.title')
-                                ->label('Capacitación'),
+                                ->label(__('admin.user_trainings.capacitacion')),
                             TextEntry::make('status')
-                                ->label('Estado')
+                                ->label(__('admin.user_trainings.estado'))
                                 ->badge()
                                 ->formatStateUsing(fn (string $state): string => match ($state) {
-                                    'pending' => 'Pendiente',
-                                    'in_progress' => 'En progreso',
-                                    'completed' => 'Completada',
-                                    'expired' => 'Expirada',
+                                    'pending' => __('admin.user_trainings.pendiente'),
+                                    'in_progress' => __('admin.user_trainings.en_progreso'),
+                                    'completed' => __('admin.user_trainings.completada'),
+                                    'expired' => __('admin.user_trainings.expirada'),
                                     default => $state,
                                 })
                                 ->color(fn (string $state): string => match ($state) {
@@ -38,14 +38,14 @@ class UserTrainingInfolist
                                     default => 'gray',
                                 }),
                             TextEntry::make('score')
-                                ->label('Calificación')
+                                ->label(__('admin.user_trainings.calificacion'))
                                 ->placeholder('N/A'),
                             TextEntry::make('completed_at')
-                                ->label('Completado')
+                                ->label(__('admin.user_trainings.completado'))
                                 ->dateTime('d/m/Y H:i')
-                                ->placeholder('Pendiente'),
+                                ->placeholder(__('admin.user_trainings.pendiente')),
                             TextEntry::make('expires_at')
-                                ->label('Expira')
+                                ->label(__('admin.user_trainings.expira'))
                                 ->dateTime('d/m/Y H:i')
                                 ->placeholder('N/A'),
                         ]),

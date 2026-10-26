@@ -2,16 +2,15 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\AvatarProviders\InitialsAvatarProvider;
 use App\Filament\Candidate\Pages\Dashboard;
 use App\Http\Middleware\RedirectToOwnPanel;
+use App\Http\Middleware\SetLocale;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
+use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\Support\Colors\Color;
 use Filament\View\PanelsRenderHook;
 use Filament\Widgets\AccountWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -32,29 +31,11 @@ class CandidatePanelProvider extends PanelProvider
             )
             ->id('candidate')
             ->path('dashboard')
-            ->viteTheme('resources/css/filament/candidate/theme.css')
-            ->brandName('CVConnectMX')
-            ->defaultAvatarProvider(InitialsAvatarProvider::class)
-            ->userMenuItems([
-                MenuItem::make()
-                    ->label('Perfil')
-                    ->url(fn (): string => route('profile.edit'))
-                    ->icon('heroicon-o-user-circle'),
-            ])
-            ->brandLogo(asset('images/candidate-logo.svg'))
-            ->brandLogoHeight('2.5rem')
-            ->favicon(asset('favicon.ico'))
-            ->colors([
-                'primary' => Color::Emerald,
-            ])
-            ->sidebarCollapsibleOnDesktop()
-            ->databaseNotifications()
-            ->databaseNotificationsPolling('30s')
             ->navigationGroups([
-                'Inicio',
-                'Perfil',
-                'Oportunidades',
-                'Soporte',
+                NavigationGroup::make()->label(fn (): string => __('candidate.navigation_groups.inicio')),
+                NavigationGroup::make()->label(fn (): string => __('candidate.navigation_groups.perfil')),
+                NavigationGroup::make()->label(fn (): string => __('candidate.navigation_groups.oportunidades')),
+                NavigationGroup::make()->label(fn (): string => __('candidate.navigation_groups.soporte')),
             ])
             ->pages([
                 Dashboard::class,
@@ -71,6 +52,7 @@ class CandidatePanelProvider extends PanelProvider
                 StartSession::class,
                 AuthenticateSession::class,
                 ShareErrorsFromSession::class,
+                SetLocale::class,
                 PreventRequestForgery::class,
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,

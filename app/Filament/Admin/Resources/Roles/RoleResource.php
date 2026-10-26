@@ -16,7 +16,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
-use UnitEnum;
 
 class RoleResource extends Resource
 {
@@ -24,7 +23,10 @@ class RoleResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedLockClosed;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Acceso';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.navigation_groups.acceso');
+    }
 
     public static function canViewAny(): bool
     {

@@ -12,15 +12,15 @@ class PermissionForm
     {
         return $schema
             ->components([
-                Section::make('Información del Permiso')
+                Section::make(__('admin.permissions.informacion_del_permiso'))
                     ->schema([
                         TextInput::make('name')
-                            ->label('Nombre del Permiso')
+                            ->label(__('admin.permissions.nombre_del_permiso'))
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
                         TextInput::make('description')
-                            ->label('Descripción')
+                            ->label(__('admin.permissions.descripcion'))
                             ->maxLength(255),
                     ]),
             ]);

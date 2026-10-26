@@ -15,31 +15,31 @@ class TicketsTable
         return $table
             ->columns([
                 TextColumn::make('title')
-                    ->label('Asunto')
+                    ->label(__('company.tickets.asunto'))
                     ->searchable()
                     ->limit(40)
                     ->sortable(),
 
                 TextColumn::make('status')
-                    ->label('Estado')
+                    ->label(__('company.tickets.estado'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => TicketLabels::statuses()[$state] ?? $state)
                     ->color(fn (string $state): string => TicketLabels::statusColors()[$state] ?? 'gray')
                     ->sortable(),
 
                 TextColumn::make('claimedBy.name')
-                    ->label('Atendido por')
-                    ->placeholder('Sin asignar'),
+                    ->label(__('company.tickets.atendido_por'))
+                    ->placeholder(__('company.tickets.sin_asignar')),
 
                 TextColumn::make('updated_at')
-                    ->label('Actualizado')
+                    ->label(__('company.tickets.actualizado'))
                     ->dateTime()
                     ->since()
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->label('Estado')
+                    ->label(__('company.tickets.estado'))
                     ->options(TicketLabels::statuses()),
             ])
             ->defaultSort('updated_at', 'desc')

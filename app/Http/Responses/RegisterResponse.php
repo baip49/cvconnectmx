@@ -16,7 +16,7 @@ class RegisterResponse implements RegisterResponseContract
      */
     public function toResponse($request): Response
     {
-        Notification::make()->title('Registro exitoso. Bienvenido a CVConnectMX.')->success()->send();
+        Notification::make()->title(__('shared.auth.registered'))->success()->send();
 
         return redirect()->intended($request->user()->panelPath());
     }

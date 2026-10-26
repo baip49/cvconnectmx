@@ -2,6 +2,8 @@
 
 namespace App\Filament\Company\Resources\Candidates\Schemas;
 
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
 class CandidateInfolist
@@ -10,21 +12,21 @@ class CandidateInfolist
     {
         return $schema
             ->components([
-                \Filament\Infolists\Components\Section::make('Información del Candidato')
+                Section::make(__('company.candidates.informacion_del_candidato'))
                     ->schema([
-                        \Filament\Infolists\Components\TextEntry::make('user.name')
-                            ->label('Nombre'),
-                        \Filament\Infolists\Components\TextEntry::make('professional_title')
-                            ->label('Título Profesional'),
-                        \Filament\Infolists\Components\TextEntry::make('ai_rating')
-                            ->label('Rating IA')
+                        TextEntry::make('user.name')
+                            ->label(__('company.candidates.nombre')),
+                        TextEntry::make('professional_title')
+                            ->label(__('company.candidates.titulo_profesional')),
+                        TextEntry::make('ai_rating')
+                            ->label(__('company.candidates.rating_ia'))
                             ->badge()
                             ->color(fn ($state) => $state >= 80 ? 'success' : ($state >= 50 ? 'warning' : 'danger'))
                             ->suffix('/100'),
-                        \Filament\Infolists\Components\TextEntry::make('ai_analysis_summary')
-                            ->label('Resumen de Análisis IA')
+                        TextEntry::make('ai_analysis_summary')
+                            ->label(__('company.candidates.resumen_de_analisis_ia'))
                             ->columnSpanFull()
-                            ->visible(fn($record) => !empty($record->ai_analysis_summary)),
+                            ->visible(fn ($record) => ! empty($record->ai_analysis_summary)),
                     ])->columns(3),
             ]);
     }

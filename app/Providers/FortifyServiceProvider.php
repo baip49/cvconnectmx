@@ -56,7 +56,7 @@ class FortifyServiceProvider extends ServiceProvider
 
             if (! $user->is_active || $user->locked_until?->isFuture()) {
                 throw ValidationException::withMessages([
-                    Fortify::username() => 'Tu cuenta está desactivada o bloqueada temporalmente.',
+                    Fortify::username() => __('shared.auth.account_locked'),
                 ]);
             }
 

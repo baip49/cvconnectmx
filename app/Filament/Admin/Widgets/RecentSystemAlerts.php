@@ -13,7 +13,10 @@ class RecentSystemAlerts extends TableWidget
 {
     protected int|string|array $columnSpan = ['default' => 'full', 'lg' => 2];
 
-    protected static ?string $heading = 'Alertas pendientes';
+    protected function getTableHeading(): ?string
+    {
+        return __('admin.recent_system_alerts.alertas_pendientes');
+    }
 
     protected static ?int $sort = 2;
 
@@ -37,13 +40,13 @@ class RecentSystemAlerts extends TableWidget
                     ->falseColor('warning'),
 
                 TextColumn::make('level')
-                    ->label('Nivel')
+                    ->label(__('admin.recent_system_alerts.nivel'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'info' => 'Info',
-                        'warning' => 'Adv',
-                        'error' => 'Error',
-                        'critical' => 'Crít',
+                        'info' => __('admin.recent_system_alerts.info'),
+                        'warning' => __('admin.recent_system_alerts.adv'),
+                        'error' => __('admin.recent_system_alerts.error'),
+                        'critical' => __('admin.recent_system_alerts.crit'),
                         default => $state,
                     })
                     ->color(fn (string $state): string => match ($state) {
@@ -55,17 +58,17 @@ class RecentSystemAlerts extends TableWidget
                     }),
 
                 TextColumn::make('type')
-                    ->label('Tipo')
+                    ->label(__('admin.recent_system_alerts.tipo'))
                     ->badge()
                     ->color('gray'),
 
                 TextColumn::make('message')
-                    ->label('Mensaje')
+                    ->label(__('admin.recent_system_alerts.mensaje'))
                     ->limit(40)
                     ->tooltip(fn ($record) => $record->message),
 
                 TextColumn::make('created_at')
-                    ->label('Fecha')
+                    ->label(__('admin.recent_system_alerts.fecha'))
                     ->dateTime('d/m/Y H:i')
                     ->since(),
             ])

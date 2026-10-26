@@ -18,7 +18,7 @@ class WelcomeBanner extends Widget
         $candidate = Auth::user()?->candidate;
 
         return [
-            'name' => Auth::user()?->name ?? 'Candidato',
+            'name' => Auth::user()?->name ?? __('candidate.candidate.candidato'),
             'rating' => $candidate?->ai_rating,
             'isBlocked' => $candidate?->is_blocked ?? false,
         ];

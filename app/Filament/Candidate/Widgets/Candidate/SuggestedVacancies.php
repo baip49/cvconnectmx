@@ -11,7 +11,10 @@ class SuggestedVacancies extends TableWidget
 {
     protected int|string|array $columnSpan = 'full';
 
-    protected static ?string $heading = 'Vacantes Sugeridas';
+    protected function getTableHeading(): ?string
+    {
+        return __('candidate.candidate.vacantes_sugeridas');
+    }
 
     public function table(Table $table): Table
     {
@@ -25,17 +28,17 @@ class SuggestedVacancies extends TableWidget
             )
             ->columns([
                 TextColumn::make('title')
-                    ->label('Título')
+                    ->label(__('candidate.candidate.titulo'))
                     ->searchable(),
                 TextColumn::make('company.name')
-                    ->label('Empresa'),
+                    ->label(__('candidate.candidate.empresa')),
                 TextColumn::make('work_model')
-                    ->label('Modalidad')
+                    ->label(__('candidate.candidate.modalidad'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'remote' => 'Remoto',
-                        'hybrid' => 'Híbrido',
-                        'on_site', 'on-site' => 'Presencial',
+                        'remote' => __('candidate.candidate.remoto'),
+                        'hybrid' => __('candidate.candidate.hibrido'),
+                        'on_site', 'on-site' => __('candidate.candidate.presencial'),
                         default => $state,
                     })
                     ->color(fn (string $state): string => match ($state) {
@@ -45,11 +48,11 @@ class SuggestedVacancies extends TableWidget
                         default => 'gray',
                     }),
                 TextColumn::make('max_salary')
-                    ->label('Sueldo Máximo')
+                    ->label(__('candidate.candidate.sueldo_maximo'))
                     ->money('MXN')
                     ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('published_at')
-                    ->label('Publicada')
+                    ->label(__('candidate.candidate.publicada'))
                     ->dateTime()
                     ->since(),
             ]);

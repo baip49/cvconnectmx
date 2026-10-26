@@ -15,7 +15,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class BackupScheduleResource extends Resource
 {
@@ -23,9 +22,15 @@ class BackupScheduleResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
-    protected static ?string $navigationLabel = 'Respaldos Programados';
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.backup_schedules.respaldos_programados');
+    }
 
-    protected static string|UnitEnum|null $navigationGroup = 'Seguridad';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.navigation_groups.seguridad');
+    }
 
     public static function form(Schema $schema): Schema
     {

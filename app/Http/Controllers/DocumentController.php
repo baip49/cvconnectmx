@@ -14,7 +14,7 @@ class DocumentController extends Controller
     {
         $user = $request->user();
 
-        abort_unless($user, 403, 'Acceso restringido: Debes iniciar sesión.');
+        abort_unless($user, 403, __('shared.documents.login_required'));
 
         $document = CandidateDocument::where('slug', $slug)->firstOrFail();
 
@@ -32,7 +32,7 @@ class DocumentController extends Controller
         }
 
         if (! ($isOwner || $isCompanyWithApplication || $isAdmin)) {
-            abort(403, 'Acceso restringido: No tienes permiso para ver este documento.');
+            abort(403, __('shared.documents.forbidden'));
         }
 
         $disk = $this->resolveDisk($document->file_path);
@@ -41,7 +41,7 @@ class DocumentController extends Controller
             $stream = Storage::disk($disk)->readStream($document->file_path);
 
             if ($stream === false) {
-                abort(404, 'Archivo no encontrado');
+                abort(404, __('shared.documents.not_found'));
             }
 
             fpassthru($stream);
@@ -65,7 +65,7 @@ class DocumentController extends Controller
             return 's3';
         }
 
-        abort(404, 'Archivo no encontrado');
+        abort(404, __('shared.documents.not_found'));
     }
 
     private function contentTypeFor(string $path): string

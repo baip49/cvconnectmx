@@ -13,7 +13,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class AuditLogResource extends Resource
 {
@@ -21,7 +20,10 @@ class AuditLogResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Auditoría';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.navigation_groups.auditoria');
+    }
 
     public static function form(Schema $schema): Schema
     {

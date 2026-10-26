@@ -1,0 +1,43 @@
+<?php
+
+return [
+    'account' => [
+        'title' => 'Mi cuenta',
+    ],
+    'auth' => [
+        'account_locked' => 'Tu cuenta está desactivada o bloqueada temporalmente.',
+        'i_am_candidate' => 'Soy Candidato',
+        'i_am_company' => 'Soy Empresa',
+        'logged_in' => 'Sesión iniciada correctamente.',
+        'registered' => 'Registro exitoso. Bienvenido a CVConnectMX.',
+    ],
+    'documents' => [
+        'forbidden' => 'Acceso restringido: No tienes permiso para ver este documento.',
+        'login_required' => 'Acceso restringido: Debes iniciar sesión.',
+        'not_found' => 'Archivo no encontrado',
+    ],
+    'tickets' => [
+        'level_high' => 'Alto',
+        'level_low' => 'Bajo',
+        'level_medium' => 'Medio',
+        'status_closed' => 'Cerrado',
+        'status_in_progress' => 'En progreso',
+        'status_open' => 'Abierto',
+    ],
+    'welcome' => [
+        'feature_connect' => 'Conecta con personas que te pueden ayudar',
+        'feature_connect_alt' => 'Conexión Profesional',
+        'feature_skills' => 'Adquiere las aptitudes necesarias para triunfar',
+        'feature_skills_alt' => 'Desarrollo de Aptitudes',
+        'get_started' => 'Empieza ahora',
+        'go_to_panel' => 'Ir a mi panel',
+        'headline' => 'Informa a las personas adecuadas de que',
+        'headline_accent' => 'buscas empleo',
+        'hero_alt' => 'Candidato Profesional',
+        'intro' => 'CVConnectMX te permite conectar con empresas, gestionar tus expedientes y encontrar tu próxima oportunidad profesional, ya sea de forma privada o pública.',
+        'join_now' => 'Unirse ahora',
+        'log_in' => 'Iniciar sesión',
+        'page_title' => 'Tu Comunidad Profesional',
+        'rights' => 'Todos los derechos reservados.',
+    ],
+];

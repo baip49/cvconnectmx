@@ -14,21 +14,21 @@ class RoleForm
     {
         return $schema
             ->components([
-                Section::make('Información del Rol')
+                Section::make(__('admin.roles.informacion_del_rol'))
                     ->schema([
                         TextInput::make('name')
-                            ->label('Nombre del Rol')
+                            ->label(__('admin.roles.nombre_del_rol'))
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
                         TextInput::make('description')
-                            ->label('Descripción')
+                            ->label(__('admin.roles.descripcion'))
                             ->maxLength(255),
                         Toggle::make('active')
-                            ->label('Activo')
+                            ->label(__('admin.roles.activo'))
                             ->default(true),
                     ]),
-                Section::make('Permisos Asociados')
+                Section::make(__('admin.roles.permisos_asociados'))
                     ->schema([
                         CheckboxList::make('permissions')
                             ->relationship('permissions', 'name')

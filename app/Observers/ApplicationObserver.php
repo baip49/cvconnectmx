@@ -6,22 +6,28 @@ use App\Models\Application;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 
+/**
+ * Notifications are stored already written, so each one uses its recipient's language.
+ */
 class ApplicationObserver
 {
     public function created(Application $application): void
     {
         $companyUser = $application->vacancy?->company?->user;
-        $candidateName = $application->candidate?->user?->name ?? 'Un candidato';
-        $vacancyTitle = $application->vacancy?->title ?? 'una vacante';
 
         if ($companyUser) {
+            $locale = $companyUser->locale ?? config('app.locale');
+
             Notification::make()
-                ->title('Nueva postulación recibida')
-                ->body("{$candidateName} aplicó a \"{$vacancyTitle}\".")
+                ->title(__('notifications.applications.received.title', [], $locale))
+                ->body(__('notifications.applications.received.body', [
+                    'name' => $application->candidate?->user?->name ?? __('notifications.applications.a_candidate', [], $locale),
+                    'vacancy' => $application->vacancy?->title ?? __('notifications.applications.a_vacancy', [], $locale),
+                ], $locale))
                 ->icon('heroicon-o-paper-airplane')
                 ->actions([
                     Action::make('view')
-                        ->label('Ver')
+                        ->label(__('notifications.view', [], $locale))
                         ->url(url("/company/applications/{$application->id}")),
                 ])
                 ->sendToDatabase($companyUser);
@@ -35,24 +41,20 @@ class ApplicationObserver
         }
 
         $candidateUser = $application->candidate?->user;
-        $vacancyTitle = $application->vacancy?->title ?? 'una vacante';
-
-        $statusLabels = [
-            'pending' => 'pendiente',
-            'interview' => 'en entrevista',
-            'accepted' => 'aceptada',
-            'rejected' => 'rechazada',
-            'offered' => 'con oferta',
-        ];
 
         if ($candidateUser) {
+            $locale = $candidateUser->locale ?? config('app.locale');
+
             Notification::make()
-                ->title('Tu postulación cambió de estado')
-                ->body("Tu postulación a \"{$vacancyTitle}\" ahora está ".($statusLabels[$application->status] ?? $application->status).'.')
+                ->title(__('notifications.applications.status_changed.title', [], $locale))
+                ->body(__('notifications.applications.status_changed.body', [
+                    'vacancy' => $application->vacancy?->title ?? __('notifications.applications.a_vacancy', [], $locale),
+                    'status' => __("notifications.applications.statuses.{$application->status}", [], $locale),
+                ], $locale))
                 ->icon('heroicon-o-bell')
                 ->actions([
                     Action::make('view')
-                        ->label('Ver')
+                        ->label(__('notifications.view', [], $locale))
                         ->url(url('/dashboard')),
                 ])
                 ->sendToDatabase($candidateUser);

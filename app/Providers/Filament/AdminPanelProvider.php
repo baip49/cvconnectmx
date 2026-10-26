@@ -2,15 +2,14 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\AvatarProviders\InitialsAvatarProvider;
 use App\Http\Middleware\RedirectToOwnPanel;
+use App\Http\Middleware\SetLocale;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
+use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -27,30 +26,12 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->id('admin')
             ->path('admin')
-            ->viteTheme('resources/css/filament/admin/theme.css')
-            ->brandName('CVConnectMX')
-            ->defaultAvatarProvider(InitialsAvatarProvider::class)
-            ->userMenuItems([
-                MenuItem::make()
-                    ->label('Perfil')
-                    ->url(fn (): string => route('profile.edit'))
-                    ->icon('heroicon-o-user-circle'),
-            ])
-            ->brandLogo(asset('images/admin-logo.svg'))
-            ->brandLogoHeight('2.5rem')
-            ->favicon(asset('favicon.ico'))
-            ->colors([
-                'primary' => Color::Blue,
-            ])
-            ->sidebarCollapsibleOnDesktop()
-            ->databaseNotifications()
-            ->databaseNotificationsPolling('30s')
             ->navigationGroups([
-                'Inicio',
-                'Acceso',
-                'Directorios',
-                'Seguridad',
-                'Auditoría',
+                NavigationGroup::make()->label(fn (): string => __('admin.navigation_groups.inicio')),
+                NavigationGroup::make()->label(fn (): string => __('admin.navigation_groups.acceso')),
+                NavigationGroup::make()->label(fn (): string => __('admin.navigation_groups.directorios')),
+                NavigationGroup::make()->label(fn (): string => __('admin.navigation_groups.seguridad')),
+                NavigationGroup::make()->label(fn (): string => __('admin.navigation_groups.auditoria')),
             ])
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\Filament\Admin\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\Filament\Admin\Pages')
@@ -65,6 +46,7 @@ class AdminPanelProvider extends PanelProvider
                 StartSession::class,
                 AuthenticateSession::class,
                 ShareErrorsFromSession::class,
+                SetLocale::class,
                 PreventRequestForgery::class,
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,

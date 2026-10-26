@@ -14,26 +14,26 @@ class AuditLogsTable
         return $table
             ->columns([
                 TextColumn::make('created_at')
-                    ->label('Fecha')
+                    ->label(__('admin.audit_logs.fecha'))
                     ->dateTime('d/m/Y H:i')
                     ->sinceTooltip()
                     ->sortable(),
 
                 TextColumn::make('user.name')
-                    ->label('Usuario')
+                    ->label(__('admin.audit_logs.usuario'))
                     ->searchable()
                     ->sortable()
-                    ->placeholder('Sistema'),
+                    ->placeholder(__('admin.audit_logs.sistema')),
 
                 TextColumn::make('action')
-                    ->label('Acción')
+                    ->label(__('admin.audit_logs.accion'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'created' => 'Creación',
-                        'updated' => 'Actualización',
-                        'deleted' => 'Eliminación',
-                        'restored' => 'Restauración',
-                        'force_deleted' => 'Eliminación permanente',
+                        'created' => __('admin.audit_logs.creacion'),
+                        'updated' => __('admin.audit_logs.actualizacion'),
+                        'deleted' => __('admin.audit_logs.eliminacion'),
+                        'restored' => __('admin.audit_logs.restauracion'),
+                        'force_deleted' => __('admin.audit_logs.eliminacion_permanente'),
                         default => ucfirst($state),
                     })
                     ->color(fn (string $state): string => match ($state) {
@@ -48,29 +48,29 @@ class AuditLogsTable
                     ->sortable(),
 
                 TextColumn::make('entity_type')
-                    ->label('Entidad')
+                    ->label(__('admin.audit_logs.entidad'))
                     ->formatStateUsing(fn (?string $state): string => $state ? class_basename($state) : '-')
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('details')
-                    ->label('Detalle')
+                    ->label(__('admin.audit_logs.detalle'))
                     ->limit(70)
                     ->wrap()
                     ->tooltip(fn (?string $state): ?string => $state)
                     ->toggleable(),
 
                 TextColumn::make('category')
-                    ->label('Categoría')
+                    ->label(__('admin.audit_logs.categoria'))
                     ->badge()
                     ->formatStateUsing(fn (?string $state): string => match ($state) {
-                        'auth' => 'Autenticación',
-                        'access' => 'Acceso',
-                        'candidate' => 'Candidato',
-                        'company' => 'Empresa',
-                        'vacancy' => 'Vacante',
-                        'application' => 'Postulación',
-                        default => 'Sistema',
+                        'auth' => __('admin.audit_logs.autenticacion'),
+                        'access' => __('admin.audit_logs.acceso'),
+                        'candidate' => __('admin.audit_logs.candidato'),
+                        'company' => __('admin.audit_logs.empresa'),
+                        'vacancy' => __('admin.audit_logs.vacante'),
+                        'application' => __('admin.audit_logs.postulacion'),
+                        default => __('admin.audit_logs.sistema'),
                     })
                     ->color(fn (?string $state): string => match ($state) {
                         'auth' => 'info',
@@ -83,13 +83,13 @@ class AuditLogsTable
                     ->sortable(),
 
                 TextColumn::make('severity')
-                    ->label('Severidad')
+                    ->label(__('admin.audit_logs.severidad'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'low' => 'Baja',
-                        'medium' => 'Media',
-                        'high' => 'Alta',
-                        'critical' => 'Crítica',
+                        'low' => __('admin.audit_logs.baja'),
+                        'medium' => __('admin.audit_logs.media'),
+                        'high' => __('admin.audit_logs.alta'),
+                        'critical' => __('admin.audit_logs.critica'),
                         default => $state,
                     })
                     ->color(fn (string $state): string => match ($state) {
@@ -102,12 +102,12 @@ class AuditLogsTable
                     ->sortable(),
 
                 TextColumn::make('result')
-                    ->label('Resultado')
+                    ->label(__('admin.audit_logs.resultado'))
                     ->badge()
                     ->formatStateUsing(fn (?string $state): string => match ($state) {
-                        'success' => 'Exitoso',
-                        'failure' => 'Fallido',
-                        default => $state ?? 'Sin resultado',
+                        'success' => __('admin.audit_logs.exitoso'),
+                        'failure' => __('admin.audit_logs.fallido'),
+                        default => $state ?? __('admin.audit_logs.sin_resultado'),
                     })
                     ->color(fn (string $state): string => match ($state) {
                         'success' => 'success',
@@ -123,38 +123,38 @@ class AuditLogsTable
             ])
             ->filters([
                 SelectFilter::make('action')
-                    ->label('Acción')
+                    ->label(__('admin.audit_logs.accion'))
                     ->options([
-                        'created' => 'Creación',
-                        'updated' => 'Actualización',
-                        'deleted' => 'Eliminación',
-                        'restored' => 'Restauración',
-                        'force_deleted' => 'Eliminación permanente',
+                        'created' => __('admin.audit_logs.creacion'),
+                        'updated' => __('admin.audit_logs.actualizacion'),
+                        'deleted' => __('admin.audit_logs.eliminacion'),
+                        'restored' => __('admin.audit_logs.restauracion'),
+                        'force_deleted' => __('admin.audit_logs.eliminacion_permanente'),
                     ]),
                 SelectFilter::make('category')
-                    ->label('Categoría')
+                    ->label(__('admin.audit_logs.categoria'))
                     ->options([
-                        'auth' => 'Autenticación',
-                        'access' => 'Acceso',
-                        'candidate' => 'Candidato',
-                        'company' => 'Empresa',
-                        'vacancy' => 'Vacante',
-                        'application' => 'Postulación',
-                        'system' => 'Sistema',
+                        'auth' => __('admin.audit_logs.autenticacion'),
+                        'access' => __('admin.audit_logs.acceso'),
+                        'candidate' => __('admin.audit_logs.candidato'),
+                        'company' => __('admin.audit_logs.empresa'),
+                        'vacancy' => __('admin.audit_logs.vacante'),
+                        'application' => __('admin.audit_logs.postulacion'),
+                        'system' => __('admin.audit_logs.sistema'),
                     ]),
                 SelectFilter::make('severity')
-                    ->label('Severidad')
+                    ->label(__('admin.audit_logs.severidad'))
                     ->options([
-                        'low' => 'Baja',
-                        'medium' => 'Media',
-                        'high' => 'Alta',
-                        'critical' => 'Crítica',
+                        'low' => __('admin.audit_logs.baja'),
+                        'medium' => __('admin.audit_logs.media'),
+                        'high' => __('admin.audit_logs.alta'),
+                        'critical' => __('admin.audit_logs.critica'),
                     ]),
                 SelectFilter::make('result')
-                    ->label('Resultado')
+                    ->label(__('admin.audit_logs.resultado'))
                     ->options([
-                        'success' => 'Exitoso',
-                        'failure' => 'Fallido',
+                        'success' => __('admin.audit_logs.exitoso'),
+                        'failure' => __('admin.audit_logs.fallido'),
                     ]),
             ])
             ->defaultSort('created_at', 'desc')

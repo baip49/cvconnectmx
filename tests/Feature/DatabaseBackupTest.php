@@ -145,7 +145,7 @@ test('admin can view a backup log without errors', function () {
 
     get("/admin/backup-logs/{$backupLog->id}")
         ->assertOk()
-        ->assertSee('Checksum SHA256');
+        ->assertSee(__('admin.backup_logs.checksum_sha256'));
 });
 
 test('deleting a backup log also deletes its file from the local disk', function () {

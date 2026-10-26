@@ -16,25 +16,25 @@ class CompaniesTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Empresa')
+                    ->label(__('admin.companies.empresa'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('user.email')
-                    ->label('Contacto')
+                    ->label(__('admin.companies.contacto'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('sector')
-                    ->label('Sector')
+                    ->label(__('admin.companies.sector'))
                     ->searchable(),
                 IconColumn::make('is_verified')
-                    ->label('Verificada')
+                    ->label(__('admin.companies.verificada'))
                     ->boolean(),
                 TextColumn::make('city')
-                    ->label('Ciudad')
+                    ->label(__('admin.companies.ciudad'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->label('Registrado')
+                    ->label(__('admin.companies.registrado'))
                     ->dateTime()
                     ->sortable(),
             ])

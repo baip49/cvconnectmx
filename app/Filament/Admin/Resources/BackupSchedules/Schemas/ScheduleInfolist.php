@@ -14,32 +14,32 @@ class ScheduleInfolist
     {
         return $schema
             ->components([
-                Section::make('Programación de Respaldo')
+                Section::make(__('admin.backup_schedules.programacion_de_respaldo'))
                     ->schema([
                         Grid::make(3)->schema([
                             TextEntry::make('name')
-                                ->label('Nombre'),
+                                ->label(__('admin.backup_schedules.nombre')),
                             TextEntry::make('scope')
-                                ->label('Qué respalda')
+                                ->label(__('admin.backup_schedules.que_respalda'))
                                 ->badge()
                                 ->formatStateUsing(fn (string $state): string => ScheduleForm::scopes()[$state] ?? $state),
                             TextEntry::make('frequency')
-                                ->label('Frecuencia')
+                                ->label(__('admin.backup_schedules.frecuencia'))
                                 ->badge()
                                 ->formatStateUsing(fn (string $state): string => ScheduleForm::frequencies()[$state] ?? $state),
                             TextEntry::make('time')
-                                ->label('Hora')
+                                ->label(__('admin.backup_schedules.hora'))
                                 ->time('H:i'),
                             TextEntry::make('retention_days')
-                                ->label('Retención')
-                                ->suffix(' días'),
+                                ->label(__('admin.backup_schedules.retencion'))
+                                ->suffix(__('admin.backup_schedules.dias')),
                             IconEntry::make('is_active')
-                                ->label('Activo')
+                                ->label(__('admin.backup_schedules.activo'))
                                 ->boolean(),
                             TextEntry::make('last_run_at')
-                                ->label('Última ejecución')
+                                ->label(__('admin.backup_schedules.ultima_ejecucion'))
                                 ->dateTime('d/m/Y H:i')
-                                ->placeholder('Nunca'),
+                                ->placeholder(__('admin.backup_schedules.nunca')),
                         ]),
                     ]),
             ]);

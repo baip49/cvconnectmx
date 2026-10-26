@@ -1,4 +1,4 @@
-<div wire:poll.5s class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-white/10 dark:bg-[#0b141a]">
+<div wire:poll.5s class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-white/10 dark:bg-zinc-800">
     <div class="flex items-center gap-3 border-b border-gray-200 bg-gray-50 px-4 py-3 dark:border-white/10 dark:bg-white/5">
         <div class="min-w-0 flex-1">
             <p class="truncate text-sm font-semibold text-gray-900 dark:text-gray-100">
@@ -25,7 +25,7 @@
                 <div
                     x-show="open"
                     x-on:click.away="open = false"
-                    class="absolute right-0 z-20 mt-1 w-48 overflow-hidden rounded-xl border border-gray-200 bg-white py-1 shadow-lg dark:border-white/10 dark:bg-[#1f2c34]"
+                    class="absolute right-0 z-20 mt-1 w-48 overflow-hidden rounded-xl border border-gray-200 bg-white py-1 shadow-lg dark:border-white/10 dark:bg-zinc-700"
                 >
                     <button
                         type="button"
@@ -44,7 +44,7 @@
         <form wire:submit="saveEdit" class="space-y-4 border-b border-gray-200 bg-gray-50 px-4 py-4 dark:border-white/10 dark:bg-white/5">
             <div>
                 <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Asunto</label>
-                <input type="text" wire:model="editTitle" maxlength="255" class="block w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:border-white/10 dark:bg-white/10 dark:text-gray-100 dark:placeholder-gray-400" />
+                <input type="text" wire:model="editTitle" maxlength="255" class="block w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm transition focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/30 dark:border-white/10 dark:bg-white/10 dark:text-gray-100 dark:placeholder-gray-400" />
                 @error('editTitle') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
             </div>
 
@@ -52,7 +52,7 @@
                 <div>
                     <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Tipo</label>
                     <div class="relative">
-                        <select wire:model="editType" class="block w-full appearance-none rounded-xl border border-gray-300 bg-white py-2 pl-3 pr-9 text-sm text-gray-900 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:border-white/10 dark:bg-white/10 dark:text-gray-100 dark:[color-scheme:dark] dark:[&>option]:bg-[#1f2c34]">
+                        <select wire:model="editType" class="block w-full appearance-none rounded-xl border border-gray-300 bg-white py-2 pl-3 pr-9 text-sm text-gray-900 shadow-sm transition focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/30 dark:border-white/10 dark:bg-white/10 dark:text-gray-100 dark:[color-scheme:dark] dark:[&>option]:bg-zinc-700">
                             @foreach ($typeOptions as $value => $label)
                                 <option value="{{ $value }}">{{ $label }}</option>
                             @endforeach
@@ -67,7 +67,7 @@
                 <div>
                     <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Urgencia</label>
                     <div class="relative">
-                        <select wire:model="editLevel" class="block w-full appearance-none rounded-xl border border-gray-300 bg-white py-2 pl-3 pr-9 text-sm text-gray-900 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:border-white/10 dark:bg-white/10 dark:text-gray-100 dark:[color-scheme:dark] dark:[&>option]:bg-[#1f2c34]">
+                        <select wire:model="editLevel" class="block w-full appearance-none rounded-xl border border-gray-300 bg-white py-2 pl-3 pr-9 text-sm text-gray-900 shadow-sm transition focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/30 dark:border-white/10 dark:bg-white/10 dark:text-gray-100 dark:[color-scheme:dark] dark:[&>option]:bg-zinc-700">
                             <option value="low">Baja</option>
                             <option value="medium">Media</option>
                             <option value="high">Alta</option>
@@ -84,7 +84,7 @@
                 <button type="button" wire:click="$set('editing', false)" class="rounded-xl px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-white/10">
                     Cancelar
                 </button>
-                <button type="submit" class="rounded-xl bg-emerald-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700">
+                <button type="submit" class="rounded-xl bg-(--color-accent) px-5 py-2 text-sm font-semibold text-(--color-accent-foreground) shadow-sm transition hover:bg-(--color-accent)/90">
                     Guardar
                 </button>
             </div>
@@ -94,7 +94,7 @@
     <div
         x-data
         x-init="const box = $el; new MutationObserver(() => { box.scrollTop = box.scrollHeight; }).observe(box, { childList: true }); box.scrollTop = box.scrollHeight;"
-        class="flex h-[calc(100dvh-25rem)] min-h-80 flex-col gap-2 overflow-y-auto overscroll-contain bg-[#ece5dd] px-4 py-4 dark:bg-[#0b141a]"
+        class="flex h-[calc(100dvh-25rem)] min-h-80 flex-col gap-2 overflow-y-auto overscroll-contain bg-zinc-100 px-4 py-4 dark:bg-zinc-900"
     >
         @php($descriptionIsMine = $ticket->created_by === auth()->id())
         <div class="flex justify-center">
@@ -105,16 +105,12 @@
 
         <div class="flex items-end gap-2 {{ $descriptionIsMine ? 'justify-end' : 'justify-start' }}">
             @unless ($descriptionIsMine)
-                @if ($ticket->creator?->getFilamentAvatarUrl())
-                    <img src="{{ $ticket->creator->getFilamentAvatarUrl() }}" alt="{{ $ticket->creator->name }}" title="{{ $ticket->creator->name }}" class="h-6 w-6 shrink-0 rounded-full object-cover shadow-sm" />
-                @else
-                    <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white" style="background-color: {{ $ticket->creator?->avatarColorHex() ?? '#6b7280' }}" title="{{ $ticket->creator?->name ?? 'Sistema' }}">
-                        {{ $ticket->creator?->initials() ?? 'S' }}
-                    </div>
+                @if ($ticket->creator)
+                    <x-filament::avatar :src="$ticket->creator->getFilamentAvatarUrl() ?? (new \App\Filament\AvatarProviders\InitialsAvatarProvider)->get($ticket->creator)" :alt="$ticket->creator->name" :title="$ticket->creator->name" size="sm" class="shrink-0" />
                 @endif
             @endunless
-            <div class="max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm {{ $descriptionIsMine ? 'rounded-br-sm bg-[#d9fdd3] text-gray-900 dark:bg-[#005c4b] dark:text-gray-100' : 'rounded-bl-sm bg-white text-gray-800 dark:bg-[#1f2c34] dark:text-gray-100' }}">
-                <p class="mb-1 text-[11px] font-semibold {{ $descriptionIsMine ? 'text-emerald-800 dark:text-emerald-300' : 'text-emerald-700 dark:text-emerald-400' }}">
+            <div class="max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm {{ $descriptionIsMine ? 'rounded-br-sm bg-(--color-accent) text-(--color-accent-foreground)' : 'rounded-bl-sm bg-white text-gray-800 dark:bg-zinc-700 dark:text-gray-100' }}">
+                <p class="mb-1 text-[11px] font-semibold {{ $descriptionIsMine ? 'text-(--color-accent-foreground)/80' : 'text-(--color-accent-content)' }}">
                     {{ $ticket->creator?->name ?? 'Sistema' }} · {{ $ticket->created_at?->format('d/m H:i') }}
                 </p>
                 <p class="whitespace-pre-line">{{ $ticket->description }}</p>
@@ -139,16 +135,12 @@
             @php($isMine = $reply->performed_by === auth()->id())
             <div class="flex items-end gap-2 {{ $isMine ? 'justify-end' : 'justify-start' }}">
                 @unless ($isMine)
-                    @if ($reply->performedBy?->getFilamentAvatarUrl())
-                        <img src="{{ $reply->performedBy->getFilamentAvatarUrl() }}" alt="{{ $reply->performedBy->name }}" title="{{ $reply->performedBy->name }}" class="h-6 w-6 shrink-0 rounded-full object-cover shadow-sm" />
-                    @else
-                        <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white" style="background-color: {{ $reply->performedBy?->avatarColorHex() ?? '#6b7280' }}" title="{{ $reply->performedBy?->name ?? 'Sistema' }}">
-                            {{ $reply->performedBy?->initials() ?? 'S' }}
-                        </div>
+                    @if ($reply->performedBy)
+                        <x-filament::avatar :src="$reply->performedBy->getFilamentAvatarUrl() ?? (new \App\Filament\AvatarProviders\InitialsAvatarProvider)->get($reply->performedBy)" :alt="$reply->performedBy->name" :title="$reply->performedBy->name" size="sm" class="shrink-0" />
                     @endif
                 @endunless
-                <div class="max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm {{ $isMine ? 'rounded-br-sm bg-[#d9fdd3] text-gray-900 dark:bg-[#005c4b] dark:text-gray-100' : 'rounded-bl-sm bg-white text-gray-800 dark:bg-[#1f2c34] dark:text-gray-100' }}">
-                    <p class="mb-1 text-[11px] font-semibold {{ $isMine ? 'text-emerald-800 dark:text-emerald-300' : 'text-emerald-700 dark:text-emerald-400' }}">
+                <div class="max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm {{ $isMine ? 'rounded-br-sm bg-(--color-accent) text-(--color-accent-foreground)' : 'rounded-bl-sm bg-white text-gray-800 dark:bg-zinc-700 dark:text-gray-100' }}">
+                    <p class="mb-1 text-[11px] font-semibold {{ $isMine ? 'text-(--color-accent-foreground)/80' : 'text-(--color-accent-content)' }}">
                         {{ $reply->performedBy?->name ?? 'Sistema' }} · {{ $reply->created_at?->format('d/m H:i') }}
                     </p>
                     <p class="whitespace-pre-line">{{ $reply->message }}</p>
@@ -165,12 +157,12 @@
                 maxlength="2000"
                 placeholder="Escribe tu mensaje..."
                 autocomplete="off"
-                class="block w-full rounded-full border-gray-300 px-4 py-2 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-white/10 dark:bg-white/10 dark:text-gray-100 dark:placeholder-gray-400"
+                class="block w-full rounded-full border-gray-300 px-4 py-2 text-sm shadow-sm focus:border-blue-400 focus:ring-blue-400 dark:border-white/10 dark:bg-white/10 dark:text-gray-100 dark:placeholder-gray-400"
             />
             <button
                 type="submit"
                 aria-label="Enviar mensaje"
-                class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white shadow-sm transition hover:bg-emerald-700"
+                class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-(--color-accent) text-(--color-accent-foreground) shadow-sm transition hover:bg-(--color-accent)/90"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
                     <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.594.75.75 0 000-1.212A60.517 60.517 0 003.478 2.405z" />

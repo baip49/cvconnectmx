@@ -13,20 +13,20 @@ class SystemAlertInfolist
     {
         return $schema
             ->components([
-                Section::make('Detalles de la Alerta')
+                Section::make(__('admin.system_alerts.detalles_de_la_alerta'))
                     ->schema([
                         Grid::make(3)->schema([
                             TextEntry::make('type')
-                                ->label('Tipo')
+                                ->label(__('admin.system_alerts.tipo'))
                                 ->badge(),
                             TextEntry::make('level')
-                                ->label('Nivel')
+                                ->label(__('admin.system_alerts.nivel'))
                                 ->badge()
                                 ->formatStateUsing(fn (string $state): string => match ($state) {
-                                    'info' => 'Informativo',
-                                    'warning' => 'Advertencia',
-                                    'error' => 'Error',
-                                    'critical' => 'Crítico',
+                                    'info' => __('admin.system_alerts.informativo'),
+                                    'warning' => __('admin.system_alerts.advertencia'),
+                                    'error' => __('admin.system_alerts.error'),
+                                    'critical' => __('admin.system_alerts.critico'),
                                     default => $state,
                                 })
                                 ->color(fn (string $state): string => match ($state) {
@@ -37,36 +37,36 @@ class SystemAlertInfolist
                                     default => 'gray',
                                 }),
                             TextEntry::make('is_resolved')
-                                ->label('Estado')
+                                ->label(__('admin.system_alerts.estado'))
                                 ->badge()
-                                ->formatStateUsing(fn (bool $state): string => $state ? 'Resuelta' : 'Pendiente')
+                                ->formatStateUsing(fn (bool $state): string => $state ? __('admin.system_alerts.resuelta') : __('admin.system_alerts.pendiente'))
                                 ->color(fn (bool $state): string => $state ? 'success' : 'warning'),
                             TextEntry::make('user.name')
-                                ->label('Asignado a')
-                                ->placeholder('Sin asignar'),
+                                ->label(__('admin.system_alerts.asignado_a'))
+                                ->placeholder(__('admin.system_alerts.sin_asignar')),
                             TextEntry::make('reviewedBy.name')
-                                ->label('Revisado por')
+                                ->label(__('admin.system_alerts.revisado_por'))
                                 ->placeholder('N/A'),
                             TextEntry::make('created_at')
-                                ->label('Creado')
+                                ->label(__('admin.system_alerts.creado'))
                                 ->dateTime('d/m/Y H:i'),
                         ]),
                     ]),
-                Section::make('Mensaje')
+                Section::make(__('admin.system_alerts.mensaje'))
                     ->schema([
                         TextEntry::make('message')
-                            ->label('Mensaje')
+                            ->label(__('admin.system_alerts.mensaje'))
                             ->columnSpanFull(),
                     ]),
-                Section::make('Resolución')
+                Section::make(__('admin.system_alerts.resolucion'))
                     ->schema([
                         TextEntry::make('resolved_at')
-                            ->label('Fecha de Resolución')
+                            ->label(__('admin.system_alerts.fecha_de_resolucion'))
                             ->dateTime('d/m/Y H:i')
-                            ->placeholder('Pendiente'),
+                            ->placeholder(__('admin.system_alerts.pendiente')),
                         TextEntry::make('resolution_notes')
-                            ->label('Notas de Resolución')
-                            ->placeholder('Sin notas')
+                            ->label(__('admin.system_alerts.notas_de_resolucion'))
+                            ->placeholder(__('admin.system_alerts.sin_notas'))
                             ->columnSpanFull(),
                     ])
                     ->visible(fn ($record) => $record->is_resolved),

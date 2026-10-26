@@ -21,11 +21,11 @@ class CandidateDocumentForm
                     ->preload()
                     ->required(),
                 TextInput::make('name')
-                    ->label('Nombre del Documento')
+                    ->label(__('admin.candidate_documents.nombre_del_documento'))
                     ->required()
                     ->maxLength(255),
                 FileUpload::make('file_path')
-                    ->label('Archivo')
+                    ->label(__('admin.candidate_documents.archivo'))
                     ->disk('local')
                     ->directory('candidate-documents')
                     ->visibility('private')

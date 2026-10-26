@@ -7,10 +7,9 @@ use Laravel\Fortify\Actions\DisableTwoFactorAuthentication;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Title;
 use Livewire\Component;
 
-new #[Title('Security settings')] class extends Component {
+new class extends Component {
     use PasswordValidationRules;
 
     public string $current_password = '';
@@ -86,11 +85,9 @@ new #[Title('Security settings')] class extends Component {
 }; ?>
 
 <section class="w-full">
-    @include('partials.settings-heading')
+    <flux:heading size="lg">{{ __('Update password') }}</flux:heading>
+    <flux:subheading>{{ __('Ensure your account is using a long, random password to stay secure') }}</flux:subheading>
 
-    <flux:heading class="sr-only">{{ __('Security settings') }}</flux:heading>
-
-    <x-pages::settings.layout :heading="__('Update password')" :subheading="__('Ensure your account is using a long, random password to stay secure')">
         <form method="POST" wire:submit="updatePassword" class="mt-6 space-y-6">
             <flux:input
                 wire:model="current_password"
@@ -174,5 +171,4 @@ new #[Title('Security settings')] class extends Component {
                 </div>
             </section>
         @endif
-    </x-pages::settings.layout>
 </section>

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Filament\AvatarProviders\InitialsAvatarProvider;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
@@ -165,13 +164,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
             'support' => $this->isSupport() || $this->isAdmin(),
             default => false,
         };
-    }
-
-    public function avatarColorHex(): string
-    {
-        $colors = InitialsAvatarProvider::COLORS;
-
-        return '#'.$colors[abs(crc32((string) $this->name)) % count($colors)];
     }
 
     public function getFilamentAvatarUrl(): ?string

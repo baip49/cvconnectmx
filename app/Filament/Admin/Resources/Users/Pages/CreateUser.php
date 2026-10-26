@@ -36,8 +36,8 @@ class CreateUser extends CreateRecord
         }
 
         Notification::make()
-            ->title('Usuario creado con contraseña temporal')
-            ->body('Compártela con el usuario, podrá cambiarla en su perfil: '.$this->generatedPassword)
+            ->title(__('admin.users.usuario_creado_con_contrasena_temporal'))
+            ->body(__('admin.users.compartela_con_el_usuario', ['password' => $this->generatedPassword]))
             ->success()
             ->send();
     }

@@ -15,42 +15,42 @@ class UserTrainingForm
     {
         return $schema
             ->components([
-                Section::make('Asignación de Capacitación')
+                Section::make(__('admin.user_trainings.asignacion_de_capacitacion'))
                     ->schema([
                         Grid::make(2)->schema([
                             Select::make('user_id')
-                                ->label('Usuario')
+                                ->label(__('admin.user_trainings.usuario'))
                                 ->relationship('user', 'name')
                                 ->searchable()
                                 ->preload()
                                 ->required(),
                             Select::make('training_id')
-                                ->label('Capacitación')
+                                ->label(__('admin.user_trainings.capacitacion'))
                                 ->relationship('training', 'title')
                                 ->searchable()
                                 ->preload()
                                 ->required(),
                             Select::make('status')
-                                ->label('Estado')
+                                ->label(__('admin.user_trainings.estado'))
                                 ->options([
-                                    'pending' => 'Pendiente',
-                                    'in_progress' => 'En progreso',
-                                    'completed' => 'Completada',
-                                    'expired' => 'Expirada',
+                                    'pending' => __('admin.user_trainings.pendiente'),
+                                    'in_progress' => __('admin.user_trainings.en_progreso'),
+                                    'completed' => __('admin.user_trainings.completada'),
+                                    'expired' => __('admin.user_trainings.expirada'),
                                 ])
                                 ->required()
                                 ->default('pending'),
                             TextInput::make('score')
-                                ->label('Calificación')
+                                ->label(__('admin.user_trainings.calificacion'))
                                 ->numeric()
                                 ->minValue(0)
                                 ->maxValue(100)
                                 ->nullable(),
                             DatePicker::make('completed_at')
-                                ->label('Fecha de Finalización')
+                                ->label(__('admin.user_trainings.fecha_de_finalizacion'))
                                 ->nullable(),
                             DatePicker::make('expires_at')
-                                ->label('Fecha de Expiración')
+                                ->label(__('admin.user_trainings.fecha_de_expiracion'))
                                 ->nullable(),
                         ]),
                     ]),

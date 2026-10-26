@@ -21,11 +21,20 @@ class VacancyResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBriefcase;
 
-    protected static ?string $navigationLabel = 'Buscador de Empleos';
+    public static function getNavigationLabel(): string
+    {
+        return __('candidate.vacancies.buscador_de_empleos');
+    }
 
-    protected static ?string $pluralModelLabel = 'Vacantes';
+    public static function getPluralModelLabel(): string
+    {
+        return __('candidate.vacancies.vacantes');
+    }
 
-    protected static ?string $modelLabel = 'Vacante';
+    public static function getModelLabel(): string
+    {
+        return __('candidate.vacancies.vacante');
+    }
 
     public static function form(Schema $schema): Schema
     {

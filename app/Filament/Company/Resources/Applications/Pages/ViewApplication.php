@@ -34,30 +34,30 @@ class ViewApplication extends ViewRecord
     {
         return [
             Action::make('change_status')
-                ->label('Cambiar Estado')
+                ->label(__('company.applications.cambiar_estado'))
                 ->color('primary')
                 ->icon('heroicon-o-chevron-up-down')
                 ->visible(fn (): bool => (bool) Auth::user()?->hasPermission('applications.manage'))
                 ->form([
                     Select::make('status')
-                        ->label('Nuevo Estado')
+                        ->label(__('company.applications.nuevo_estado'))
                         ->options([
-                            'pending' => 'Pendiente',
-                            'interview' => 'Entrevista',
-                            'accepted' => 'Aceptado',
-                            'rejected' => 'Rechazado',
+                            'pending' => __('company.applications.pendiente'),
+                            'interview' => __('company.applications.entrevista'),
+                            'accepted' => __('company.applications.aceptado'),
+                            'rejected' => __('company.applications.rechazado'),
                         ])
                         ->default(fn () => $this->getRecord()->status)
                         ->required(),
                     Textarea::make('internal_notes')
-                        ->label('Notas Internas')
+                        ->label(__('company.applications.notas_internas'))
                         ->default(fn () => $this->getRecord()->internal_notes)
                         ->rows(3),
                 ])
                 ->action(function (array $data) {
                     $this->getRecord()->update($data);
                     Notification::make()
-                        ->title('Estado actualizado correctamente')
+                        ->title(__('company.applications.estado_actualizado_correctamente'))
                         ->success()
                         ->send();
                     $this->refreshFormData(['status', 'internal_notes']);

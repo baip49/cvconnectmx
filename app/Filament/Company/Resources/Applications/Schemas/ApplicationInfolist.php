@@ -15,21 +15,21 @@ class ApplicationInfolist
     {
         return $schema
             ->components([
-                Section::make('Estado de la Postulación')
+                Section::make(__('company.applications.estado_de_la_postulacion'))
                     ->schema([
                         Grid::make(3)
                             ->schema([
                                 TextEntry::make('vacancy.title')
-                                    ->label('Vacante'),
+                                    ->label(__('company.applications.vacante')),
                                 TextEntry::make('status')
-                                    ->label('Estado')
+                                    ->label(__('company.applications.estado'))
                                     ->badge()
                                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                                        'pending' => 'Pendiente',
-                                        'interview' => 'Entrevista',
-                                        'accepted' => 'Aceptado',
-                                        'rejected' => 'Rechazado',
-                                        'offered' => 'Ofertado',
+                                        'pending' => __('company.applications.pendiente'),
+                                        'interview' => __('company.applications.entrevista'),
+                                        'accepted' => __('company.applications.aceptado'),
+                                        'rejected' => __('company.applications.rechazado'),
+                                        'offered' => __('company.applications.ofertado'),
                                         default => $state,
                                     })
                                     ->color(fn (string $state): string => match ($state) {
@@ -41,38 +41,38 @@ class ApplicationInfolist
                                         default => 'gray',
                                     }),
                                 TextEntry::make('created_at')
-                                    ->label('Fecha de Postulación')
+                                    ->label(__('company.applications.fecha_de_postulacion'))
                                     ->dateTime(),
                             ]),
                         TextEntry::make('cover_letter')
-                            ->label('Carta de Presentación')
+                            ->label(__('company.applications.carta_de_presentacion'))
                             ->columnSpanFull()
-                            ->default('Sin carta de presentación'),
+                            ->default(__('company.applications.sin_carta_de_presentacion')),
                         TextEntry::make('internal_notes')
-                            ->label('Notas Internas')
+                            ->label(__('company.applications.notas_internas'))
                             ->columnSpanFull()
                             ->default('—'),
                     ]),
 
-                Section::make('Perfil del Candidato')
+                Section::make(__('company.applications.perfil_del_candidato'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextEntry::make('candidate.user.name')
-                                    ->label('Nombre'),
+                                    ->label(__('company.applications.nombre')),
                                 TextEntry::make('candidate.user.email')
-                                    ->label('Correo Electrónico'),
+                                    ->label(__('company.applications.correo_electronico')),
                                 TextEntry::make('candidate.phone_encrypted')
-                                    ->label('Teléfono')
+                                    ->label(__('company.applications.telefono'))
                                     ->default('No proporcionado'),
                             ]),
                         TextEntry::make('candidate.summary')
-                            ->label('Sobre el Candidato')
+                            ->label(__('company.applications.sobre_el_candidato'))
                             ->columnSpanFull()
-                            ->default('Sin descripción'),
+                            ->default(__('company.applications.sin_descripcion')),
                     ]),
 
-                Section::make('Experiencia Laboral')
+                Section::make(__('company.applications.experiencia_laboral'))
                     ->schema([
                         RepeatableEntry::make('candidate.workExperiences')
                             ->label('')
@@ -80,23 +80,23 @@ class ApplicationInfolist
                                 Grid::make(2)
                                     ->schema([
                                         TextEntry::make('job_title')
-                                            ->label('Puesto')
+                                            ->label(__('company.applications.puesto'))
                                             ->weight('bold'),
                                         TextEntry::make('company_name')
-                                            ->label('Empresa'),
+                                            ->label(__('company.applications.empresa')),
                                         TextEntry::make('start_date')
-                                            ->label('Desde')
+                                            ->label(__('company.applications.desde'))
                                             ->date(),
                                         TextEntry::make('end_date')
-                                            ->label('Hasta')
-                                            ->formatStateUsing(fn ($state) => $state ? Carbon::parse($state)->format('Y-m-d') : 'Actualidad'),
+                                            ->label(__('company.applications.hasta'))
+                                            ->formatStateUsing(fn ($state) => $state ? Carbon::parse($state)->format('Y-m-d') : __('company.applications.actualidad')),
                                     ]),
                             ])
                             ->columnSpanFull()
                             ->grid(2),
                     ]),
 
-                Section::make('Educación')
+                Section::make(__('company.applications.educacion'))
                     ->schema([
                         RepeatableEntry::make('candidate.educations')
                             ->label('')
@@ -104,17 +104,17 @@ class ApplicationInfolist
                                 Grid::make(2)
                                     ->schema([
                                         TextEntry::make('degree')
-                                            ->label('Grado / Título')
+                                            ->label(__('company.applications.grado_titulo'))
                                             ->weight('bold'),
                                         TextEntry::make('institution')
-                                            ->label('Institución'),
+                                            ->label(__('company.applications.institucion')),
                                     ]),
                             ])
                             ->columnSpanFull()
                             ->grid(2),
                     ]),
 
-                Section::make('Habilidades')
+                Section::make(__('company.applications.habilidades'))
                     ->schema([
                         TextEntry::make('skills')
                             ->label('')
@@ -124,7 +124,7 @@ class ApplicationInfolist
                             ->color('info'),
                     ]),
 
-                Section::make('Documentos Adjuntos')
+                Section::make(__('company.applications.documentos_adjuntos'))
                     ->schema([
                         RepeatableEntry::make('candidate.documents')
                             ->hiddenLabel()

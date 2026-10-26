@@ -17,45 +17,45 @@ class TicketsTable
         return $table
             ->columns([
                 TextColumn::make('title')
-                    ->label('Asunto')
+                    ->label(__('admin.tickets.asunto'))
                     ->searchable()
                     ->limit(40)
                     ->sortable(),
 
                 TextColumn::make('level')
-                    ->label('Nivel')
+                    ->label(__('admin.tickets.nivel'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => TicketLabels::levels()[$state] ?? $state)
                     ->color(fn (string $state): string => TicketLabels::levelColors()[$state] ?? 'gray'),
 
                 TextColumn::make('status')
-                    ->label('Estado')
+                    ->label(__('admin.tickets.estado'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => TicketLabels::statuses()[$state] ?? $state)
                     ->color(fn (string $state): string => TicketLabels::statusColors()[$state] ?? 'gray')
                     ->sortable(),
 
                 TextColumn::make('creator.name')
-                    ->label('Reportado por')
+                    ->label(__('admin.tickets.reportado_por'))
                     ->searchable()
-                    ->placeholder('Sistema'),
+                    ->placeholder(__('admin.tickets.sistema')),
 
                 TextColumn::make('claimedBy.name')
-                    ->label('Atendido por')
+                    ->label(__('admin.tickets.atendido_por'))
                     ->searchable()
-                    ->placeholder('Sin reclamar'),
+                    ->placeholder(__('admin.tickets.sin_reclamar')),
 
                 TextColumn::make('created_at')
-                    ->label('Fecha')
+                    ->label(__('admin.tickets.fecha'))
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->label('Estado')
+                    ->label(__('admin.tickets.estado'))
                     ->options(TicketLabels::statuses()),
                 SelectFilter::make('level')
-                    ->label('Nivel')
+                    ->label(__('admin.tickets.nivel'))
                     ->options(TicketLabels::levels()),
             ])
             ->defaultSort('created_at', 'desc')

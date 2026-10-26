@@ -14,38 +14,38 @@ class CompanyInfolist
     {
         return $schema
             ->components([
-                Section::make('Información Corporativa')
+                Section::make(__('admin.companies.informacion_corporativa'))
                     ->schema([
                         Grid::make(3)
                             ->schema([
                                 TextEntry::make('name')
-                                    ->label('Nombre de la Empresa'),
+                                    ->label(__('admin.companies.nombre_de_la_empresa')),
                                 TextEntry::make('sector')
-                                    ->label('Sector'),
+                                    ->label(__('admin.companies.sector')),
                                 IconEntry::make('is_verified')
-                                    ->label('Verificada')
+                                    ->label(__('admin.companies.verificada'))
                                     ->boolean(),
                                 TextEntry::make('internal_tax_id')
-                                    ->label('RFC / Tax ID'),
+                                    ->label(__('admin.companies.rfc_tax_id')),
                                 TextEntry::make('city')
-                                    ->label('Ciudad'),
+                                    ->label(__('admin.companies.ciudad')),
                                 TextEntry::make('state')
-                                    ->label('Estado / Provincia'),
+                                    ->label(__('admin.companies.estado_provincia')),
                             ]),
                     ]),
 
-                Section::make('Información de Contacto (Usuario)')
+                Section::make(__('admin.companies.informacion_de_contacto_usuario'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextEntry::make('user.name')
-                                    ->label('Representante'),
+                                    ->label(__('admin.companies.representante')),
                                 TextEntry::make('user.email')
-                                    ->label('Correo Electrónico'),
+                                    ->label(__('admin.companies.correo_electronico')),
                             ]),
                     ]),
 
-                Section::make('Vacantes Publicadas')
+                Section::make(__('admin.companies.vacantes_publicadas'))
                     ->schema([
                         TextEntry::make('vacancies')
                             ->label('')
@@ -53,7 +53,7 @@ class CompanyInfolist
                                 $vacancies = $record->vacancies;
 
                                 if ($vacancies->isEmpty()) {
-                                    return 'Sin vacantes publicadas';
+                                    return __('admin.companies.sin_vacantes_publicadas');
                                 }
 
                                 return $vacancies->map(function ($vacancy) {

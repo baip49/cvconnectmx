@@ -19,7 +19,7 @@ test('candidate dashboard loads the welcome banner widget first', function () {
     $html = get('/dashboard')->assertOk()->getContent();
 
     // The panel must serve its Vite theme, otherwise custom widget styling is lost.
-    expect((string) $html)->toContain('filament/candidate/theme');
+    expect((string) $html)->toContain('filament/theme');
 
     // Widgets are lazy-loaded, so assert on their render order in the page.
     expect(strpos((string) $html, 'WelcomeBanner-0'))->toBeLessThan(strpos((string) $html, 'RecentApplications-2'))
@@ -33,6 +33,6 @@ test('welcome banner greets the candidate and shows the AI rating', function () 
     actingAs($user);
 
     Livewire::test(WelcomeBanner::class)
-        ->assertSee('¡Hola,')
+        ->assertSee(__('candidate.banners.hello', ['name' => $user->name]))
         ->assertSee('85/100');
 });

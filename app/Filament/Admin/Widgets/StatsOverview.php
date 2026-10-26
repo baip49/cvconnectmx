@@ -35,33 +35,33 @@ class StatsOverview extends StatsOverviewWidget
         $todayLogs = AuditLog::whereDate('created_at', today())->count();
 
         return [
-            Stat::make('Usuarios', $totalUsers)
-                ->description("{$totalCandidates} candidatos · {$totalCompanies} empresas")
+            Stat::make(__('admin.stats_overview.usuarios'), $totalUsers)
+                ->description(__('admin.stats_overview.totalcandidates_candidatos_totalcompanie', ['totalCandidates' => $totalCandidates, 'totalCompanies' => $totalCompanies]))
                 ->descriptionIcon('heroicon-m-users')
                 ->color('primary'),
 
-            Stat::make('Vacantes activas', $activeVacancies)
-                ->description('Publicadas actualmente')
+            Stat::make(__('admin.stats_overview.vacantes_activas'), $activeVacancies)
+                ->description(__('admin.stats_overview.publicadas_actualmente'))
                 ->descriptionIcon('heroicon-m-briefcase')
                 ->color('success'),
 
-            Stat::make('Postulaciones', $totalApplications)
-                ->description("{$pendingApplications} pendientes · {$acceptedApplications} aceptadas")
+            Stat::make(__('admin.stats_overview.postulaciones'), $totalApplications)
+                ->description(__('admin.stats_overview.pendingapplications_pendientes_accepteda', ['pendingApplications' => $pendingApplications, 'acceptedApplications' => $acceptedApplications]))
                 ->descriptionIcon('heroicon-m-paper-airplane')
                 ->color('info'),
 
-            Stat::make('Actividad hoy', $todayLogs)
-                ->description('Registros de auditoría')
+            Stat::make(__('admin.stats_overview.actividad_hoy'), $todayLogs)
+                ->description(__('admin.stats_overview.registros_de_auditoria'))
                 ->descriptionIcon('heroicon-m-document-text')
                 ->color('warning'),
 
-            Stat::make('Tickets abiertos', $openTickets)
-                ->description('Requieren atención')
+            Stat::make(__('admin.stats_overview.tickets_abiertos'), $openTickets)
+                ->description(__('admin.stats_overview.requieren_atencion'))
                 ->descriptionIcon('heroicon-m-lifebuoy')
                 ->color($openTickets > 0 ? 'danger' : 'success'),
 
-            Stat::make('Alertas pendientes', $unresolvedAlerts)
-                ->description('Sin resolver')
+            Stat::make(__('admin.stats_overview.alertas_pendientes'), $unresolvedAlerts)
+                ->description(__('admin.stats_overview.sin_resolver'))
                 ->descriptionIcon('heroicon-m-bell-alert')
                 ->color($unresolvedAlerts > 0 ? 'warning' : 'success'),
         ];

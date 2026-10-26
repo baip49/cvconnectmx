@@ -15,14 +15,14 @@ class PermissionsTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Permiso')
+                    ->label(__('admin.permissions.permiso'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('description')
-                    ->label('Descripción')
+                    ->label(__('admin.permissions.descripcion'))
                     ->searchable(),
                 TextColumn::make('created_at')
-                    ->label('Creado')
+                    ->label(__('admin.permissions.creado'))
                     ->dateTime()
                     ->sortable(),
             ])

@@ -18,7 +18,7 @@ class ViewTicket extends ViewRecord
     {
         return [
             Action::make('close')
-                ->label('Cerrar ticket')
+                ->label(__('candidate.tickets.cerrar_ticket'))
                 ->icon(Heroicon::OutlinedCheckCircle)
                 ->color('success')
                 ->requiresConfirmation()
@@ -26,20 +26,20 @@ class ViewTicket extends ViewRecord
                 ->action(function (Ticket $record): void {
                     $record->close(Auth::user());
 
-                    Notification::make()->title('Ticket cerrado')->success()->send();
+                    Notification::make()->title(__('candidate.tickets.ticket_cerrado'))->success()->send();
                 }),
 
             Action::make('reopen')
-                ->label('Reabrir ticket')
+                ->label(__('candidate.tickets.reabrir_ticket'))
                 ->icon(Heroicon::OutlinedArrowPath)
                 ->color('warning')
                 ->requiresConfirmation()
-                ->modalDescription('El ticket volverá a estado abierto o en progreso. Solo se puede reabrir dentro de los 30 días posteriores al cierre.')
+                ->modalDescription(__('candidate.tickets.el_ticket_volvera_a_estado_abierto_o_en'))
                 ->visible(fn (Ticket $record): bool => $record->canBeReopenedBy(Auth::user()))
                 ->action(function (Ticket $record): void {
                     $record->reopen(Auth::user());
 
-                    Notification::make()->title('Ticket reabierto')->success()->send();
+                    Notification::make()->title(__('candidate.tickets.ticket_reabierto'))->success()->send();
                 }),
         ];
     }

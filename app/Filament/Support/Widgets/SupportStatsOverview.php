@@ -21,18 +21,18 @@ class SupportStatsOverview extends StatsOverviewWidget
         $closed = Ticket::where('status', 'closed')->count();
 
         return [
-            Stat::make('Sin reclamar', $unclaimed)
-                ->description('Tickets esperando asistente')
+            Stat::make(__('support.support_stats_overview.sin_reclamar'), $unclaimed)
+                ->description(__('support.support_stats_overview.tickets_esperando_asistente'))
                 ->descriptionIcon('heroicon-m-ticket')
                 ->color($unclaimed > 0 ? 'danger' : 'success'),
 
-            Stat::make('En atención', $inProgress)
-                ->description('Siendo atendidos ahora')
+            Stat::make(__('support.support_stats_overview.en_atencion'), $inProgress)
+                ->description(__('support.support_stats_overview.siendo_atendidos_ahora'))
                 ->descriptionIcon('heroicon-m-chat-bubble-left-right')
                 ->color('warning'),
 
-            Stat::make('Cerrados', $closed)
-                ->description('Asuntos resueltos')
+            Stat::make(__('support.support_stats_overview.cerrados'), $closed)
+                ->description(__('support.support_stats_overview.asuntos_resueltos'))
                 ->descriptionIcon('heroicon-m-check-circle')
                 ->color('success'),
         ];

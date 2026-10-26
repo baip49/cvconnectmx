@@ -16,7 +16,7 @@ class LoginResponse implements LoginResponseContract
      */
     public function toResponse($request): Response
     {
-        Notification::make()->title('Sesión iniciada correctamente.')->success()->send();
+        Notification::make()->title(__('shared.auth.logged_in'))->success()->send();
 
         return redirect()->intended($request->user()->panelPath());
     }

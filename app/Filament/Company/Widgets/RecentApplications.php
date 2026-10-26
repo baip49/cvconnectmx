@@ -11,8 +11,13 @@ use Illuminate\Support\Facades\Auth;
 class RecentApplications extends BaseWidget
 {
     protected static ?int $sort = 2;
-    protected int | string | array $columnSpan = 'full';
-    protected static ?string $heading = 'Postulaciones Recientes';
+
+    protected int|string|array $columnSpan = 'full';
+
+    protected function getTableHeading(): ?string
+    {
+        return __('company.recent_applications.postulaciones_recientes');
+    }
 
     public function table(Table $table): Table
     {
@@ -21,31 +26,31 @@ class RecentApplications extends BaseWidget
         return $table
             ->query(
                 Application::query()
-                    ->whereHas('vacancy', fn($q) => $q->where('company_id', $companyId))
+                    ->whereHas('vacancy', fn ($q) => $q->where('company_id', $companyId))
                     ->latest()
                     ->limit(5)
             )
             ->columns([
                 Tables\Columns\TextColumn::make('vacancy.title')
-                    ->label('Vacante')
+                    ->label(__('company.recent_applications.vacante'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('candidate.user.name')
-                    ->label('Candidato')
+                    ->label(__('company.recent_applications.candidato'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('candidate.ai_rating')
-                    ->label('Rating IA')
+                    ->label(__('company.recent_applications.rating_ia'))
                     ->badge()
                     ->color(fn ($state) => $state >= 80 ? 'success' : ($state >= 50 ? 'warning' : 'danger'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
-                    ->label('Estado')
+                    ->label(__('company.recent_applications.estado'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'pending' => 'Pendiente',
-                        'interview' => 'Entrevista',
-                        'accepted' => 'Aceptado',
-                        'rejected' => 'Rechazado',
-                        'offered' => 'Ofertado',
+                        'pending' => __('company.recent_applications.pendiente'),
+                        'interview' => __('company.recent_applications.entrevista'),
+                        'accepted' => __('company.recent_applications.aceptado'),
+                        'rejected' => __('company.recent_applications.rechazado'),
+                        'offered' => __('company.recent_applications.ofertado'),
                         default => $state,
                     })
                     ->color(fn (string $state): string => match ($state) {
@@ -57,7 +62,7 @@ class RecentApplications extends BaseWidget
                         default => 'gray',
                     }),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Fecha')
+                    ->label(__('company.recent_applications.fecha'))
                     ->dateTime()
                     ->since()
                     ->sortable(),

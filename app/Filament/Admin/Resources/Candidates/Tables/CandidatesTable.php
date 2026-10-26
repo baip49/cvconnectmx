@@ -18,28 +18,28 @@ class CandidatesTable
         return $table
             ->columns([
                 TextColumn::make('user.name')
-                    ->label('Nombre')
+                    ->label(__('admin.candidates.nombre'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('user.email')
-                    ->label('Correo')
+                    ->label(__('admin.candidates.correo'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('professional_title')
-                    ->label('Título')
+                    ->label(__('admin.candidates.titulo'))
                     ->searchable(),
                 TextColumn::make('city')
-                    ->label('Ciudad')
+                    ->label(__('admin.candidates.ciudad'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->label('Registrado')
+                    ->label(__('admin.candidates.registrado'))
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('is_blocked')
-                    ->label('Estado')
+                    ->label(__('admin.candidates.estado'))
                     ->badge()
-                    ->formatStateUsing(fn (bool $state) => $state ? 'Bloqueado' : 'Activo')
+                    ->formatStateUsing(fn (bool $state) => $state ? __('admin.candidates.bloqueado') : __('admin.candidates.activo'))
                     ->color(fn (bool $state) => $state ? 'danger' : 'success'),
             ])
             ->filters([
@@ -48,14 +48,14 @@ class CandidatesTable
             ->recordActions([
                 ViewAction::make(),
                 Action::make('toggle_block')
-                    ->label(fn (Candidate $record) => $record->is_blocked ? 'Desbloquear' : 'Bloquear')
+                    ->label(fn (Candidate $record) => $record->is_blocked ? __('admin.candidates.desbloquear') : __('admin.candidates.bloquear'))
                     ->icon(fn (Candidate $record) => $record->is_blocked ? 'heroicon-o-lock-open' : 'heroicon-o-lock-closed')
                     ->color(fn (Candidate $record) => $record->is_blocked ? 'success' : 'danger')
                     ->requiresConfirmation()
                     ->action(function (Candidate $record) {
                         $record->update(['is_blocked' => ! $record->is_blocked]);
                         Notification::make()
-                            ->title($record->is_blocked ? 'Candidato bloqueado' : 'Candidato desbloqueado')
+                            ->title($record->is_blocked ? __('admin.candidates.candidato_bloqueado') : __('admin.candidates.candidato_desbloqueado'))
                             ->success()
                             ->send();
                     }),

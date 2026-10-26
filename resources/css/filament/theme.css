@@ -1,0 +1,79 @@
+@import '../../../vendor/filament/filament/resources/css/theme.css';
+@import '../../../vendor/livewire/flux/dist/flux.css';
+@import '../brand.css';
+
+@source '../../../app/Filament/**/*';
+@source '../../../resources/views/filament/**/*';
+@source '../../../resources/views/livewire/**/*';
+@source '../../../resources/views/pages/settings/**/*';
+@source '../../../resources/views/components/**/*';
+
+/*
+ * Flux look for Filament: Filament's own components stay, these rules restyle them with Flux's surfaces,
+ * borders and sidebar so the panels and the Flux pages read as one design.
+ */
+@layer components {
+    .fi-body {
+        @apply bg-zinc-100 dark:bg-zinc-900;
+    }
+
+    .fi-header-heading,
+    .fi-simple-header-heading,
+    .fi-logo {
+        @apply font-display tracking-tight;
+    }
+
+    /* Sidebar, as Flux's <flux:sidebar>. */
+    .fi-sidebar {
+        @apply lg:border-e lg:border-zinc-200 lg:bg-zinc-200/50 dark:lg:border-zinc-800 dark:lg:bg-zinc-950;
+    }
+
+    .fi-sidebar-item-btn {
+        @apply border border-transparent px-3 py-1.5 hover:bg-zinc-800/5 dark:hover:bg-white/[7%];
+
+        & > .fi-sidebar-item-label {
+            @apply text-zinc-500 dark:text-white/80;
+        }
+    }
+
+    .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+        @apply border-zinc-200 bg-zinc-50 shadow-xs dark:border-white/10 dark:bg-white/[7%];
+
+        & > .fi-sidebar-item-label {
+            @apply text-zinc-800 dark:text-white;
+        }
+
+        & > .fi-icon {
+            @apply text-(--color-accent-content);
+        }
+    }
+
+    .fi-sidebar-group-label {
+        @apply text-xs text-zinc-400;
+    }
+
+    .fi-topbar {
+        @apply shadow-none ring-0 border-b border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900;
+    }
+
+    /* Cards, as Flux's <flux:card>. */
+    .fi-section:not(.fi-section-not-contained):not(.fi-aside),
+    .fi-ta-ctn,
+    .fi-wi-stats-overview-stat {
+        @apply bg-zinc-50 shadow-xs ring-zinc-900/10 dark:bg-white/5 dark:ring-white/10;
+    }
+
+    /* Inputs, as Flux's outline <flux:input>. */
+    .fi-input-wrp {
+        @apply shadow-xs ring-zinc-200 dark:bg-white/5 dark:ring-white/10;
+    }
+
+    /* Menus and modals, as Flux's <flux:menu> and <flux:modal>. */
+    .fi-dropdown-panel {
+        @apply rounded-lg shadow-xs ring-zinc-200 dark:bg-zinc-800 dark:ring-zinc-700;
+    }
+
+    .fi-modal-window {
+        @apply ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-white/10;
+    }
+}

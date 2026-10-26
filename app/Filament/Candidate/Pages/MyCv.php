@@ -28,9 +28,15 @@ class MyCv extends Page implements HasForms
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $title = 'Mi CV';
+    public function getTitle(): string
+    {
+        return __('candidate.my_cv.mi_cv');
+    }
 
-    protected static ?string $navigationLabel = 'Mi CV';
+    public static function getNavigationLabel(): string
+    {
+        return __('candidate.my_cv.mi_cv');
+    }
 
     protected string $view = 'filament.candidate.pages.my-cv';
 
@@ -57,11 +63,11 @@ class MyCv extends Page implements HasForms
     {
         return $schema
             ->schema([
-                Section::make('CV Principal')
-                    ->description('Sube tu currículum en formato PDF para que nuestra IA local evalúe tu perfil.')
+                Section::make(__('candidate.my_cv.cv_principal'))
+                    ->description(__('candidate.my_cv.sube_tu_curriculum_en_formato_pdf_para_q'))
                     ->schema([
                         FileUpload::make('cv_url')
-                            ->label('Archivo CV')
+                            ->label(__('candidate.my_cv.archivo_cv'))
                             ->disk('local')
                             ->directory('candidate-cvs')
                             ->visibility('private')
@@ -72,7 +78,7 @@ class MyCv extends Page implements HasForms
                                 if ($state instanceof TemporaryUploadedFile) {
                                     // The file is stored before form validation runs, so check it here.
                                     if ($state->getMimeType() !== 'application/pdf' || $state->getSize() > 5120 * 1024) {
-                                        Notification::make()->title('Archivo no permitido')->body('El CV debe ser un PDF de máximo 5MB.')->danger()->send();
+                                        Notification::make()->title(__('candidate.my_cv.archivo_no_permitido'))->body(__('candidate.my_cv.el_cv_debe_ser_un_pdf_de_maximo_5mb'))->danger()->send();
 
                                         return;
                                     }
@@ -85,13 +91,13 @@ class MyCv extends Page implements HasForms
                                         $candidate->cv_url = $path;
                                         $candidate->save();
                                         Log::info("MyCv: Candidate updated with permanent S3 path: {$path}");
-                                        Notification::make()->title('CV subido y guardado en la nube')->success()->send();
+                                        Notification::make()->title(__('candidate.my_cv.cv_subido_y_guardado_en_la_nube'))->success()->send();
                                     }
                                 }
                             })
                             ->hintAction(
                                 fn () => Auth::user()->candidate->cv_url ? Action::make('analyze_cv')
-                                    ->label('Analizar con IA')
+                                    ->label(__('candidate.my_cv.analizar_con_ia'))
                                     ->icon('heroicon-o-sparkles')
                                     ->action(function (AiService $aiService) {
                                         $candidate = Auth::user()->candidate;
@@ -106,89 +112,89 @@ class MyCv extends Page implements HasForms
                                         ]);
 
                                         Notification::make()
-                                            ->title('Análisis completado')
-                                            ->body('Tu perfil ha sido calificado con un '.$result['rating'].'/100')
+                                            ->title(__('candidate.my_cv.analisis_completado'))
+                                            ->body(__('candidate.my_cv.tu_perfil_ha_sido_calificado', ['rating' => $result['rating']]))
                                             ->success()
                                             ->send();
                                     }) : null
                             ),
                     ]),
 
-                Section::make('Resumen Profesional')
-                    ->description(fn () => Auth::user()->candidate->ai_rating ? 'Tu perfil tiene una calificación de IA de '.Auth::user()->candidate->ai_rating.'/100' : 'Analiza tu CV principal para obtener una calificación de IA.')
+                Section::make(__('candidate.my_cv.resumen_profesional'))
+                    ->description(fn () => Auth::user()->candidate->ai_rating ? __('candidate.my_cv.tu_perfil_tiene_una_calificacion', ['rating' => Auth::user()->candidate->ai_rating]) : __('candidate.my_cv.analiza_tu_cv_principal_para_obtener_una'))
                     ->schema([
                         Textarea::make('summary')
-                            ->label('Sobre mí')
+                            ->label(__('candidate.my_cv.sobre_mi'))
                             ->rows(3),
                         TextInput::make('phone_encrypted')
-                            ->label('Teléfono')
+                            ->label(__('candidate.my_cv.telefono'))
                             ->tel(),
                     ]),
 
-                Section::make('Experiencia Laboral')
+                Section::make(__('candidate.my_cv.experiencia_laboral'))
                     ->schema([
                         Repeater::make('work_experiences')
                             ->label('')
                             ->schema([
                                 Hidden::make('id'),
                                 TextInput::make('company_name')
-                                    ->label('Empresa')
+                                    ->label(__('candidate.my_cv.empresa'))
                                     ->required(),
                                 TextInput::make('job_title')
-                                    ->label('Puesto')
+                                    ->label(__('candidate.my_cv.puesto'))
                                     ->required(),
                                 DatePicker::make('start_date')
-                                    ->label('Fecha de inicio'),
+                                    ->label(__('candidate.my_cv.fecha_de_inicio')),
                                 DatePicker::make('end_date')
-                                    ->label('Fecha de fin'),
+                                    ->label(__('candidate.my_cv.fecha_de_fin')),
                             ])
                             ->columns(2),
                     ]),
 
-                Section::make('Educación')
+                Section::make(__('candidate.my_cv.educacion'))
                     ->schema([
                         Repeater::make('educations')
                             ->label('')
                             ->schema([
                                 Hidden::make('id'),
                                 TextInput::make('institution')
-                                    ->label('Institución')
+                                    ->label(__('candidate.my_cv.institucion'))
                                     ->required(),
                                 TextInput::make('degree')
-                                    ->label('Grado / Título')
+                                    ->label(__('candidate.my_cv.grado_titulo'))
                                     ->required(),
                             ])
                             ->columns(2),
                     ]),
 
-                Section::make('Habilidades')
+                Section::make(__('candidate.my_cv.habilidades'))
                     ->schema([
                         Repeater::make('skills')
                             ->label('')
                             ->schema([
                                 Hidden::make('id'),
                                 TextInput::make('name')
-                                    ->label('Habilidad')
+                                    ->label(__('candidate.my_cv.habilidad'))
                                     ->required(),
                                 TextInput::make('level')
-                                    ->label('Nivel (Básico, Intermedio, Avanzado)'),
+                                    ->label(__('candidate.my_cv.nivel_basico_intermedio_avanzado')),
                             ])
                             ->columns(2),
                     ]),
 
-                Section::make('Documentos Adjuntos')
-                    ->description('Sube tu CV, certificados u otros archivos relevantes.')
+                Section::make(__('candidate.my_cv.documentos_adjuntos'))
+                    ->description(__('candidate.my_cv.sube_tu_cv_certificados_u_otros_archivos'))
                     ->schema([
                         Repeater::make('documents')
                             ->hiddenLabel()
                             ->compact()
                             ->schema([
                                 TextInput::make('name')
-                                    ->label('Nombre del Documento')
-                                    ->placeholder('Ej: Certificado de Inglés, CV 2024')
+                                    ->label(__('candidate.my_cv.nombre_del_documento'))
+                                    ->placeholder(__('candidate.my_cv.ej_certificado_de_ingles_cv_2024'))
                                     ->required(),
                                 FileUpload::make('file_path')
-                                    ->label('Archivo')
+                                    ->label(__('candidate.my_cv.archivo'))
                                     ->disk('local')
                                     ->directory('candidate-documents')
                                     ->visibility('private')
@@ -200,7 +206,7 @@ class MyCv extends Page implements HasForms
                                         if ($state instanceof TemporaryUploadedFile && $get('name')) {
                                             // The file is stored before form validation runs, so check it here.
                                             if (! in_array($state->getMimeType(), CandidateDocument::ACCEPTED_FILE_TYPES, true) || $state->getSize() > 5120 * 1024) {
-                                                Notification::make()->title('Archivo no permitido')->body('Sube un PDF, imagen o Word de máximo 5MB.')->danger()->send();
+                                                Notification::make()->title(__('candidate.my_cv.archivo_no_permitido'))->body(__('candidate.my_cv.sube_un_pdf_imagen_o_word_de_maximo_5mb'))->danger()->send();
 
                                                 return;
                                             }
@@ -211,13 +217,13 @@ class MyCv extends Page implements HasForms
                                                 ['file_path' => $path],
                                                 ['name' => $get('name')]
                                             );
-                                            Notification::make()->title('Documento guardado correctamente')->success()->send();
+                                            Notification::make()->title(__('candidate.my_cv.documento_guardado_correctamente'))->success()->send();
                                         }
                                     })
                                     ->extraAttributes(['class' => 'mb-0'])
                                     ->hintAction(
                                         fn ($state, $record, $component) => $state ? Action::make('preview')
-                                            ->label('Ver archivo actual')
+                                            ->label(__('candidate.my_cv.ver_archivo_actual'))
                                             ->icon('heroicon-o-eye')
                                             ->url(function () use ($component) {
                                                 $data = $component->getContainer()->getRawState();
@@ -238,7 +244,7 @@ class MyCv extends Page implements HasForms
     {
         return [
             Action::make('save')
-                ->label('Guardar Cambios')
+                ->label(__('candidate.my_cv.guardar_cambios'))
                 ->submit('save'),
         ];
     }
@@ -294,7 +300,7 @@ class MyCv extends Page implements HasForms
         }
 
         Notification::make()
-            ->title('CV actualizado correctamente')
+            ->title(__('candidate.my_cv.cv_actualizado_correctamente'))
             ->success()
             ->send();
     }

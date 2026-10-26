@@ -15,36 +15,36 @@ class TrainingForm
     {
         return $schema
             ->components([
-                Section::make('Información de la Capacitación')
+                Section::make(__('admin.trainings.informacion_de_la_capacitacion'))
                     ->schema([
                         Grid::make(2)->schema([
                             TextInput::make('title')
-                                ->label('Título')
+                                ->label(__('admin.trainings.titulo'))
                                 ->required()
                                 ->maxLength(255),
                             Select::make('type')
-                                ->label('Tipo')
+                                ->label(__('admin.trainings.tipo'))
                                 ->options([
-                                    'security' => 'Seguridad',
-                                    'compliance' => 'Cumplimiento',
-                                    'onboarding' => 'Inducción',
-                                    'technical' => 'Técnica',
-                                    'soft_skills' => 'Habilidades Blandas',
+                                    'security' => __('admin.trainings.seguridad'),
+                                    'compliance' => __('admin.trainings.cumplimiento'),
+                                    'onboarding' => __('admin.trainings.induccion'),
+                                    'technical' => __('admin.trainings.tecnica'),
+                                    'soft_skills' => __('admin.trainings.habilidades_blandas'),
                                 ])
                                 ->required(),
                             Select::make('target_role_id')
-                                ->label('Rol Objetivo')
+                                ->label(__('admin.trainings.rol_objetivo'))
                                 ->relationship('targetRole', 'name')
                                 ->searchable()
                                 ->preload()
                                 ->nullable(),
                             TextInput::make('validity_days')
-                                ->label('Validez (días)')
+                                ->label(__('admin.trainings.validez_dias'))
                                 ->numeric()
                                 ->required()
                                 ->default(365),
                             Toggle::make('is_active')
-                                ->label('Activo')
+                                ->label(__('admin.trainings.activo'))
                                 ->default(true),
                         ]),
                     ]),

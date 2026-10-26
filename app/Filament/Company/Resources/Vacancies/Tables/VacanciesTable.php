@@ -17,12 +17,12 @@ class VacanciesTable
         return $table
             ->columns([
                 TextColumn::make('title')
-                    ->label('Título')
+                    ->label(__('company.vacancies.titulo'))
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
                 TextColumn::make('work_model')
-                    ->label('Modalidad')
+                    ->label(__('company.vacancies.modalidad'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'remote' => 'success',
@@ -31,17 +31,17 @@ class VacanciesTable
                         default => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'remote' => 'Remoto',
-                        'hybrid' => 'Híbrido',
-                        'on_site' => 'Presencial',
+                        'remote' => __('company.vacancies.remoto'),
+                        'hybrid' => __('company.vacancies.hibrido'),
+                        'on_site' => __('company.vacancies.presencial'),
                         default => $state,
                     }),
                 TextColumn::make('max_salary')
-                    ->label('Sueldo Máx.')
+                    ->label(__('company.vacancies.sueldo_max'))
                     ->money('MXN')
                     ->sortable(),
                 TextColumn::make('status')
-                    ->label('Estado')
+                    ->label(__('company.vacancies.estado'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'published' => 'success',
@@ -50,34 +50,34 @@ class VacanciesTable
                         default => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'published' => 'Publicada',
-                        'draft' => 'Borrador',
-                        'closed' => 'Cerrada',
+                        'published' => __('company.vacancies.publicada'),
+                        'draft' => __('company.vacancies.borrador'),
+                        'closed' => __('company.vacancies.cerrada'),
                         default => $state,
                     }),
                 TextColumn::make('applications_count')
-                    ->label('Postulaciones')
+                    ->label(__('company.vacancies.postulaciones'))
                     ->counts('applications')
                     ->sortable(),
                 TextColumn::make('expires_at')
-                    ->label('Expira')
+                    ->label(__('company.vacancies.expira'))
                     ->date()
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('work_model')
-                    ->label('Modalidad')
+                    ->label(__('company.vacancies.modalidad'))
                     ->options([
-                        'remote' => 'Remoto',
-                        'hybrid' => 'Híbrido',
-                        'on_site' => 'Presencial',
+                        'remote' => __('company.vacancies.remoto'),
+                        'hybrid' => __('company.vacancies.hibrido'),
+                        'on_site' => __('company.vacancies.presencial'),
                     ]),
                 SelectFilter::make('status')
-                    ->label('Estado')
+                    ->label(__('company.vacancies.estado'))
                     ->options([
-                        'published' => 'Publicada',
-                        'draft' => 'Borrador',
-                        'closed' => 'Cerrada',
+                        'published' => __('company.vacancies.publicada'),
+                        'draft' => __('company.vacancies.borrador'),
+                        'closed' => __('company.vacancies.cerrada'),
                     ]),
             ])
             ->recordActions([

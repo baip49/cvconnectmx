@@ -15,7 +15,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class SystemAlertResource extends Resource
 {
@@ -23,9 +22,15 @@ class SystemAlertResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBellAlert;
 
-    protected static ?string $navigationLabel = 'Alertas del Sistema';
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.system_alerts.alertas_del_sistema');
+    }
 
-    protected static string|UnitEnum|null $navigationGroup = 'Seguridad';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.navigation_groups.seguridad');
+    }
 
     public static function form(Schema $schema): Schema
     {

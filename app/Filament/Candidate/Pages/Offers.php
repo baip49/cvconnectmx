@@ -10,7 +10,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
-
 use Illuminate\Support\Facades\Auth;
 
 class Offers extends Page implements HasTable
@@ -19,9 +18,15 @@ class Offers extends Page implements HasTable
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-envelope';
 
-    protected static ?string $title = 'Ofertas Recibidas';
+    public function getTitle(): string
+    {
+        return __('candidate.offers.ofertas_recibidas');
+    }
 
-    protected static ?string $navigationLabel = 'Ofertas';
+    public static function getNavigationLabel(): string
+    {
+        return __('candidate.offers.ofertas');
+    }
 
     protected string $view = 'filament.candidate.pages.offers';
 
@@ -35,24 +40,24 @@ class Offers extends Page implements HasTable
             )
             ->columns([
                 TextColumn::make('vacancy.title')
-                    ->label('Vacante')
+                    ->label(__('candidate.offers.vacante'))
                     ->searchable()
                     ->sortable()
                     ->url(fn (Application $record): string => route('filament.candidate.resources.vacancies.view', ['record' => $record->vacancy_id]))
                     ->color('primary')
                     ->weight('bold'),
                 TextColumn::make('vacancy.company.name')
-                    ->label('Empresa')
+                    ->label(__('candidate.offers.empresa'))
                     ->searchable(),
                 TextColumn::make('status')
-                    ->label('Estado')
+                    ->label(__('candidate.offers.estado'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'offered' => 'Ofertado',
-                        'accepted' => 'Aceptado',
-                        'rejected' => 'Rechazado',
-                        'pending' => 'Pendiente',
-                        'interview' => 'Entrevista',
+                        'offered' => __('candidate.offers.ofertado'),
+                        'accepted' => __('candidate.offers.aceptado'),
+                        'rejected' => __('candidate.offers.rechazado'),
+                        'pending' => __('candidate.offers.pendiente'),
+                        'interview' => __('candidate.offers.entrevista'),
                         default => $state,
                     })
                     ->color(fn (string $state): string => match ($state) {
@@ -64,40 +69,40 @@ class Offers extends Page implements HasTable
                         default => 'gray',
                     }),
                 TextColumn::make('created_at')
-                    ->label('Fecha')
+                    ->label(__('candidate.offers.fecha'))
                     ->dateTime()
                     ->sortable(),
             ])
             ->actions([
                 Action::make('accept')
-                    ->label('Aceptar')
+                    ->label(__('candidate.offers.aceptar'))
                     ->color('success')
                     ->icon('heroicon-o-check')
                     ->visible(fn (Application $record) => $record->status === 'offered')
                     ->requiresConfirmation()
-                    ->modalHeading('Aceptar Oferta')
-                    ->modalDescription('¿Estás seguro de que deseas aceptar esta oferta de trabajo? Al hacerlo, la empresa será notificada.')
-                    ->modalSubmitActionLabel('Sí, aceptar')
+                    ->modalHeading(__('candidate.offers.aceptar_oferta'))
+                    ->modalDescription(__('candidate.offers.estas_seguro_de_que_deseas_aceptar_esta'))
+                    ->modalSubmitActionLabel(__('candidate.offers.si_aceptar'))
                     ->action(function (Application $record) {
                         $record->update(['status' => 'accepted']);
                         Notification::make()
-                            ->title('Oferta aceptada')
+                            ->title(__('candidate.offers.oferta_aceptada'))
                             ->success()
                             ->send();
                     }),
                 Action::make('reject')
-                    ->label('Rechazar')
+                    ->label(__('candidate.offers.rechazar'))
                     ->color('danger')
                     ->icon('heroicon-o-x-mark')
                     ->visible(fn (Application $record) => $record->status === 'offered')
                     ->requiresConfirmation()
-                    ->modalHeading('Rechazar Oferta')
-                    ->modalDescription('¿Estás seguro de que deseas rechazar esta oferta de trabajo? Esta acción no se puede deshacer.')
-                    ->modalSubmitActionLabel('Sí, rechazar')
+                    ->modalHeading(__('candidate.offers.rechazar_oferta'))
+                    ->modalDescription(__('candidate.offers.estas_seguro_de_que_deseas_rechazar_esta'))
+                    ->modalSubmitActionLabel(__('candidate.offers.si_rechazar'))
                     ->action(function (Application $record) {
                         $record->update(['status' => 'rejected']);
                         Notification::make()
-                            ->title('Oferta rechazada')
+                            ->title(__('candidate.offers.oferta_rechazada'))
                             ->danger()
                             ->send();
                     }),

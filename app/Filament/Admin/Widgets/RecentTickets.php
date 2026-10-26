@@ -13,7 +13,10 @@ class RecentTickets extends TableWidget
 {
     protected int|string|array $columnSpan = ['default' => 'full', 'lg' => 2];
 
-    protected static ?string $heading = 'Tickets recientes';
+    protected function getTableHeading(): ?string
+    {
+        return __('admin.recent_tickets.tickets_recientes');
+    }
 
     protected static ?int $sort = 1;
 
@@ -28,27 +31,27 @@ class RecentTickets extends TableWidget
             )
             ->columns([
                 TextColumn::make('title')
-                    ->label('Asunto')
+                    ->label(__('admin.recent_tickets.asunto'))
                     ->limit(30),
 
                 TextColumn::make('level')
-                    ->label('Nivel')
+                    ->label(__('admin.recent_tickets.nivel'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => TicketLabels::levels()[$state] ?? $state)
                     ->color(fn (string $state): string => TicketLabels::levelColors()[$state] ?? 'gray'),
 
                 TextColumn::make('status')
-                    ->label('Estado')
+                    ->label(__('admin.recent_tickets.estado'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => TicketLabels::statuses()[$state] ?? $state)
                     ->color(fn (string $state): string => TicketLabels::statusColors()[$state] ?? 'gray'),
 
                 TextColumn::make('creator.name')
-                    ->label('Reportado por')
-                    ->placeholder('Sistema'),
+                    ->label(__('admin.recent_tickets.reportado_por'))
+                    ->placeholder(__('admin.recent_tickets.sistema')),
 
                 TextColumn::make('created_at')
-                    ->label('Fecha')
+                    ->label(__('admin.recent_tickets.fecha'))
                     ->dateTime('d/m/Y H:i')
                     ->since(),
             ])

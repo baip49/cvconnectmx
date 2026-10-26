@@ -20,11 +20,20 @@ class CandidateDocumentResource extends Resource
 {
     protected static ?string $model = CandidateDocument::class;
 
-    protected static ?string $navigationLabel = 'Archivos';
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.candidate_documents.archivos');
+    }
 
-    protected static ?string $pluralModelLabel = 'Archivos';
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.candidate_documents.archivos');
+    }
 
-    protected static ?string $modelLabel = 'Archivo';
+    public static function getModelLabel(): string
+    {
+        return __('admin.candidate_documents.archivo');
+    }
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArchiveBox;
 

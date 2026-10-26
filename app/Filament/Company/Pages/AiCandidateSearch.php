@@ -28,9 +28,15 @@ class AiCandidateSearch extends Page implements HasForms, HasTable
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-cpu-chip';
 
-    protected static ?string $title = 'Búsqueda de candidatos';
+    public function getTitle(): string
+    {
+        return __('company.ai_candidate_search.busqueda_de_candidatos');
+    }
 
-    protected static ?string $navigationLabel = 'Búsqueda de candidatos';
+    public static function getNavigationLabel(): string
+    {
+        return __('company.ai_candidate_search.busqueda_de_candidatos');
+    }
 
     protected string $view = 'filament.company.pages.ai-candidate-search';
 
@@ -43,9 +49,9 @@ class AiCandidateSearch extends Page implements HasForms, HasTable
         return $schema
             ->schema([
                 TextInput::make('searchQuery')
-                    ->label('¿Qué perfil estás buscando?')
-                    ->placeholder('Ej: Desarrollador Fullstack con experiencia en Laravel y React...')
-                    ->hint('Describe las habilidades y experiencia ideal.')
+                    ->label(__('company.ai_candidate_search.que_perfil_estas_buscando'))
+                    ->placeholder(__('company.ai_candidate_search.ej_desarrollador_fullstack_con_experienc'))
+                    ->hint(__('company.ai_candidate_search.describe_las_habilidades_y_experiencia_i'))
                     ->required()
                     ->columnSpanFull(),
             ]);
@@ -60,7 +66,7 @@ class AiCandidateSearch extends Page implements HasForms, HasTable
         $this->aiFilters = $aiService->searchCandidates($this->searchQuery);
 
         Notification::make()
-            ->title('Búsqueda procesada por IA')
+            ->title(__('company.ai_candidate_search.busqueda_procesada_por_ia'))
             ->success()
             ->send();
 
@@ -75,8 +81,8 @@ class AiCandidateSearch extends Page implements HasForms, HasTable
         $this->resetTable();
 
         Notification::make()
-            ->title('Filtros reiniciados')
-            ->body('Mostrando todos los candidatos ordenados por calificación IA.')
+            ->title(__('company.ai_candidate_search.filtros_reiniciados'))
+            ->body(__('company.ai_candidate_search.mostrando_todos_los_candidatos_ordenados'))
             ->success()
             ->send();
     }
@@ -112,28 +118,28 @@ class AiCandidateSearch extends Page implements HasForms, HasTable
             )
             ->columns([
                 TextColumn::make('user.name')
-                    ->label('Nombre')
+                    ->label(__('company.ai_candidate_search.nombre'))
                     ->searchable(),
                 TextColumn::make('professional_title')
-                    ->label('Título')
+                    ->label(__('company.ai_candidate_search.titulo'))
                     ->limit(30),
                 TextColumn::make('ai_rating')
-                    ->label('Rating IA')
+                    ->label(__('company.ai_candidate_search.rating_ia'))
                     ->badge()
                     ->color(fn ($state) => $state >= 80 ? 'success' : ($state >= 50 ? 'warning' : 'danger'))
                     ->sortable(),
                 TextColumn::make('skills.name')
-                    ->label('Habilidades')
+                    ->label(__('company.ai_candidate_search.habilidades'))
                     ->badge()
                     ->limitList(3),
             ])
             ->actions([
                 Action::make('offer_vacancy')
-                    ->label('Ofrecer Vacante')
+                    ->label(__('company.ai_candidate_search.ofrecer_vacante'))
                     ->icon('heroicon-o-briefcase')
                     ->form([
                         Select::make('vacancy_id')
-                            ->label('Seleccionar Vacante')
+                            ->label(__('company.ai_candidate_search.seleccionar_vacante'))
                             ->options(fn () => Vacancy::where('company_id', Auth::user()->company->id)->pluck('title', 'id'))
                             ->required(),
                     ])
@@ -144,7 +150,7 @@ class AiCandidateSearch extends Page implements HasForms, HasTable
                         );
 
                         Notification::make()
-                            ->title('Oferta enviada')
+                            ->title(__('company.ai_candidate_search.oferta_enviada'))
                             ->success()
                             ->send();
                     }),

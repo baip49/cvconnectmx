@@ -15,29 +15,29 @@ class TicketForm
     {
         return $schema
             ->components([
-                Section::make('Abrir ticket de ayuda')
-                    ->description('Describe tu problema y el equipo de asistencia te atenderá.')
+                Section::make(__('candidate.tickets.abrir_ticket_de_ayuda'))
+                    ->description(__('candidate.tickets.describe_tu_problema_y_el_equipo_de_asis'))
                     ->schema([
                         TextInput::make('title')
-                            ->label('Asunto')
+                            ->label(__('candidate.tickets.asunto'))
                             ->required()
                             ->maxLength(255),
                         Select::make('type')
-                            ->label('Tipo de ayuda')
+                            ->label(__('candidate.tickets.tipo_de_ayuda'))
                             ->options(TicketLabels::types())
                             ->default('general')
                             ->required(),
                         Select::make('level')
-                            ->label('Urgencia')
+                            ->label(__('candidate.tickets.urgencia'))
                             ->options([
-                                'low' => 'Baja',
-                                'medium' => 'Media',
-                                'high' => 'Alta',
+                                'low' => __('candidate.tickets.baja'),
+                                'medium' => __('candidate.tickets.media'),
+                                'high' => __('candidate.tickets.alta'),
                             ])
                             ->default('medium')
                             ->required(),
                         Textarea::make('description')
-                            ->label('Descripción del problema')
+                            ->label(__('candidate.tickets.descripcion_del_problema'))
                             ->required()
                             ->rows(4)
                             ->columnSpanFull(),

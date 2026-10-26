@@ -12,7 +12,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class LoginAttemptResource extends Resource
 {
@@ -20,9 +19,15 @@ class LoginAttemptResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedLockClosed;
 
-    protected static ?string $navigationLabel = 'Intentos de Acceso';
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.login_attempts.intentos_de_acceso');
+    }
 
-    protected static string|UnitEnum|null $navigationGroup = 'Seguridad';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.navigation_groups.seguridad');
+    }
 
     public static function infolist(Schema $schema): Schema
     {

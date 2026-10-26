@@ -12,7 +12,10 @@ class RecentApplications extends TableWidget
 {
     protected int|string|array $columnSpan = 'full';
 
-    protected static ?string $heading = 'Mis Postulaciones Recientes';
+    protected function getTableHeading(): ?string
+    {
+        return __('candidate.candidate.mis_postulaciones_recientes');
+    }
 
     public function table(Table $table): Table
     {
@@ -27,19 +30,19 @@ class RecentApplications extends TableWidget
             )
             ->columns([
                 TextColumn::make('vacancy.title')
-                    ->label('Vacante')
+                    ->label(__('candidate.candidate.vacante'))
                     ->searchable(),
                 TextColumn::make('vacancy.company.name')
-                    ->label('Empresa'),
+                    ->label(__('candidate.candidate.empresa')),
                 TextColumn::make('status')
-                    ->label('Estado')
+                    ->label(__('candidate.candidate.estado'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'pending' => 'Pendiente',
-                        'interview' => 'Entrevista',
-                        'accepted' => 'Aceptado',
-                        'rejected' => 'Rechazado',
-                        'offered' => 'Ofertado',
+                        'pending' => __('candidate.candidate.pendiente'),
+                        'interview' => __('candidate.candidate.entrevista'),
+                        'accepted' => __('candidate.candidate.aceptado'),
+                        'rejected' => __('candidate.candidate.rechazado'),
+                        'offered' => __('candidate.candidate.ofertado'),
                         default => $state,
                     })
                     ->color(fn (string $state): string => match ($state) {
@@ -51,7 +54,7 @@ class RecentApplications extends TableWidget
                         default => 'gray',
                     }),
                 TextColumn::make('created_at')
-                    ->label('Fecha')
+                    ->label(__('candidate.candidate.fecha'))
                     ->dateTime()
                     ->since(),
             ]);

@@ -16,98 +16,57 @@ class TicketNotifier
 
     public function replyReceived(Ticket $ticket, User $author): void
     {
-        $this->sendToMany(
-            $this->interestedParties($ticket, $author),
-            'Nueva respuesta en tu ticket',
-            "{$author->name} respondió en \"{$ticket->title}\".",
-            'heroicon-o-chat-bubble-left-right',
-            $ticket
-        );
+        $this->sendToMany($this->interestedParties($ticket, $author), 'reply_received', $author, 'heroicon-o-chat-bubble-left-right', $ticket);
     }
 
     public function claimed(Ticket $ticket, User $claimer): void
     {
-        $this->sendToMany(
-            $this->interestedParties($ticket, $claimer),
-            'Tu ticket está siendo atendido',
-            "{$claimer->name} reclamó tu ticket \"{$ticket->title}\" y te atenderá ahora.",
-            'heroicon-o-user-plus',
-            $ticket
-        );
+        $this->sendToMany($this->interestedParties($ticket, $claimer), 'claimed', $claimer, 'heroicon-o-user-plus', $ticket);
     }
 
     public function joined(Ticket $ticket, User $joiner): void
     {
-        $this->sendToMany(
-            $this->interestedParties($ticket, $joiner),
-            'Un segundo asistente se unió',
-            "{$joiner->name} se unió como segundo asistente al ticket \"{$ticket->title}\".",
-            'heroicon-o-users',
-            $ticket
-        );
+        $this->sendToMany($this->interestedParties($ticket, $joiner), 'joined', $joiner, 'heroicon-o-users', $ticket);
     }
 
     public function released(Ticket $ticket, User $leaver): void
     {
-        $this->sendToMany(
-            $this->interestedParties($ticket, $leaver),
-            'Un asistente abandonó el ticket',
-            "{$leaver->name} dejó de atender el ticket \"{$ticket->title}\".",
-            'heroicon-o-arrow-right-start-on-rectangle',
-            $ticket
-        );
+        $this->sendToMany($this->interestedParties($ticket, $leaver), 'released', $leaver, 'heroicon-o-arrow-right-start-on-rectangle', $ticket);
     }
 
     public function closed(Ticket $ticket, User $closer): void
     {
-        $this->sendToMany(
-            $this->interestedParties($ticket, $closer),
-            'Ticket cerrado',
-            "{$closer->name} cerró el ticket \"{$ticket->title}\".",
-            'heroicon-o-check-circle',
-            $ticket
-        );
+        $this->sendToMany($this->interestedParties($ticket, $closer), 'closed', $closer, 'heroicon-o-check-circle', $ticket);
     }
 
     public function reopened(Ticket $ticket, User $reopener): void
     {
-        $this->sendToMany(
-            $this->interestedParties($ticket, $reopener),
-            'Ticket reabierto',
-            "{$reopener->name} reabrió el ticket \"{$ticket->title}\".",
-            'heroicon-o-arrow-path',
-            $ticket
-        );
+        $this->sendToMany($this->interestedParties($ticket, $reopener), 'reopened', $reopener, 'heroicon-o-arrow-path', $ticket);
     }
 
     public function assigned(Ticket $ticket, User $assignee): void
     {
-        $this->sendToMany(
-            $this->interestedParties($ticket, $assignee),
-            'Tienes un ticket asignado',
-            "Se te asignó el ticket \"{$ticket->title}\".",
-            'heroicon-o-inbox-arrow-down',
-            $ticket
-        );
+        $this->sendToMany($this->interestedParties($ticket, $assignee), 'assigned', $assignee, 'heroicon-o-inbox-arrow-down', $ticket);
     }
 
-    protected function sendToMany(iterable $users, string $title, string $body, string $icon, ?Ticket $linkTicket = null): void
+    /**
+     * Notifications are stored already written, so each one uses its recipient's language.
+     */
+    protected function sendToMany(iterable $users, string $event, User $actor, string $icon, Ticket $ticket): void
     {
         foreach ($users as $user) {
-            $notification = Notification::make()
-                ->title($title)
-                ->body($body)
-                ->icon($icon);
+            $locale = $user->locale ?? config('app.locale');
 
-            if ($linkTicket) {
-                $notification->actions([
+            Notification::make()
+                ->title(__("notifications.tickets.{$event}.title", [], $locale))
+                ->body(__("notifications.tickets.{$event}.body", ['name' => $actor->name, 'title' => $ticket->title], $locale))
+                ->icon($icon)
+                ->actions([
                     Action::make('view')
-                        ->label('Ver')
-                        ->url($this->ticketUrl($user, $linkTicket)),
-                ]);
-            }
-
-            $notification->sendToDatabase($user);
+                        ->label(__('notifications.view', [], $locale))
+                        ->url($this->ticketUrl($user, $ticket)),
+                ])
+                ->sendToDatabase($user);
         }
     }
 

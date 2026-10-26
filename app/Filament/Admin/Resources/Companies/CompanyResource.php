@@ -14,7 +14,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
-use UnitEnum;
 
 class CompanyResource extends Resource
 {
@@ -22,9 +21,15 @@ class CompanyResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Directorios';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.navigation_groups.directorios');
+    }
 
-    protected static ?string $navigationLabel = 'Empresas';
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.companies.empresas');
+    }
 
     public static function canEdit(Model $record): bool
     {

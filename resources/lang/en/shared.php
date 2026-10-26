@@ -1,0 +1,43 @@
+<?php
+
+return [
+    'account' => [
+        'title' => 'My account',
+    ],
+    'auth' => [
+        'account_locked' => 'Your account is disabled or temporarily locked.',
+        'i_am_candidate' => 'I\'m a candidate',
+        'i_am_company' => 'I\'m a company',
+        'logged_in' => 'Signed in successfully.',
+        'registered' => 'Registration complete. Welcome to CVConnectMX.',
+    ],
+    'documents' => [
+        'forbidden' => 'Restricted access: you are not allowed to view this document.',
+        'login_required' => 'Restricted access: you must sign in.',
+        'not_found' => 'File not found',
+    ],
+    'tickets' => [
+        'level_high' => 'High',
+        'level_low' => 'Low',
+        'level_medium' => 'Medium',
+        'status_closed' => 'Closed',
+        'status_in_progress' => 'In progress',
+        'status_open' => 'Open',
+    ],
+    'welcome' => [
+        'feature_connect' => 'Connect with people who can help you',
+        'feature_connect_alt' => 'Professional connection',
+        'feature_skills' => 'Gain the skills you need to succeed',
+        'feature_skills_alt' => 'Skills development',
+        'get_started' => 'Get started',
+        'go_to_panel' => 'Go to my dashboard',
+        'headline' => 'Let the right people know',
+        'headline_accent' => 'you\'re looking for a job',
+        'hero_alt' => 'Professional candidate',
+        'intro' => 'CVConnectMX lets you connect with companies, manage your records and find your next career opportunity, privately or publicly.',
+        'join_now' => 'Join now',
+        'log_in' => 'Log in',
+        'page_title' => 'Your Professional Community',
+        'rights' => 'All rights reserved.',
+    ],
+];

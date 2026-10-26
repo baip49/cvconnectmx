@@ -24,11 +24,20 @@ class CompanyResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
 
-    protected static ?string $navigationLabel = 'Mi Empresa';
+    public static function getNavigationLabel(): string
+    {
+        return __('company.companies.mi_empresa');
+    }
 
-    protected static ?string $pluralModelLabel = 'Empresas';
+    public static function getPluralModelLabel(): string
+    {
+        return __('company.companies.empresas');
+    }
 
-    protected static ?string $modelLabel = 'Empresa';
+    public static function getModelLabel(): string
+    {
+        return __('company.companies.empresa');
+    }
 
     public static function form(Schema $schema): Schema
     {

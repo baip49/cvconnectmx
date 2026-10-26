@@ -16,20 +16,20 @@ class RolesTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Rol')
+                    ->label(__('admin.roles.rol'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('description')
-                    ->label('Descripción')
+                    ->label(__('admin.roles.descripcion'))
                     ->searchable(),
                 IconColumn::make('active')
-                    ->label('Activo')
+                    ->label(__('admin.roles.activo'))
                     ->boolean(),
                 TextColumn::make('permissions_count')
-                    ->label('Permisos')
+                    ->label(__('admin.roles.permisos'))
                     ->counts('permissions'),
                 TextColumn::make('created_at')
-                    ->label('Creado')
+                    ->label(__('admin.roles.creado'))
                     ->dateTime()
                     ->sortable(),
             ])

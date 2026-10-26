@@ -22,11 +22,20 @@ class ApplicationResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
 
-    protected static ?string $navigationLabel = 'Postulaciones';
+    public static function getNavigationLabel(): string
+    {
+        return __('company.applications.postulaciones');
+    }
 
-    protected static ?string $pluralModelLabel = 'Postulaciones';
+    public static function getPluralModelLabel(): string
+    {
+        return __('company.applications.postulaciones');
+    }
 
-    protected static ?string $modelLabel = 'Postulación';
+    public static function getModelLabel(): string
+    {
+        return __('company.applications.postulacion');
+    }
 
     public static function canViewAny(): bool
     {

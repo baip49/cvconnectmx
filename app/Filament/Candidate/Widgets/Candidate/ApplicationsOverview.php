@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ApplicationsOverview extends StatsOverviewWidget
 {
-    protected int | array | null $columns = 4;
+    protected int|array|null $columns = 4;
 
     protected function getStats(): array
     {
@@ -21,20 +21,20 @@ class ApplicationsOverview extends StatsOverviewWidget
         }
 
         return [
-            Stat::make('Total Postulaciones', Application::where('candidate_id', $candidateId)->count())
-                ->description('Tus candidaturas enviadas')
+            Stat::make(__('candidate.candidate.total_postulaciones'), Application::where('candidate_id', $candidateId)->count())
+                ->description(__('candidate.candidate.tus_candidaturas_enviadas'))
                 ->descriptionIcon('heroicon-m-paper-airplane')
                 ->color('primary'),
-            Stat::make('Postulaciones Pendientes', Application::where('candidate_id', $candidateId)->where('status', 'pending')->count())
-                ->description('En espera de revisión')
+            Stat::make(__('candidate.candidate.postulaciones_pendientes'), Application::where('candidate_id', $candidateId)->where('status', 'pending')->count())
+                ->description(__('candidate.candidate.en_espera_de_revision'))
                 ->descriptionIcon('heroicon-m-clock')
                 ->color('warning'),
-            Stat::make('Entrevistas / Avances', Application::where('candidate_id', $candidateId)->whereIn('status', ['interview', 'accepted'])->count())
-                ->description('Candidaturas con progreso')
+            Stat::make(__('candidate.candidate.entrevistas_avances'), Application::where('candidate_id', $candidateId)->whereIn('status', ['interview', 'accepted'])->count())
+                ->description(__('candidate.candidate.candidaturas_con_progreso'))
                 ->descriptionIcon('heroicon-m-check-circle')
                 ->color('success'),
-            Stat::make('Rating IA Actual', ($candidate->ai_rating ?? 0) . '/100')
-                ->description('Calificación de tu perfil')
+            Stat::make(__('candidate.candidate.rating_ia_actual'), ($candidate->ai_rating ?? 0).'/100')
+                ->description(__('candidate.candidate.calificacion_de_tu_perfil'))
                 ->descriptionIcon('heroicon-m-cpu-chip')
                 ->color($candidate->ai_rating >= 80 ? 'success' : ($candidate->ai_rating >= 50 ? 'warning' : 'danger')),
         ];

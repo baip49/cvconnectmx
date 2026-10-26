@@ -12,27 +12,27 @@ class CompanyForm
     {
         return $schema
             ->components([
-                Section::make('Información de la Empresa')
+                Section::make(__('company.companies.informacion_de_la_empresa'))
                     ->schema([
                         TextInput::make('name')
-                            ->label('Nombre de la Empresa')
+                            ->label(__('company.companies.nombre_de_la_empresa'))
                             ->required()
                             ->maxLength(255),
                         TextInput::make('sector')
                             ->label('Sector / Industria')
                             ->maxLength(255),
                         TextInput::make('internal_tax_id')
-                            ->label('RFC / ID Fiscal')
+                            ->label(__('company.companies.rfc_id_fiscal'))
                             ->maxLength(255),
                     ])->columns(2),
 
-                Section::make('Ubicación')
+                Section::make(__('company.companies.ubicacion'))
                     ->schema([
                         TextInput::make('city')
-                            ->label('Ciudad')
+                            ->label(__('company.companies.ciudad'))
                             ->maxLength(255),
                         TextInput::make('state')
-                            ->label('Estado')
+                            ->label(__('company.companies.estado'))
                             ->maxLength(255),
                     ])->columns(2),
             ]);

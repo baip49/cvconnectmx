@@ -13,31 +13,31 @@ class CandidateInfolist
     {
         return $schema
             ->components([
-                Section::make('Información Personal')
+                Section::make(__('admin.candidates.informacion_personal'))
                     ->schema([
                         Grid::make(3)
                             ->schema([
                                 TextEntry::make('user.name')
-                                    ->label('Nombre'),
+                                    ->label(__('admin.candidates.nombre')),
                                 TextEntry::make('user.last_name')
-                                    ->label('Apellidos'),
+                                    ->label(__('admin.candidates.apellidos')),
                                 TextEntry::make('user.email')
-                                    ->label('Correo Electrónico'),
+                                    ->label(__('admin.candidates.correo_electronico')),
                                 TextEntry::make('phone_encrypted')
-                                    ->label('Teléfono'),
+                                    ->label(__('admin.candidates.telefono')),
                                 TextEntry::make('city')
-                                    ->label('Ciudad'),
+                                    ->label(__('admin.candidates.ciudad')),
                                 TextEntry::make('professional_title')
-                                    ->label('Título Profesional'),
+                                    ->label(__('admin.candidates.titulo_profesional')),
                                 TextEntry::make('is_blocked')
-                                    ->label('Estado')
+                                    ->label(__('admin.candidates.estado'))
                                     ->badge()
-                                    ->formatStateUsing(fn (bool $state) => $state ? 'Bloqueado' : 'Activo')
+                                    ->formatStateUsing(fn (bool $state) => $state ? __('admin.candidates.bloqueado') : __('admin.candidates.activo'))
                                     ->color(fn (bool $state) => $state ? 'danger' : 'success'),
                             ]),
                     ]),
 
-                Section::make('Resumen Profesional')
+                Section::make(__('admin.candidates.resumen_profesional'))
                     ->schema([
                         TextEntry::make('summary')
                             ->label('')
@@ -47,7 +47,7 @@ class CandidateInfolist
 
                 Grid::make(2)
                     ->schema([
-                        Section::make('Experiencia Laboral')
+                        Section::make(__('admin.candidates.experiencia_laboral'))
                             ->columnSpan(1)
                             ->schema([
                                 TextEntry::make('workExperiences')
@@ -56,21 +56,21 @@ class CandidateInfolist
                                         $experiences = $record->workExperiences;
 
                                         if ($experiences->isEmpty()) {
-                                            return 'Sin experiencia registrada';
+                                            return __('admin.candidates.sin_experiencia_registrada');
                                         }
 
                                         return $experiences->map(function ($exp) {
                                             $dates = $exp->start_date
-                                                ? $exp->start_date.' → '.($exp->end_date ?? 'Actualidad')
+                                                ? $exp->start_date.' → '.($exp->end_date ?? __('admin.candidates.actualidad'))
                                                 : '';
 
-                                            return "**{$exp->job_title}** en {$exp->company_name}\n{$dates}";
+                                            return __('admin.candidates.job_title_en_company_name_dates', ['job_title' => $exp->job_title, 'company_name' => $exp->company_name, 'dates' => $dates]);
                                         })->implode("\n\n");
                                     })
                                     ->markdown(),
                             ]),
 
-                        Section::make('Educación')
+                        Section::make(__('admin.candidates.educacion'))
                             ->columnSpan(1)
                             ->schema([
                                 TextEntry::make('educations')
@@ -79,7 +79,7 @@ class CandidateInfolist
                                         $educations = $record->educations;
 
                                         if ($educations->isEmpty()) {
-                                            return 'Sin educación registrada';
+                                            return __('admin.candidates.sin_educacion_registrada');
                                         }
 
                                         return $educations->map(function ($edu) {
@@ -90,7 +90,7 @@ class CandidateInfolist
                             ]),
                     ]),
 
-                Section::make('Habilidades')
+                Section::make(__('admin.candidates.habilidades'))
                     ->schema([
                         TextEntry::make('skills')
                             ->label('')
@@ -98,7 +98,7 @@ class CandidateInfolist
                                 $skills = $record->skills;
 
                                 if ($skills->isEmpty()) {
-                                    return 'Sin habilidades registradas';
+                                    return __('admin.candidates.sin_habilidades_registradas');
                                 }
 
                                 return $skills->map(function ($skill) {

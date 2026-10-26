@@ -2,15 +2,14 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\AvatarProviders\InitialsAvatarProvider;
 use App\Http\Middleware\RedirectToOwnPanel;
+use App\Http\Middleware\SetLocale;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
+use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\Support\Colors\Color;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -25,29 +24,11 @@ class CompanyPanelProvider extends PanelProvider
         return $panel
             ->id('company')
             ->path('company')
-            ->viteTheme('resources/css/filament/company/theme.css')
-            ->brandName('CVConnectMX')
-            ->defaultAvatarProvider(InitialsAvatarProvider::class)
-            ->userMenuItems([
-                MenuItem::make()
-                    ->label('Perfil')
-                    ->url(fn (): string => route('profile.edit'))
-                    ->icon('heroicon-o-user-circle'),
-            ])
-            ->brandLogo(asset('images/company-logo.svg'))
-            ->brandLogoHeight('2.5rem')
-            ->favicon(asset('favicon.ico'))
-            ->colors([
-                'primary' => Color::Violet,
-            ])
-            ->sidebarCollapsibleOnDesktop()
-            ->databaseNotifications()
-            ->databaseNotificationsPolling('30s')
             ->navigationGroups([
-                'Inicio',
-                'Gestión',
-                'Búsqueda',
-                'Soporte',
+                NavigationGroup::make()->label(fn (): string => __('company.navigation_groups.inicio')),
+                NavigationGroup::make()->label(fn (): string => __('company.navigation_groups.gestion')),
+                NavigationGroup::make()->label(fn (): string => __('company.navigation_groups.busqueda')),
+                NavigationGroup::make()->label(fn (): string => __('company.navigation_groups.soporte')),
             ])
             ->discoverResources(in: app_path('Filament/Company/Resources'), for: 'App\Filament\Company\Resources')
             ->discoverPages(in: app_path('Filament/Company/Pages'), for: 'App\Filament\Company\Pages')
@@ -61,6 +42,7 @@ class CompanyPanelProvider extends PanelProvider
                 StartSession::class,
                 AuthenticateSession::class,
                 ShareErrorsFromSession::class,
+                SetLocale::class,
                 PreventRequestForgery::class,
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,

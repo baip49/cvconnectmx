@@ -20,30 +20,30 @@ class ListBackupLogs extends ListRecords
     {
         return [
             Action::make('run_backup')
-                ->label('Realizar respaldo')
+                ->label(__('admin.backup_logs.realizar_respaldo'))
                 ->icon('heroicon-o-circle-stack')
                 ->color('primary')
                 ->form([
                     Select::make('type')
-                        ->label('Tipo')
+                        ->label(__('admin.backup_logs.tipo'))
                         ->options([
-                            'full' => 'Completo',
-                            'incremental' => 'Incremental',
-                            'differential' => 'Diferencial',
+                            'full' => __('admin.backup_logs.completo'),
+                            'incremental' => __('admin.backup_logs.incremental'),
+                            'differential' => __('admin.backup_logs.diferencial'),
                         ])
                         ->default('full')
                         ->required(),
                     Select::make('scope')
-                        ->label('Qué respaldar')
+                        ->label(__('admin.backup_logs.que_respaldar'))
                         ->options([
-                            'database' => 'Base de datos',
-                            'files' => 'Archivos',
-                            'both' => 'Base de datos y archivos',
+                            'database' => __('admin.backup_logs.base_de_datos'),
+                            'files' => __('admin.backup_logs.archivos'),
+                            'both' => __('admin.backup_logs.base_de_datos_y_archivos'),
                         ])
                         ->default('database')
                         ->required(),
                     TextInput::make('retention_days')
-                        ->label('Retención (días)')
+                        ->label(__('admin.backup_logs.retencion_dias'))
                         ->numeric()
                         ->minValue(1)
                         ->default(30)
@@ -70,8 +70,8 @@ class ListBackupLogs extends ListRecords
                     }
 
                     Notification::make()
-                        ->title('Respaldo encolado')
-                        ->body('Se está generando en segundo plano; puedes abandonar esta página. Te avisaremos por Telegram al iniciar y al terminar.')
+                        ->title(__('admin.backup_logs.respaldo_encolado'))
+                        ->body(__('admin.backup_logs.se_esta_generando_en_segundo_plano_puede'))
                         ->success()
                         ->send();
                 }),

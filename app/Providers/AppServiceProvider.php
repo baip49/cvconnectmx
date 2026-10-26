@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Filament\AvatarProviders\InitialsAvatarProvider;
+use App\Filament\Pages\AccountSettings;
 use App\Models\Application;
 use App\Models\BackupLog;
 use App\Models\Candidate;
@@ -17,6 +19,14 @@ use App\Observers\ApplicationObserver;
 use App\Observers\AuditObserver;
 use App\Observers\UserObserver;
 use Carbon\CarbonImmutable;
+use Filament\FontProviders\LocalFontProvider;
+use Filament\Navigation\MenuItem;
+use Filament\Panel;
+use Filament\Support\Colors\Color;
+use Filament\Support\Icons\Heroicon;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -44,6 +54,40 @@ class AppServiceProvider extends ServiceProvider
             VerifyEmailResponse::class,
             \App\Http\Responses\VerifyEmailResponse::class
         );
+
+        // Panels are built after this runs, so every panel starts from the shared brand.
+        Panel::configureUsing(fn (Panel $panel): Panel => $panel
+            ->viteTheme('resources/css/filament/theme.css')
+            ->colors([
+                'primary' => Color::Blue,
+                'gray' => Color::Slate,
+                'info' => Color::Sky,
+                'success' => Color::Emerald,
+                'warning' => Color::Amber,
+                'danger' => Color::Red,
+            ])
+            ->font('Roboto', provider: LocalFontProvider::class)
+            ->brandName('CVConnectMX')
+            ->brandLogo(fn (): View => view('filament.components.brand-logo'))
+            ->favicon(asset('favicon.ico'))
+            ->defaultAvatarProvider(InitialsAvatarProvider::class)
+            ->sidebarCollapsibleOnDesktop()
+            ->databaseNotifications()
+            ->databaseNotificationsPolling('30s')
+            ->pages([AccountSettings::class])
+            ->userMenuItems([
+                'account' => MenuItem::make()
+                    ->label(fn (): string => __('shared.account.title'))
+                    ->url(fn (): string => AccountSettings::getUrl())
+                    ->icon(Heroicon::OutlinedUserCircle),
+                // Each language is named in itself, so it stays recognizable whatever the current one is.
+                'locale' => MenuItem::make()
+                    ->label(fn (): string => app()->getLocale() === 'en' ? 'Español' : 'English')
+                    ->url(fn (): string => route('locale.switch', app()->getLocale() === 'en' ? 'es' : 'en'))
+                    ->icon(Heroicon::OutlinedLanguage),
+            ])
+            ->renderHook(PanelsRenderHook::HEAD_START, fn (): View => view('partials.appearance-sync'))
+            ->renderHook(PanelsRenderHook::BODY_END, fn (): string => Blade::render('@fluxScripts')));
     }
 
     /**

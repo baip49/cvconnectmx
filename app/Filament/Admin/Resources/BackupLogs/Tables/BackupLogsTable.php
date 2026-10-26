@@ -18,25 +18,25 @@ class BackupLogsTable
         return $table
             ->columns([
                 TextColumn::make('type')
-                    ->label('Tipo')
+                    ->label(__('admin.backup_logs.tipo'))
                     ->badge()
                     ->color('gray')
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'full' => 'Completo',
-                        'incremental' => 'Incremental',
-                        'differential' => 'Diferencial',
+                        'full' => __('admin.backup_logs.completo'),
+                        'incremental' => __('admin.backup_logs.incremental'),
+                        'differential' => __('admin.backup_logs.diferencial'),
                         default => $state,
                     })
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('status')
-                    ->label('Estado')
+                    ->label(__('admin.backup_logs.estado'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'success' => 'Exitoso',
-                        'failed' => 'Fallido',
-                        'in_progress' => 'En progreso',
+                        'success' => __('admin.backup_logs.exitoso'),
+                        'failed' => __('admin.backup_logs.fallido'),
+                        'in_progress' => __('admin.backup_logs.en_progreso'),
                         default => $state,
                     })
                     ->color(fn (string $state): string => match ($state) {
@@ -48,72 +48,72 @@ class BackupLogsTable
                     ->sortable(),
 
                 TextColumn::make('frequency')
-                    ->label('Frecuencia')
+                    ->label(__('admin.backup_logs.frecuencia'))
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'manual' => 'Manual',
-                        'daily' => 'Diario',
-                        'weekly' => 'Semanal',
-                        'monthly' => 'Mensual',
+                        'manual' => __('admin.backup_logs.manual'),
+                        'daily' => __('admin.backup_logs.diario'),
+                        'weekly' => __('admin.backup_logs.semanal'),
+                        'monthly' => __('admin.backup_logs.mensual'),
                         default => $state,
                     })
                     ->searchable(),
 
                 TextColumn::make('scope')
-                    ->label('Alcance')
+                    ->label(__('admin.backup_logs.alcance'))
                     ->badge()
                     ->color('gray')
                     ->formatStateUsing(fn (?string $state): string => match ($state) {
-                        'database' => 'Base de datos',
-                        'files' => 'Archivos',
-                        'both' => 'Base de datos y archivos',
-                        default => $state ?? 'Base de datos',
+                        'database' => __('admin.backup_logs.base_de_datos'),
+                        'files' => __('admin.backup_logs.archivos'),
+                        'both' => __('admin.backup_logs.base_de_datos_y_archivos'),
+                        default => $state ?? __('admin.backup_logs.base_de_datos'),
                     }),
 
                 TextColumn::make('destination_path')
-                    ->label('Destino')
+                    ->label(__('admin.backup_logs.destino'))
                     ->limit(40)
                     ->tooltip(fn ($record) => $record->destination_path),
 
                 IconColumn::make('is_encrypted')
-                    ->label('Cifrado')
+                    ->label(__('admin.backup_logs.cifrado'))
                     ->boolean(),
 
                 TextColumn::make('size_bytes')
-                    ->label('Tamaño')
+                    ->label(__('admin.backup_logs.tamano'))
                     ->formatStateUsing(fn ($state): string => round($state / 1024 / 1024, 2).' MB'),
 
                 TextColumn::make('executedBy.name')
-                    ->label('Ejecutado por')
-                    ->placeholder('Sistema'),
+                    ->label(__('admin.backup_logs.ejecutado_por'))
+                    ->placeholder(__('admin.backup_logs.sistema')),
 
                 TextColumn::make('created_at')
-                    ->label('Fecha')
+                    ->label(__('admin.backup_logs.fecha'))
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->label('Estado')
+                    ->label(__('admin.backup_logs.estado'))
                     ->options([
-                        'success' => 'Exitoso',
-                        'failed' => 'Fallido',
-                        'in_progress' => 'En progreso',
+                        'success' => __('admin.backup_logs.exitoso'),
+                        'failed' => __('admin.backup_logs.fallido'),
+                        'in_progress' => __('admin.backup_logs.en_progreso'),
                     ]),
                 SelectFilter::make('type')
-                    ->label('Tipo')
+                    ->label(__('admin.backup_logs.tipo'))
                     ->options([
-                        'full' => 'Completo',
-                        'incremental' => 'Incremental',
-                        'differential' => 'Diferencial',
+                        'full' => __('admin.backup_logs.completo'),
+                        'incremental' => __('admin.backup_logs.incremental'),
+                        'differential' => __('admin.backup_logs.diferencial'),
                     ]),
             ])
             ->defaultSort('created_at', 'desc')
             ->recordActions([
                 ViewAction::make(),
                 DeleteAction::make()
-                    ->label('Eliminar')
-                    ->modalHeading('Eliminar respaldo')
-                    ->modalDescription('Se eliminará el registro y el archivo del respaldo. Esta acción no se puede deshacer. ¿Deseas continuar?'),
+                    ->label(__('admin.backup_logs.eliminar'))
+                    ->modalHeading(__('admin.backup_logs.eliminar_respaldo'))
+                    ->modalDescription(__('admin.backup_logs.se_eliminara_el_registro_y_el_archivo_de')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

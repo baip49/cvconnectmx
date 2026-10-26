@@ -17,22 +17,22 @@ class ApplicationsTable
         return $table
             ->columns([
                 TextColumn::make('vacancy.title')
-                    ->label('Vacante')
+                    ->label(__('company.applications.vacante'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('candidate.user.name')
-                    ->label('Candidato')
+                    ->label(__('company.applications.candidato'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('status')
-                    ->label('Estado')
+                    ->label(__('company.applications.estado'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'pending' => 'Pendiente',
-                        'interview' => 'Entrevista',
-                        'accepted' => 'Aceptado',
-                        'rejected' => 'Rechazado',
-                        'offered' => 'Ofertado',
+                        'pending' => __('company.applications.pendiente'),
+                        'interview' => __('company.applications.entrevista'),
+                        'accepted' => __('company.applications.aceptado'),
+                        'rejected' => __('company.applications.rechazado'),
+                        'offered' => __('company.applications.ofertado'),
                         default => $state,
                     })
                     ->color(fn (string $state): string => match ($state) {
@@ -44,7 +44,7 @@ class ApplicationsTable
                         default => 'gray',
                     }),
                 TextColumn::make('created_at')
-                    ->label('Fecha de Postulación')
+                    ->label(__('company.applications.fecha_de_postulacion'))
                     ->dateTime()
                     ->sortable(),
             ])
@@ -54,24 +54,24 @@ class ApplicationsTable
             ->recordActions([
                 ViewAction::make(),
                 Action::make('change_status')
-                    ->label('Cambiar Estado')
+                    ->label(__('company.applications.cambiar_estado'))
                     ->icon('heroicon-o-chevron-up-down')
                     ->form([
                         Select::make('status')
-                            ->label('Nuevo Estado')
+                            ->label(__('company.applications.nuevo_estado'))
                             ->options([
-                                'pending' => 'Pendiente',
-                                'interview' => 'Entrevista',
-                                'accepted' => 'Aceptado',
-                                'rejected' => 'Rechazado',
-                                'offered' => 'Ofertado',
+                                'pending' => __('company.applications.pendiente'),
+                                'interview' => __('company.applications.entrevista'),
+                                'accepted' => __('company.applications.aceptado'),
+                                'rejected' => __('company.applications.rechazado'),
+                                'offered' => __('company.applications.ofertado'),
                             ])
                             ->required(),
                     ])
                     ->action(function (Application $record, array $data) {
                         $record->update($data);
                         Notification::make()
-                            ->title('Estado actualizado')
+                            ->title(__('company.applications.estado_actualizado'))
                             ->success()
                             ->send();
                     }),

@@ -6,9 +6,15 @@ use Filament\Pages\Dashboard as BaseDashboard;
 
 class Dashboard extends BaseDashboard
 {
-    protected static ?string $title = 'Panel de la empresa';
+    public function getTitle(): string
+    {
+        return __('company.dashboard.panel_de_la_empresa');
+    }
 
-    protected static ?string $navigationLabel = 'Panel principal';
+    public static function getNavigationLabel(): string
+    {
+        return __('company.dashboard.panel_principal');
+    }
 
     public function getHeaderWidgetsColumns(): int|array
     {

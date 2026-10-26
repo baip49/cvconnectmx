@@ -1,19 +1,15 @@
 <?php
 
-use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-new #[Title('Profile settings')] class extends Component {
-    use PasswordValidationRules;
+new class extends Component {
     use ProfileValidationRules;
     use WithFileUploads;
 
@@ -21,10 +17,6 @@ new #[Title('Profile settings')] class extends Component {
     public string $last_name = '';
     public string $email = '';
     public $avatar = null;
-
-    public string $current_password = '';
-    public string $password = '';
-    public string $password_confirmation = '';
 
     /**
      * Mount the component.
@@ -78,23 +70,6 @@ new #[Title('Profile settings')] class extends Component {
     }
 
     /**
-     * Update the password for the currently authenticated user.
-     */
-    public function updatePassword(): void
-    {
-        $validated = $this->validate([
-            'current_password' => $this->currentPasswordRules(),
-            'password' => $this->passwordRules(),
-        ]);
-
-        Auth::user()->forceFill(['password' => Hash::make($validated['password'])])->save();
-
-        $this->reset('current_password', 'password', 'password_confirmation');
-
-        $this->dispatch('password-updated');
-    }
-
-    /**
      * Send an email verification notification to the current user.
      */
     public function resendVerificationNotification(): void
@@ -127,130 +102,89 @@ new #[Title('Profile settings')] class extends Component {
 }; ?>
 
 <section class="w-full">
-    @include('partials.settings-heading')
+    <flux:heading size="lg">{{ __('Profile') }}</flux:heading>
+    <flux:subheading>{{ __('Update your name and email address') }}</flux:subheading>
 
-    <flux:heading class="sr-only">{{ __('Profile settings') }}</flux:heading>
+    <div class="my-6 flex items-center gap-4">
+        <flux:avatar size="lg" circle :src="Auth::user()->getFilamentAvatarUrl() ?? (new \App\Filament\AvatarProviders\InitialsAvatarProvider)->get(Auth::user())" :name="Auth::user()->name" />
+        <div>
+            <flux:text class="font-medium">{{ Auth::user()->name }}</flux:text>
+            <flux:text class="text-sm">{{ Auth::user()->email }}</flux:text>
+        </div>
+    </div>
 
-    <x-pages::settings.layout :heading="__('Profile')" :subheading="__('Update your name and email address')">
-        <div class="my-6 flex items-center gap-4">
-            @if (Auth::user()->getFilamentAvatarUrl())
-                <img src="{{ Auth::user()->getFilamentAvatarUrl() }}" alt="Avatar" class="h-16 w-16 rounded-full object-cover" />
-            @else
-                <div class="flex h-16 w-16 items-center justify-center rounded-full text-xl font-bold text-white" style="background-color: {{ Auth::user()->avatarColorHex() }}">
-                    {{ Auth::user()->initials() }}
+    <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
+        <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus autocomplete="name" />
+
+        <flux:input wire:model="last_name" :label="__('Last name')" type="text" autocomplete="family-name" />
+
+        <div>
+            <flux:label>{{ __('Profile picture') }}</flux:label>
+
+            <div
+                x-data="{ dragging: false }"
+                x-on:dragover.prevent="dragging = true"
+                x-on:dragleave.prevent="dragging = false"
+                x-on:drop.prevent="dragging = false; if ($event.dataTransfer.files.length) { $refs.avatarInput.files = $event.dataTransfer.files; $refs.avatarInput.dispatchEvent(new Event('change', { bubbles: true })); }"
+                :class="dragging ? 'border-(--color-accent) bg-(--color-accent)/5' : 'border-zinc-300 dark:border-zinc-700'"
+                class="mt-2 rounded-xl border-2 border-dashed bg-zinc-500/5 px-6 py-8 text-center transition dark:bg-white/5"
+            >
+                <label for="avatar-upload" class="cursor-pointer">
+                    <flux:icon.cloud-arrow-up class="mx-auto size-8 text-zinc-400" />
+                    <p class="mt-2 text-sm font-semibold">{{ __('Drop files here or click to browse') }}</p>
+                    <p class="mt-1 text-xs text-zinc-500">JPG, PNG, GIF · 10MB</p>
+                </label>
+                <input id="avatar-upload" x-ref="avatarInput" type="file" wire:model="avatar" accept="image/*" class="sr-only" />
+            </div>
+
+            @if ($avatar)
+                <div class="mt-3 flex items-center gap-3 rounded-xl border border-zinc-200 bg-zinc-500/5 px-3 py-2.5 dark:border-zinc-700 dark:bg-white/5">
+                    <img src="{{ $avatar->temporaryUrl() }}" alt="{{ __('Preview') }}" class="h-11 w-11 rounded-lg object-cover" />
+                    <div class="min-w-0 flex-1">
+                        <p class="truncate text-sm font-medium">{{ $avatar->getClientOriginalName() }}</p>
+                        <p class="text-xs text-zinc-500">{{ number_format($avatar->getSize() / 1024, 0) }} KB</p>
+                    </div>
+                    <flux:button size="sm" variant="ghost" icon="x-mark" wire:click="$set('avatar', null)" :aria-label="__('Remove file')" />
                 </div>
             @endif
-            <div>
-                <flux:text class="font-medium">{{ Auth::user()->name }}</flux:text>
-                <flux:text class="text-sm">{{ Auth::user()->email }}</flux:text>
-            </div>
+
+            <flux:error name="avatar" />
         </div>
 
-        <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
-            <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus autocomplete="name" />
+        <div>
+            <flux:input wire:model="email" :label="__('Email')" type="email" required autocomplete="email" />
 
-            <flux:input wire:model="last_name" :label="__('Last name')" type="text" autocomplete="family-name" />
+            @if ($this->hasUnverifiedEmail)
+                <div>
+                    <flux:text class="mt-4">
+                        {{ __('Your email address is unverified.') }}
 
-            <div>
-                <flux:label>{{ __('Profile picture') }}</flux:label>
+                        <flux:link class="text-sm cursor-pointer" wire:click.prevent="resendVerificationNotification">
+                            {{ __('Click here to re-send the verification email.') }}
+                        </flux:link>
+                    </flux:text>
 
-                <div
-                    x-data="{ dragging: false }"
-                    x-on:dragover.prevent="dragging = true"
-                    x-on:dragleave.prevent="dragging = false"
-                    x-on:drop.prevent="dragging = false; if ($event.dataTransfer.files.length) { $refs.avatarInput.files = $event.dataTransfer.files; $refs.avatarInput.dispatchEvent(new Event('change', { bubbles: true })); }"
-                    :class="dragging ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-500/10' : 'border-zinc-300 dark:border-zinc-700'"
-                    class="mt-2 rounded-2xl border-2 border-dashed bg-zinc-500/5 px-6 py-8 text-center transition dark:bg-white/5"
-                >
-                    <label for="avatar-upload" class="cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-auto h-8 w-8 text-zinc-400">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
-                        </svg>
-                        <p class="mt-2 text-sm font-semibold">Drop files here or click to browse</p>
-                        <p class="mt-1 text-xs text-zinc-500">JPG, PNG, GIF up to 10MB</p>
-                    </label>
-                    <input id="avatar-upload" x-ref="avatarInput" type="file" wire:model="avatar" accept="image/*" class="sr-only" />
-                </div>
-
-                @if ($avatar)
-                    <div class="mt-3 flex items-center gap-3 rounded-2xl border border-zinc-200 bg-zinc-500/5 px-3 py-2.5 dark:border-zinc-700 dark:bg-white/5">
-                        <img src="{{ $avatar->temporaryUrl() }}" alt="Preview" class="h-11 w-11 rounded-xl object-cover" />
-                        <div class="min-w-0 flex-1">
-                            <p class="truncate text-sm font-medium">{{ $avatar->getClientOriginalName() }}</p>
-                            <p class="text-xs text-zinc-500">{{ number_format($avatar->getSize() / 1024, 0) }} KB</p>
-                        </div>
-                        <button type="button" wire:click="$set('avatar', null)" aria-label="Remove file" class="rounded-lg p-1.5 text-zinc-500 transition hover:bg-zinc-500/10 hover:text-zinc-800 dark:hover:text-zinc-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4">
-                                <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-                            </svg>
-                        </button>
-                    </div>
-                @endif
-
-                @error('avatar')
-                    <flux:text class="mt-2 text-sm text-red-600">{{ $message }}</flux:text>
-                @enderror
-            </div>
-
-            <div>
-                <flux:input wire:model="email" :label="__('Email')" type="email" required autocomplete="email" />
-
-                @if ($this->hasUnverifiedEmail)
-                    <div>
-                        <flux:text class="mt-4">
-                            {{ __('Your email address is unverified.') }}
-
-                            <flux:link class="text-sm cursor-pointer" wire:click.prevent="resendVerificationNotification">
-                                {{ __('Click here to re-send the verification email.') }}
-                            </flux:link>
+                    @if (session('status') === 'verification-link-sent')
+                        <flux:text class="mt-2 font-medium !text-emerald-600 dark:!text-emerald-400">
+                            {{ __('A new verification link has been sent to your email address.') }}
                         </flux:text>
-
-                        @if (session('status') === 'verification-link-sent')
-                            <flux:text class="mt-2 font-medium !dark:text-green-400 !text-green-600">
-                                {{ __('A new verification link has been sent to your email address.') }}
-                            </flux:text>
-                        @endif
-                    </div>
-                @endif
-            </div>
-
-            <div class="flex items-center gap-4">
-                <div class="flex items-center justify-end">
-                    <flux:button variant="primary" type="submit" class="w-full" data-test="update-profile-button">
-                        {{ __('Save') }}
-                    </flux:button>
+                    @endif
                 </div>
+            @endif
+        </div>
 
-                <x-action-message class="me-3" on="profile-updated">
-                    {{ __('Saved.') }}
-                </x-action-message>
-            </div>
-        </form>
+        <div class="flex items-center gap-4">
+            <flux:button variant="primary" type="submit" data-test="update-profile-button">
+                {{ __('Save') }}
+            </flux:button>
 
-        <form wire:submit="updatePassword" class="my-6 w-full space-y-6 border-t border-zinc-200 pt-6 dark:border-white/10">
-            <flux:heading size="sm">{{ __('Change password') }}</flux:heading>
+            <x-action-message class="me-3" on="profile-updated">
+                {{ __('Saved.') }}
+            </x-action-message>
+        </div>
+    </form>
 
-            <flux:input wire:model="current_password" :label="__('Current password')" type="password" required autocomplete="current-password" />
-
-            <flux:input wire:model="password" :label="__('New password')" type="password" required autocomplete="new-password" />
-
-            <flux:input wire:model="password_confirmation" :label="__('Confirm new password')" type="password" required autocomplete="new-password" />
-
-            <div class="flex items-center gap-4">
-                <div class="flex items-center justify-end">
-                    <flux:button variant="primary" type="submit" class="w-full">
-                        {{ __('Update password') }}
-                    </flux:button>
-                </div>
-
-                <x-action-message class="me-3" on="password-updated">
-                    {{ __('Saved.') }}
-                </x-action-message>
-            </div>
-        </form>
-
-        @if ($this->showDeleteUser)
-            <livewire:pages::settings.delete-user-form />
-        @endif
-    </x-pages::settings.layout>
+    @if ($this->showDeleteUser)
+        <livewire:pages::settings.delete-user-form />
+    @endif
 </section>

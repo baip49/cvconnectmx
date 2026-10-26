@@ -16,15 +16,15 @@ class UsersTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Nombre')
+                    ->label(__('admin.users.nombre'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('email')
-                    ->label('Correo Electrónico')
+                    ->label(__('admin.users.correo_electronico'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('role.name')
-                    ->label('Rol')
+                    ->label(__('admin.users.rol'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'admin' => 'danger',
@@ -34,7 +34,7 @@ class UsersTable
                     })
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->label('Registrado')
+                    ->label(__('admin.users.registrado'))
                     ->dateTime()
                     ->sortable(),
             ])

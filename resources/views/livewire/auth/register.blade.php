@@ -87,8 +87,8 @@
                 required
                 :placeholder="__('Select account type')"
             >
-                <option value="candidate">{{ __('Soy Candidato') }}</option>
-                <option value="company">{{ __('Soy Empresa') }}</option>
+                <option value="candidate">{{ __('shared.auth.i_am_candidate') }}</option>
+                <option value="company">{{ __('shared.auth.i_am_company') }}</option>
             </flux:select>
             <flux:error name="user_type" />
         </flux:field>

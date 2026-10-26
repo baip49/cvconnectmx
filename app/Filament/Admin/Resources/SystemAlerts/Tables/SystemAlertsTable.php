@@ -18,7 +18,7 @@ class SystemAlertsTable
         return $table
             ->columns([
                 IconColumn::make('is_resolved')
-                    ->label('Estado')
+                    ->label(__('admin.system_alerts.estado'))
                     ->boolean()
                     ->trueIcon('heroicon-o-check-circle')
                     ->falseIcon('heroicon-o-exclamation-circle')
@@ -26,36 +26,36 @@ class SystemAlertsTable
                     ->falseColor('warning'),
 
                 TextColumn::make('type')
-                    ->label('Tipo')
+                    ->label(__('admin.system_alerts.tipo'))
                     ->badge()
                     ->color('gray')
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'security' => 'Seguridad',
-                        'maintenance' => 'Mantenimiento',
-                        'system' => 'Sistema',
-                        'system.memory' => 'Memoria',
-                        'system.cpu' => 'CPU',
-                        'system.disk' => 'Disco',
-                        'system.queue' => 'Cola',
+                        'security' => __('admin.system_alerts.seguridad'),
+                        'maintenance' => __('admin.system_alerts.mantenimiento'),
+                        'system' => __('admin.system_alerts.sistema'),
+                        'system.memory' => __('admin.system_alerts.memoria'),
+                        'system.cpu' => __('admin.system_alerts.cpu'),
+                        'system.disk' => __('admin.system_alerts.disco'),
+                        'system.queue' => __('admin.system_alerts.cola'),
                         default => $state,
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'security' => 'Seguridad',
-                        'maintenance' => 'Mantenimiento',
-                        'system' => 'Sistema',
+                        'security' => __('admin.system_alerts.seguridad'),
+                        'maintenance' => __('admin.system_alerts.mantenimiento'),
+                        'system' => __('admin.system_alerts.sistema'),
                         default => $state,
                     })
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('level')
-                    ->label('Nivel')
+                    ->label(__('admin.system_alerts.nivel'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'info' => 'Informativo',
-                        'warning' => 'Advertencia',
-                        'error' => 'Error',
-                        'critical' => 'Crítico',
+                        'info' => __('admin.system_alerts.informativo'),
+                        'warning' => __('admin.system_alerts.advertencia'),
+                        'error' => __('admin.system_alerts.error'),
+                        'critical' => __('admin.system_alerts.critico'),
                         default => $state,
                     })
                     ->color(fn (string $state): string => match ($state) {
@@ -67,40 +67,40 @@ class SystemAlertsTable
                     }),
 
                 TextColumn::make('message')
-                    ->label('Mensaje')
+                    ->label(__('admin.system_alerts.mensaje'))
                     ->limit(60)
                     ->tooltip(fn ($record) => $record->message),
 
                 TextColumn::make('user.name')
-                    ->label('Asignado a')
+                    ->label(__('admin.system_alerts.asignado_a'))
                     ->searchable()
-                    ->placeholder('Sin asignar'),
+                    ->placeholder(__('admin.system_alerts.sin_asignar')),
 
                 TextColumn::make('resolved_at')
-                    ->label('Resuelto')
+                    ->label(__('admin.system_alerts.resuelto'))
                     ->dateTime('d/m/Y H:i')
                     ->sortable()
-                    ->placeholder('Pendiente'),
+                    ->placeholder(__('admin.system_alerts.pendiente')),
 
                 TextColumn::make('created_at')
-                    ->label('Creado')
+                    ->label(__('admin.system_alerts.creado'))
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('level')
-                    ->label('Nivel')
+                    ->label(__('admin.system_alerts.nivel'))
                     ->options([
-                        'info' => 'Informativo',
-                        'warning' => 'Advertencia',
-                        'error' => 'Error',
-                        'critical' => 'Crítico',
+                        'info' => __('admin.system_alerts.informativo'),
+                        'warning' => __('admin.system_alerts.advertencia'),
+                        'error' => __('admin.system_alerts.error'),
+                        'critical' => __('admin.system_alerts.critico'),
                     ]),
                 SelectFilter::make('is_resolved')
-                    ->label('Estado')
+                    ->label(__('admin.system_alerts.estado'))
                     ->options([
-                        0 => 'Pendiente',
-                        1 => 'Resuelta',
+                        0 => __('admin.system_alerts.pendiente'),
+                        1 => __('admin.system_alerts.resuelta'),
                     ]),
             ])
             ->defaultSort('created_at', 'desc')

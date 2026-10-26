@@ -19,17 +19,17 @@ test('security settings page can be rendered', function () {
 
     $this->actingAs($user)
         ->withSession(['auth.password_confirmed_at' => time()])
-        ->get(route('security.edit'))
+        ->get('/dashboard/account')
         ->assertOk()
-        ->assertSee('Two-factor authentication')
-        ->assertSee('Enable 2FA');
+        ->assertSee(__('Two-factor authentication'))
+        ->assertSee(__('Enable 2FA'));
 });
 
 test('security settings page requires password confirmation when enabled', function () {
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)
-        ->get(route('security.edit'));
+        ->get('/dashboard/account');
 
     $response->assertRedirect(route('password.confirm'));
 });
@@ -41,10 +41,10 @@ test('security settings page renders without two factor when feature is disabled
 
     $this->actingAs($user)
         ->withSession(['auth.password_confirmed_at' => time()])
-        ->get(route('security.edit'))
+        ->get('/dashboard/account')
         ->assertOk()
-        ->assertSee('Update password')
-        ->assertDontSee('Two-factor authentication');
+        ->assertSee(__('Update password'))
+        ->assertDontSee(__('Two-factor authentication'));
 });
 
 test('two factor authentication disabled when confirmation abandoned between requests', function () {

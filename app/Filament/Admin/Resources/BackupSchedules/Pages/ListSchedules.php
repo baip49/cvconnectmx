@@ -13,7 +13,7 @@ class ListSchedules extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()->label('Programar respaldo'),
+            CreateAction::make()->label(__('admin.backup_schedules.programar_respaldo')),
         ];
     }
 }

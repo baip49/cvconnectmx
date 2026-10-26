@@ -346,9 +346,6 @@ test('user avatars default to colored initials without external services', funct
 
     expect($url)->toStartWith('data:image/svg+xml,')
         ->and(rawurldecode($url))->toContain('CE');
-
-    expect($user->avatarColorHex())->toMatch('/^#[0-9a-f]{6}$/')
-        ->and($user->avatarColorHex())->toBe($user->avatarColorHex());
 });
 
 test('chat shows the uploaded profile photo instead of initials', function () {

@@ -15,18 +15,18 @@ class ScheduleForm
     public static function scopes(): array
     {
         return [
-            'database' => 'Base de datos',
-            'files' => 'Archivos',
-            'both' => 'Base de datos y archivos',
+            'database' => __('admin.backup_schedules.base_de_datos'),
+            'files' => __('admin.backup_schedules.archivos'),
+            'both' => __('admin.backup_schedules.base_de_datos_y_archivos'),
         ];
     }
 
     public static function frequencies(): array
     {
         return [
-            'daily' => 'Diario',
-            'weekly' => 'Semanal',
-            'monthly' => 'Mensual',
+            'daily' => __('admin.backup_schedules.diario'),
+            'weekly' => __('admin.backup_schedules.semanal'),
+            'monthly' => __('admin.backup_schedules.mensual'),
         ];
     }
 
@@ -34,35 +34,35 @@ class ScheduleForm
     {
         return $schema
             ->components([
-                Section::make('Programación de Respaldo')
+                Section::make(__('admin.backup_schedules.programacion_de_respaldo'))
                     ->schema([
                         Grid::make(2)->schema([
                             TextInput::make('name')
-                                ->label('Nombre')
+                                ->label(__('admin.backup_schedules.nombre'))
                                 ->required()
                                 ->maxLength(255),
                             Select::make('scope')
-                                ->label('Qué respaldar')
+                                ->label(__('admin.backup_schedules.que_respaldar'))
                                 ->options(self::scopes())
                                 ->default('database')
                                 ->required(),
                             Select::make('frequency')
-                                ->label('Cada cuánto')
+                                ->label(__('admin.backup_schedules.cada_cuanto'))
                                 ->options(self::frequencies())
                                 ->default('daily')
                                 ->required(),
                             TimePicker::make('time')
-                                ->label('Hora')
+                                ->label(__('admin.backup_schedules.hora'))
                                 ->default('02:00')
                                 ->required(),
                             TextInput::make('retention_days')
-                                ->label('Retención (días)')
+                                ->label(__('admin.backup_schedules.retencion_dias'))
                                 ->numeric()
                                 ->minValue(1)
                                 ->default(30)
                                 ->required(),
                             Toggle::make('is_active')
-                                ->label('Activo')
+                                ->label(__('admin.backup_schedules.activo'))
                                 ->default(true),
                         ]),
                     ]),

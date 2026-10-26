@@ -14,7 +14,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
-use UnitEnum;
 
 class CandidateResource extends Resource
 {
@@ -22,9 +21,15 @@ class CandidateResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Directorios';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.navigation_groups.directorios');
+    }
 
-    protected static ?string $navigationLabel = 'Candidatos';
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.candidates.candidatos');
+    }
 
     public static function canCreate(): bool
     {

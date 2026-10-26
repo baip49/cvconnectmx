@@ -13,7 +13,10 @@ class OpenTickets extends TableWidget
 {
     protected int|string|array $columnSpan = 'full';
 
-    protected static ?string $heading = 'Tickets por atender';
+    protected function getTableHeading(): ?string
+    {
+        return __('support.open_tickets.tickets_por_atender');
+    }
 
     public function table(Table $table): Table
     {
@@ -27,25 +30,25 @@ class OpenTickets extends TableWidget
             )
             ->columns([
                 TextColumn::make('title')
-                    ->label('Asunto')
+                    ->label(__('support.open_tickets.asunto'))
                     ->limit(35),
 
                 TextColumn::make('level')
-                    ->label('Nivel')
+                    ->label(__('support.open_tickets.nivel'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => TicketLabels::levels()[$state] ?? $state)
                     ->color(fn (string $state): string => TicketLabels::levelColors()[$state] ?? 'gray'),
 
                 TextColumn::make('creator.name')
-                    ->label('Reportado por')
-                    ->placeholder('Sistema'),
+                    ->label(__('support.open_tickets.reportado_por'))
+                    ->placeholder(__('support.open_tickets.sistema')),
 
                 TextColumn::make('claimedBy.name')
-                    ->label('Atendido por')
-                    ->placeholder('Sin reclamar'),
+                    ->label(__('support.open_tickets.atendido_por'))
+                    ->placeholder(__('support.open_tickets.sin_reclamar')),
 
                 TextColumn::make('created_at')
-                    ->label('Fecha')
+                    ->label(__('support.open_tickets.fecha'))
                     ->dateTime('d/m/Y H:i')
                     ->since(),
             ])

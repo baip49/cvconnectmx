@@ -20,32 +20,32 @@ class ViewTicket extends ViewRecord
     {
         return [
             Action::make('claim')
-                ->label('Reclamar')
+                ->label(__('admin.tickets.reclamar'))
                 ->icon(Heroicon::OutlinedUserPlus)
                 ->visible(fn (Ticket $record): bool => $record->canBeClaimedBy(Auth::user()))
                 ->action(function (Ticket $record): void {
                     $record->claim(Auth::user());
 
-                    Notification::make()->title('Ticket reclamado')->success()->send();
+                    Notification::make()->title(__('admin.tickets.ticket_reclamado'))->success()->send();
                 }),
 
             Action::make('join')
-                ->label('Unirse como segundo asistente')
+                ->label(__('admin.tickets.unirse_como_segundo_asistente'))
                 ->icon(Heroicon::OutlinedUsers)
                 ->visible(fn (Ticket $record): bool => $record->canBeJoinedBy(Auth::user()))
                 ->action(function (Ticket $record): void {
                     $record->joinAsSecond(Auth::user());
 
-                    Notification::make()->title('Te uniste al ticket')->success()->send();
+                    Notification::make()->title(__('admin.tickets.te_uniste_al_ticket'))->success()->send();
                 }),
 
             Action::make('assign')
-                ->label('Asignar')
+                ->label(__('admin.tickets.asignar'))
                 ->icon(Heroicon::OutlinedUserPlus)
                 ->visible(fn (): bool => (bool) Auth::user()?->hasPermission('tickets.assign'))
                 ->form([
                     Select::make('claimed_by')
-                        ->label('Asistente')
+                        ->label(__('admin.tickets.asistente'))
                         ->options(fn (): array => User::query()
                             ->whereHas('role', fn ($query) => $query->whereIn('name', ['support', 'admin']))
                             ->pluck('name', 'id')
@@ -58,31 +58,31 @@ class ViewTicket extends ViewRecord
                         Auth::user()
                     );
 
-                    Notification::make()->title('Ticket asignado')->success()->send();
+                    Notification::make()->title(__('admin.tickets.ticket_asignado'))->success()->send();
                 }),
 
             Action::make('release')
-                ->label('Abandonar ticket')
+                ->label(__('admin.tickets.abandonar_ticket'))
                 ->icon(Heroicon::OutlinedArrowRightStartOnRectangle)
                 ->color('warning')
                 ->requiresConfirmation()
-                ->modalDescription('Dejarás de atender este ticket. Tu salida quedará registrada en la auditoría.')
+                ->modalDescription(__('admin.tickets.dejaras_de_atender_este_ticket_tu_salida'))
                 ->visible(fn (Ticket $record): bool => $record->canBeReleasedBy(Auth::user()))
                 ->action(function (Ticket $record): void {
                     $record->release(Auth::user());
 
-                    Notification::make()->title('Abandonaste el ticket')->success()->send();
+                    Notification::make()->title(__('admin.tickets.abandonaste_el_ticket'))->success()->send();
                 }),
 
             Action::make('transition')
-                ->label('Cambiar estado')
+                ->label(__('admin.tickets.cambiar_estado'))
                 ->icon(Heroicon::OutlinedArrowsRightLeft)
                 ->form([
                     Select::make('status')
-                        ->label('Estado')
+                        ->label(__('admin.tickets.estado'))
                         ->options([
-                            'open' => 'Abierto',
-                            'in_progress' => 'En progreso',
+                            'open' => __('admin.tickets.abierto'),
+                            'in_progress' => __('admin.tickets.en_progreso'),
                         ])
                         ->required(),
                 ])
@@ -90,11 +90,11 @@ class ViewTicket extends ViewRecord
                 ->action(function (Ticket $record, array $data): void {
                     $record->transitionTo(Auth::user(), $data['status']);
 
-                    Notification::make()->title('Estado actualizado')->success()->send();
+                    Notification::make()->title(__('admin.tickets.estado_actualizado'))->success()->send();
                 }),
 
             Action::make('close')
-                ->label('Cerrar ticket')
+                ->label(__('admin.tickets.cerrar_ticket'))
                 ->icon(Heroicon::OutlinedCheckCircle)
                 ->color('success')
                 ->requiresConfirmation()
@@ -102,20 +102,20 @@ class ViewTicket extends ViewRecord
                 ->action(function (Ticket $record): void {
                     $record->close(Auth::user());
 
-                    Notification::make()->title('Ticket cerrado')->success()->send();
+                    Notification::make()->title(__('admin.tickets.ticket_cerrado'))->success()->send();
                 }),
 
             Action::make('reopen')
-                ->label('Reabrir ticket')
+                ->label(__('admin.tickets.reabrir_ticket'))
                 ->icon(Heroicon::OutlinedArrowPath)
                 ->color('warning')
                 ->requiresConfirmation()
-                ->modalDescription('El ticket volverá a estado abierto o en progreso. Solo se puede reabrir dentro de los 30 días posteriores al cierre.')
+                ->modalDescription(__('admin.tickets.el_ticket_volvera_a_estado_abierto_o_en'))
                 ->visible(fn (Ticket $record): bool => $record->canBeReopenedBy(Auth::user()))
                 ->action(function (Ticket $record): void {
                     $record->reopen(Auth::user());
 
-                    Notification::make()->title('Ticket reabierto')->success()->send();
+                    Notification::make()->title(__('admin.tickets.ticket_reabierto'))->success()->send();
                 }),
         ];
     }

@@ -1,0 +1,74 @@
+/*
+ * CVConnectMX design tokens, shared by the Flux pages (app.css) and every Filament panel (filament/theme.css).
+ * Brand primary is #51a2ff, which is exactly Tailwind's blue-400; neutrals are slate.
+ */
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/roboto/Roboto-Variable.ttf') format('truetype');
+    font-weight: 100 900;
+    font-stretch: 75% 100%;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/roboto/Roboto-Italic-Variable.ttf') format('truetype');
+    font-weight: 100 900;
+    font-stretch: 75% 100%;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Expletus Sans';
+    src: url('../fonts/expletus-sans/ExpletusSans-Variable.ttf') format('truetype');
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@theme {
+    --font-sans: 'Roboto', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+    /* Display face for the brand name and page titles only; Roboto carries everything else. */
+    --font-display: 'Expletus Sans', 'Roboto', ui-sans-serif, system-ui, sans-serif;
+
+    /* Flux draws its neutrals with zinc, so zinc is pointed at the brand's slate. */
+    --color-zinc-50: var(--color-slate-50);
+    --color-zinc-100: var(--color-slate-100);
+    --color-zinc-200: var(--color-slate-200);
+    --color-zinc-300: var(--color-slate-300);
+    --color-zinc-400: var(--color-slate-400);
+    --color-zinc-500: var(--color-slate-500);
+    --color-zinc-600: var(--color-slate-600);
+    --color-zinc-700: var(--color-slate-700);
+    --color-zinc-800: var(--color-slate-800);
+    --color-zinc-900: var(--color-slate-900);
+    --color-zinc-950: var(--color-slate-950);
+
+    /* White text on #51a2ff is only 2.6:1, so light mode fills and text use blue-600 (5.2:1). */
+    --color-accent: var(--color-blue-600);
+    --color-accent-content: var(--color-blue-600);
+    --color-accent-foreground: var(--color-white);
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+/* Surfaces are a step darker than Flux's defaults in both modes, to be easier on the eyes. */
+@layer components {
+    [data-flux-card] {
+        @apply bg-zinc-50 dark:bg-white/5;
+    }
+}
+
+@layer theme {
+    .dark {
+        /* #51a2ff itself, with dark text on top (6.8:1). */
+        --color-accent: var(--color-blue-400);
+        --color-accent-content: var(--color-blue-400);
+        --color-accent-foreground: var(--color-slate-900);
+    }
+}

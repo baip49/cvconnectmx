@@ -17,19 +17,19 @@ class CandidateDocumentsTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Nombre')
+                    ->label(__('admin.candidate_documents.nombre'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('candidate.user.name')
-                    ->label('Candidato')
+                    ->label(__('admin.candidate_documents.candidato'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('slug')
-                    ->label('Slug')
+                    ->label(__('admin.candidate_documents.slug'))
                     ->fontFamily(FontFamily::Mono)
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
-                    ->label('Subido el')
+                    ->label(__('admin.candidate_documents.subido_el'))
                     ->dateTime()
                     ->sortable(),
             ])

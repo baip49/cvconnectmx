@@ -12,7 +12,10 @@ class RecentAuditLogs extends TableWidget
 {
     protected int|string|array $columnSpan = 'full';
 
-    protected static ?string $heading = 'Actividad reciente';
+    protected function getTableHeading(): ?string
+    {
+        return __('admin.recent_audit_logs.actividad_reciente');
+    }
 
     protected static ?int $sort = 3;
 
@@ -27,23 +30,23 @@ class RecentAuditLogs extends TableWidget
             )
             ->columns([
                 TextColumn::make('created_at')
-                    ->label('Fecha')
+                    ->label(__('admin.recent_audit_logs.fecha'))
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
 
                 TextColumn::make('user.name')
-                    ->label('Usuario')
-                    ->placeholder('Sistema'),
+                    ->label(__('admin.recent_audit_logs.usuario'))
+                    ->placeholder(__('admin.recent_audit_logs.sistema')),
 
                 TextColumn::make('action')
-                    ->label('Acción')
+                    ->label(__('admin.recent_audit_logs.accion'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'created' => 'Creación',
-                        'updated' => 'Actualización',
-                        'deleted' => 'Eliminación',
-                        'restored' => 'Restauración',
-                        'force_deleted' => 'Eliminación permanente',
+                        'created' => __('admin.recent_audit_logs.creacion'),
+                        'updated' => __('admin.recent_audit_logs.actualizacion'),
+                        'deleted' => __('admin.recent_audit_logs.eliminacion'),
+                        'restored' => __('admin.recent_audit_logs.restauracion'),
+                        'force_deleted' => __('admin.recent_audit_logs.eliminacion_permanente'),
                         default => ucfirst($state),
                     })
                     ->color(fn (string $state): string => match ($state) {
@@ -56,31 +59,31 @@ class RecentAuditLogs extends TableWidget
                     }),
 
                 TextColumn::make('entity_type')
-                    ->label('Entidad')
+                    ->label(__('admin.recent_audit_logs.entidad'))
                     ->formatStateUsing(fn (?string $state): string => $state ? class_basename($state) : '-'),
 
                 TextColumn::make('category')
-                    ->label('Categoría')
+                    ->label(__('admin.recent_audit_logs.categoria'))
                     ->badge()
                     ->formatStateUsing(fn (?string $state): string => match ($state) {
-                        'auth' => 'Autenticación',
-                        'access' => 'Acceso',
-                        'candidate' => 'Candidato',
-                        'company' => 'Empresa',
-                        'vacancy' => 'Vacante',
-                        'application' => 'Postulación',
-                        default => 'Sistema',
+                        'auth' => __('admin.recent_audit_logs.autenticacion'),
+                        'access' => __('admin.recent_audit_logs.acceso'),
+                        'candidate' => __('admin.recent_audit_logs.candidato'),
+                        'company' => __('admin.recent_audit_logs.empresa'),
+                        'vacancy' => __('admin.recent_audit_logs.vacante'),
+                        'application' => __('admin.recent_audit_logs.postulacion'),
+                        default => __('admin.recent_audit_logs.sistema'),
                     })
                     ->color('gray'),
 
                 TextColumn::make('severity')
-                    ->label('Severidad')
+                    ->label(__('admin.recent_audit_logs.severidad'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'low' => 'Baja',
-                        'medium' => 'Media',
-                        'high' => 'Alta',
-                        'critical' => 'Crítica',
+                        'low' => __('admin.recent_audit_logs.baja'),
+                        'medium' => __('admin.recent_audit_logs.media'),
+                        'high' => __('admin.recent_audit_logs.alta'),
+                        'critical' => __('admin.recent_audit_logs.critica'),
                         default => $state,
                     })
                     ->color(fn (string $state): string => match ($state) {

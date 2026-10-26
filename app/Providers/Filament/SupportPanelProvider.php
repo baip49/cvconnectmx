@@ -2,16 +2,15 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\AvatarProviders\InitialsAvatarProvider;
 use App\Filament\Support\Pages\Dashboard;
 use App\Http\Middleware\RedirectToOwnPanel;
+use App\Http\Middleware\SetLocale;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
+use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\Support\Colors\Color;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -26,25 +25,9 @@ class SupportPanelProvider extends PanelProvider
         return $panel
             ->id('support')
             ->path('support')
-            ->viteTheme('resources/css/filament/support/theme.css')
-            ->brandName('CVConnectMX Soporte')
-            ->defaultAvatarProvider(InitialsAvatarProvider::class)
-            ->userMenuItems([
-                MenuItem::make()
-                    ->label('Perfil')
-                    ->url(fn (): string => route('profile.edit'))
-                    ->icon('heroicon-o-user-circle'),
-            ])
-            ->favicon(asset('favicon.ico'))
-            ->colors([
-                'primary' => Color::Amber,
-            ])
-            ->sidebarCollapsibleOnDesktop()
-            ->databaseNotifications()
-            ->databaseNotificationsPolling('30s')
             ->navigationGroups([
-                'Inicio',
-                'Tickets',
+                NavigationGroup::make()->label(fn (): string => __('support.navigation_groups.inicio')),
+                NavigationGroup::make()->label(fn (): string => __('support.navigation_groups.tickets')),
             ])
             ->pages([
                 Dashboard::class,
@@ -58,6 +41,7 @@ class SupportPanelProvider extends PanelProvider
                 StartSession::class,
                 AuthenticateSession::class,
                 ShareErrorsFromSession::class,
+                SetLocale::class,
                 PreventRequestForgery::class,
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,

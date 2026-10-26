@@ -16,23 +16,23 @@ class UserTrainingsTable
         return $table
             ->columns([
                 TextColumn::make('user.name')
-                    ->label('Usuario')
+                    ->label(__('admin.user_trainings.usuario'))
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('training.title')
-                    ->label('Capacitación')
+                    ->label(__('admin.user_trainings.capacitacion'))
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('status')
-                    ->label('Estado')
+                    ->label(__('admin.user_trainings.estado'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'pending' => 'Pendiente',
-                        'in_progress' => 'En progreso',
-                        'completed' => 'Completada',
-                        'expired' => 'Expirada',
+                        'pending' => __('admin.user_trainings.pendiente'),
+                        'in_progress' => __('admin.user_trainings.en_progreso'),
+                        'completed' => __('admin.user_trainings.completada'),
+                        'expired' => __('admin.user_trainings.expirada'),
                         default => $state,
                     })
                     ->color(fn (string $state): string => match ($state) {
@@ -45,24 +45,24 @@ class UserTrainingsTable
                     ->sortable(),
 
                 TextColumn::make('score')
-                    ->label('Calificación')
+                    ->label(__('admin.user_trainings.calificacion'))
                     ->placeholder('N/A')
                     ->sortable(),
 
                 TextColumn::make('completed_at')
-                    ->label('Completado')
+                    ->label(__('admin.user_trainings.completado'))
                     ->dateTime('d/m/Y H:i')
                     ->sortable()
-                    ->placeholder('Pendiente'),
+                    ->placeholder(__('admin.user_trainings.pendiente')),
 
                 TextColumn::make('expires_at')
-                    ->label('Expira')
+                    ->label(__('admin.user_trainings.expira'))
                     ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->placeholder('N/A'),
 
                 TextColumn::make('created_at')
-                    ->label('Asignado')
+                    ->label(__('admin.user_trainings.asignado'))
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
             ])

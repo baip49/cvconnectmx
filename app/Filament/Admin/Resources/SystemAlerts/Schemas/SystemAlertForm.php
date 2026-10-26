@@ -16,42 +16,42 @@ class SystemAlertForm
     {
         return $schema
             ->components([
-                Section::make('Información de la Alerta')
+                Section::make(__('admin.system_alerts.informacion_de_la_alerta'))
                     ->schema([
                         Grid::make(2)->schema([
                             TextInput::make('type')
-                                ->label('Tipo de Alerta')
+                                ->label(__('admin.system_alerts.tipo_de_alerta'))
                                 ->required()
                                 ->maxLength(255),
                             Select::make('level')
-                                ->label('Nivel')
+                                ->label(__('admin.system_alerts.nivel'))
                                 ->options([
-                                    'info' => 'Informativo',
-                                    'warning' => 'Advertencia',
-                                    'error' => 'Error',
-                                    'critical' => 'Crítico',
+                                    'info' => __('admin.system_alerts.informativo'),
+                                    'warning' => __('admin.system_alerts.advertencia'),
+                                    'error' => __('admin.system_alerts.error'),
+                                    'critical' => __('admin.system_alerts.critico'),
                                 ])
                                 ->required(),
                             Select::make('user_id')
-                                ->label('Asignado a')
+                                ->label(__('admin.system_alerts.asignado_a'))
                                 ->relationship('user', 'name')
                                 ->searchable()
                                 ->preload()
                                 ->nullable(),
                             Toggle::make('is_resolved')
-                                ->label('Resuelta')
+                                ->label(__('admin.system_alerts.resuelta'))
                                 ->default(false),
                         ]),
                         Textarea::make('message')
-                            ->label('Mensaje')
+                            ->label(__('admin.system_alerts.mensaje'))
                             ->required()
                             ->rows(3)
                             ->columnSpanFull(),
                     ]),
-                Section::make('Resolución')
+                Section::make(__('admin.system_alerts.resolucion'))
                     ->schema([
                         Textarea::make('resolution_notes')
-                            ->label('Notas de Resolución')
+                            ->label(__('admin.system_alerts.notas_de_resolucion'))
                             ->rows(3)
                             ->columnSpanFull(),
                     ])

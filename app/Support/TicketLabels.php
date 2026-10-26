@@ -10,9 +10,9 @@ class TicketLabels
     public static function statuses(): array
     {
         return [
-            'open' => 'Abierto',
-            'in_progress' => 'En progreso',
-            'closed' => 'Cerrado',
+            'open' => __('shared.tickets.status_open'),
+            'in_progress' => __('shared.tickets.status_in_progress'),
+            'closed' => __('shared.tickets.status_closed'),
         ];
     }
 
@@ -34,9 +34,9 @@ class TicketLabels
     public static function levels(): array
     {
         return [
-            'low' => 'Bajo',
-            'medium' => 'Medio',
-            'high' => 'Alto',
+            'low' => __('shared.tickets.level_low'),
+            'medium' => __('shared.tickets.level_medium'),
+            'high' => __('shared.tickets.level_high'),
         ];
     }
 

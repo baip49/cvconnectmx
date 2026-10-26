@@ -18,34 +18,34 @@ class SchedulesTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Nombre')
+                    ->label(__('admin.backup_schedules.nombre'))
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('scope')
-                    ->label('Qué respalda')
+                    ->label(__('admin.backup_schedules.que_respalda'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => ScheduleForm::scopes()[$state] ?? $state)
                     ->color('gray'),
 
                 TextColumn::make('frequency')
-                    ->label('Frecuencia')
+                    ->label(__('admin.backup_schedules.frecuencia'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => ScheduleForm::frequencies()[$state] ?? $state)
                     ->color('gray'),
 
                 TextColumn::make('time')
-                    ->label('Hora')
+                    ->label(__('admin.backup_schedules.hora'))
                     ->time('H:i'),
 
                 IconColumn::make('is_active')
-                    ->label('Activo')
+                    ->label(__('admin.backup_schedules.activo'))
                     ->boolean(),
 
                 TextColumn::make('last_run_at')
-                    ->label('Última ejecución')
+                    ->label(__('admin.backup_schedules.ultima_ejecucion'))
                     ->dateTime('d/m/Y H:i')
-                    ->placeholder('Nunca')
+                    ->placeholder(__('admin.backup_schedules.nunca'))
                     ->sortable(),
             ])
             ->defaultSort('created_at', 'desc')

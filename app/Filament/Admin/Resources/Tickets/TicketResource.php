@@ -12,7 +12,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class TicketResource extends Resource
 {
@@ -20,9 +19,15 @@ class TicketResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTicket;
 
-    protected static ?string $navigationLabel = 'Tickets';
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.tickets.tickets');
+    }
 
-    protected static string|UnitEnum|null $navigationGroup = 'Seguridad';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.navigation_groups.seguridad');
+    }
 
     public static function infolist(Schema $schema): Schema
     {

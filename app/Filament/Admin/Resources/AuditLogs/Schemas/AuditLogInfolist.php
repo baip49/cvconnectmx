@@ -14,22 +14,22 @@ class AuditLogInfolist
     {
         return $schema
             ->components([
-                Section::make('Detalles del Registro')
+                Section::make(__('admin.audit_logs.detalles_del_registro'))
                     ->schema([
                         Grid::make(3)
                             ->schema([
                                 TextEntry::make('user.name')
-                                    ->label('Usuario')
-                                    ->placeholder('Sistema'),
+                                    ->label(__('admin.audit_logs.usuario'))
+                                    ->placeholder(__('admin.audit_logs.sistema')),
                                 TextEntry::make('action')
-                                    ->label('Acción')
+                                    ->label(__('admin.audit_logs.accion'))
                                     ->badge()
                                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                                        'created' => 'Creación',
-                                        'updated' => 'Actualización',
-                                        'deleted' => 'Eliminación',
-                                        'restored' => 'Restauración',
-                                        'force_deleted' => 'Eliminación permanente',
+                                        'created' => __('admin.audit_logs.creacion'),
+                                        'updated' => __('admin.audit_logs.actualizacion'),
+                                        'deleted' => __('admin.audit_logs.eliminacion'),
+                                        'restored' => __('admin.audit_logs.restauracion'),
+                                        'force_deleted' => __('admin.audit_logs.eliminacion_permanente'),
                                         default => ucfirst($state),
                                     })
                                     ->color(fn (string $state): string => match ($state) {
@@ -41,12 +41,12 @@ class AuditLogInfolist
                                         default => 'gray',
                                     }),
                                 TextEntry::make('result')
-                                    ->label('Resultado')
+                                    ->label(__('admin.audit_logs.resultado'))
                                     ->badge()
                                     ->formatStateUsing(fn (?string $state): string => match ($state) {
-                                        'success' => 'Exitoso',
-                                        'failure' => 'Fallido',
-                                        default => $state ?? 'Sin resultado',
+                                        'success' => __('admin.audit_logs.exitoso'),
+                                        'failure' => __('admin.audit_logs.fallido'),
+                                        default => $state ?? __('admin.audit_logs.sin_resultado'),
                                     })
                                     ->color(fn (?string $state): string => match ($state) {
                                         'success' => 'success',
@@ -54,16 +54,16 @@ class AuditLogInfolist
                                         default => 'gray',
                                     }),
                                 TextEntry::make('category')
-                                    ->label('Categoría')
+                                    ->label(__('admin.audit_logs.categoria'))
                                     ->badge()
                                     ->formatStateUsing(fn (?string $state): string => match ($state) {
-                                        'auth' => 'Autenticación',
-                                        'access' => 'Acceso',
-                                        'candidate' => 'Candidato',
-                                        'company' => 'Empresa',
-                                        'vacancy' => 'Vacante',
-                                        'application' => 'Postulación',
-                                        default => 'Sistema',
+                                        'auth' => __('admin.audit_logs.autenticacion'),
+                                        'access' => __('admin.audit_logs.acceso'),
+                                        'candidate' => __('admin.audit_logs.candidato'),
+                                        'company' => __('admin.audit_logs.empresa'),
+                                        'vacancy' => __('admin.audit_logs.vacante'),
+                                        'application' => __('admin.audit_logs.postulacion'),
+                                        default => __('admin.audit_logs.sistema'),
                                     })
                                     ->color(fn (?string $state): string => match ($state) {
                                         'auth' => 'info',
@@ -74,13 +74,13 @@ class AuditLogInfolist
                                         default => 'gray',
                                     }),
                                 TextEntry::make('severity')
-                                    ->label('Severidad')
+                                    ->label(__('admin.audit_logs.severidad'))
                                     ->badge()
                                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                                        'low' => 'Baja',
-                                        'medium' => 'Media',
-                                        'high' => 'Alta',
-                                        'critical' => 'Crítica',
+                                        'low' => __('admin.audit_logs.baja'),
+                                        'medium' => __('admin.audit_logs.media'),
+                                        'high' => __('admin.audit_logs.alta'),
+                                        'critical' => __('admin.audit_logs.critica'),
                                         default => $state,
                                     })
                                     ->color(fn (string $state): string => match ($state) {
@@ -91,42 +91,42 @@ class AuditLogInfolist
                                         default => 'gray',
                                     }),
                                 TextEntry::make('entity_type')
-                                    ->label('Tipo de Entidad'),
+                                    ->label(__('admin.audit_logs.tipo_de_entidad')),
                                 TextEntry::make('entity_id')
-                                    ->label('ID de Entidad'),
+                                    ->label(__('admin.audit_logs.id_de_entidad')),
                                 TextEntry::make('ip_address')
-                                    ->label('Dirección IP'),
+                                    ->label(__('admin.audit_logs.direccion_ip')),
                                 TextEntry::make('created_at')
-                                    ->label('Fecha y Hora')
+                                    ->label(__('admin.audit_logs.fecha_y_hora'))
                                     ->dateTime('d/m/Y H:i:s'),
                             ]),
                     ]),
-                Section::make('Información del Dispositivo')
+                Section::make(__('admin.audit_logs.informacion_del_dispositivo'))
                     ->schema([
                         TextEntry::make('user_agent')
-                            ->label('Navegador / Dispositivo')
-                            ->placeholder('No registrado')
+                            ->label(__('admin.audit_logs.navegador_dispositivo'))
+                            ->placeholder(__('admin.audit_logs.no_registrado'))
                             ->columnSpanFull()
                             ->limit(100)
                             ->tooltip(fn ($record) => $record->user_agent),
                     ]),
-                Section::make('Detalles')
+                Section::make(__('admin.audit_logs.detalles'))
                     ->schema([
                         TextEntry::make('details')
-                            ->label('Descripción')
-                            ->placeholder('Sin detalles adicionales')
+                            ->label(__('admin.audit_logs.descripcion'))
+                            ->placeholder(__('admin.audit_logs.sin_detalles_adicionales'))
                             ->wrap()
                             ->columnSpanFull(),
                     ])
                     ->visible(fn ($record) => ! empty($record->details)),
-                Section::make('Cambios en los Datos')
+                Section::make(__('admin.audit_logs.cambios_en_los_datos'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 KeyValueEntry::make('old_data')
-                                    ->label('Datos Anteriores'),
+                                    ->label(__('admin.audit_logs.datos_anteriores')),
                                 KeyValueEntry::make('new_data')
-                                    ->label('Datos Nuevos'),
+                                    ->label(__('admin.audit_logs.datos_nuevos')),
                             ]),
                     ])
                     ->collapsible(),

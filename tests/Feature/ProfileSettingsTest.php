@@ -31,11 +31,11 @@ test('user can update avatar and last name in profile', function () {
         ->and(Storage::disk('public')->exists($user->avatar_path))->toBeTrue();
 });
 
-test('user can change password from the profile section', function () {
+test('user can change password from the account page', function () {
     $user = User::factory()->candidate()->create();
     actingAs($user);
 
-    Livewire::test('pages::settings.profile')
+    Livewire::test('pages::settings.security')
         ->set('current_password', 'password')
         ->set('password', 'nueva-clave-segura-123')
         ->set('password_confirmation', 'nueva-clave-segura-123')
@@ -48,7 +48,7 @@ test('user can change password from the profile section', function () {
 test('password change requires the current password', function () {
     actingAs(User::factory()->candidate()->create());
 
-    Livewire::test('pages::settings.profile')
+    Livewire::test('pages::settings.security')
         ->set('current_password', 'incorrecta')
         ->set('password', 'nueva-clave-segura-123')
         ->set('password_confirmation', 'nueva-clave-segura-123')
@@ -56,32 +56,32 @@ test('password change requires the current password', function () {
         ->assertHasErrors('current_password');
 });
 
-test('candidate menu shows the profile entry', function () {
+test('candidate menu shows the account entry', function () {
     config()->set('app.env', 'local');
     actingAs(User::factory()->candidate()->create());
 
-    get('/dashboard')->assertOk()->assertSee('Perfil', false);
+    get('/dashboard')->assertOk()->assertSee(__('shared.account.title'), false);
 });
 
-test('company menu shows the profile entry', function () {
+test('company menu shows the account entry', function () {
     config()->set('app.env', 'local');
     actingAs(User::factory()->company()->create());
 
-    get('/company')->assertOk()->assertSee('Perfil', false);
+    get('/company')->assertOk()->assertSee(__('shared.account.title'), false);
 });
 
-test('admin menu shows the profile entry', function () {
+test('admin menu shows the account entry', function () {
     config()->set('app.env', 'local');
     actingAs(User::factory()->admin()->create());
 
-    get('/admin')->assertOk()->assertSee('Perfil', false);
+    get('/admin')->assertOk()->assertSee(__('shared.account.title'), false);
 });
 
-test('support menu shows the profile entry', function () {
+test('support menu shows the account entry', function () {
     config()->set('app.env', 'local');
     actingAs(User::factory()->support()->create());
 
-    get('/support')->assertOk()->assertSee('Perfil', false);
+    get('/support')->assertOk()->assertSee(__('shared.account.title'), false);
 });
 
 test('user panel paths resolve by role', function () {
@@ -91,11 +91,12 @@ test('user panel paths resolve by role', function () {
         ->and(User::factory()->candidate()->create()->panelPath())->toBe('/dashboard');
 });
 
-test('settings sidebar shows branding and a link back to the role panel', function () {
+test('the account page lives inside the role panel with its branding', function () {
     actingAs(User::factory()->candidate()->create());
 
-    get(route('profile.edit'))
+    $this->withSession(['auth.password_confirmed_at' => time()])
+        ->get('/dashboard/account')
         ->assertOk()
         ->assertSee('CVConnectMX', false)
-        ->assertSee('Ir al panel', false);
+        ->assertSee(__('shared.account.title'), false);
 });

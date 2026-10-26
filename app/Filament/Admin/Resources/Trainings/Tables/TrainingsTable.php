@@ -17,30 +17,30 @@ class TrainingsTable
         return $table
             ->columns([
                 TextColumn::make('title')
-                    ->label('Título')
+                    ->label(__('admin.trainings.titulo'))
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('type')
-                    ->label('Tipo')
+                    ->label(__('admin.trainings.tipo'))
                     ->badge()
                     ->color('gray')
                     ->searchable(),
 
                 TextColumn::make('targetRole.name')
-                    ->label('Rol Objetivo')
-                    ->placeholder('Todos'),
+                    ->label(__('admin.trainings.rol_objetivo'))
+                    ->placeholder(__('admin.trainings.todos')),
 
                 TextColumn::make('validity_days')
-                    ->label('Validez')
-                    ->formatStateUsing(fn ($state): string => $state.' días'),
+                    ->label(__('admin.trainings.validez'))
+                    ->formatStateUsing(fn ($state): string => __('admin.trainings.dias', ['count' => $state])),
 
                 IconColumn::make('is_active')
-                    ->label('Activo')
+                    ->label(__('admin.trainings.activo'))
                     ->boolean(),
 
                 TextColumn::make('created_at')
-                    ->label('Creado')
+                    ->label(__('admin.trainings.creado'))
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
             ])

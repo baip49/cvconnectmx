@@ -13,24 +13,24 @@ class VacancyInfolist
     {
         return $schema
             ->components([
-                Section::make('Detalles de la Vacante')
+                Section::make(__('candidate.vacancies.detalles_de_la_vacante'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextEntry::make('title')
-                                    ->label('Título'),
+                                    ->label(__('candidate.vacancies.titulo')),
                                 TextEntry::make('company.name')
-                                    ->label('Empresa'),
+                                    ->label(__('candidate.vacancies.empresa')),
                                 TextEntry::make('work_model')
-                                    ->label('Modalidad')
+                                    ->label(__('candidate.vacancies.modalidad'))
                                     ->badge(),
                                 TextEntry::make('max_salary')
-                                    ->label('Sueldo Máximo')
+                                    ->label(__('candidate.vacancies.sueldo_maximo'))
                                     ->money('MXN'),
                             ]),
                     ]),
 
-                Section::make('Descripción')
+                Section::make(__('candidate.vacancies.descripcion'))
                     ->schema([
                         TextEntry::make('description')
                             ->label('')
@@ -38,7 +38,7 @@ class VacancyInfolist
                             ->columnSpanFull(),
                     ]),
 
-                Section::make('Requisitos')
+                Section::make(__('candidate.vacancies.requisitos'))
                     ->schema([
                         TextEntry::make('requirements')
                             ->label('')
@@ -46,18 +46,18 @@ class VacancyInfolist
                             ->columnSpanFull(),
                     ]),
 
-                Section::make('Información Adicional')
+                Section::make(__('candidate.vacancies.informacion_adicional'))
                     ->schema([
                         Grid::make(3)
                             ->schema([
                                 TextEntry::make('published_at')
-                                    ->label('Publicada el')
+                                    ->label(__('candidate.vacancies.publicada_el'))
                                     ->dateTime(),
                                 TextEntry::make('expires_at')
-                                    ->label('Vence el')
+                                    ->label(__('candidate.vacancies.vence_el'))
                                     ->dateTime(),
                                 TextEntry::make('status')
-                                    ->label('Estado')
+                                    ->label(__('candidate.vacancies.estado'))
                                     ->badge(),
                             ]),
                     ]),

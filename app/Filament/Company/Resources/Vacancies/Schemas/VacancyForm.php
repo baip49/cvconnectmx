@@ -15,34 +15,34 @@ class VacancyForm
     {
         return $schema
             ->components([
-                Section::make('Información de la Vacante')
+                Section::make(__('company.vacancies.informacion_de_la_vacante'))
                     ->schema([
                         TextInput::make('title')
-                            ->label('Título de la Vacante')
+                            ->label(__('company.vacancies.titulo_de_la_vacante'))
                             ->required()
                             ->maxLength(255),
                         Select::make('work_model')
-                            ->label('Modalidad')
+                            ->label(__('company.vacancies.modalidad'))
                             ->options([
-                                'remote' => 'Remoto',
-                                'hybrid' => 'Híbrido',
-                                'on_site' => 'Presencial',
+                                'remote' => __('company.vacancies.remoto'),
+                                'hybrid' => __('company.vacancies.hibrido'),
+                                'on_site' => __('company.vacancies.presencial'),
                             ])
                             ->required(),
                         TextInput::make('max_salary')
-                            ->label('Sueldo Máximo (Mensual)')
+                            ->label(__('company.vacancies.sueldo_maximo_mensual'))
                             ->numeric()
                             ->prefix('$'),
                         DatePicker::make('expires_at')
-                            ->label('Fecha de Expiración')
+                            ->label(__('company.vacancies.fecha_de_expiracion'))
                             ->required(),
                         Textarea::make('description')
-                            ->label('Descripción del Puesto')
+                            ->label(__('company.vacancies.descripcion_del_puesto'))
                             ->required()
                             ->rows(6)
                             ->columnSpanFull(),
                         Textarea::make('requirements')
-                            ->label('Requisitos del Puesto')
+                            ->label(__('company.vacancies.requisitos_del_puesto'))
                             ->required()
                             ->rows(6)
                             ->columnSpanFull(),

@@ -17,13 +17,13 @@ class ViewVacancy extends ViewRecord
     {
         return [
             Action::make('accept_offer')
-                ->label('Aceptar Oferta')
+                ->label(__('candidate.vacancies.aceptar_oferta'))
                 ->color('success')
                 ->icon('heroicon-o-check')
                 ->requiresConfirmation()
-                ->modalHeading('Aceptar Oferta de Trabajo')
-                ->modalDescription('¿Estás seguro de que deseas aceptar esta oferta? La empresa será notificada de inmediato.')
-                ->modalSubmitActionLabel('Sí, aceptar oferta')
+                ->modalHeading(__('candidate.vacancies.aceptar_oferta_de_trabajo'))
+                ->modalDescription(__('candidate.vacancies.estas_seguro_de_que_deseas_aceptar_esta'))
+                ->modalSubmitActionLabel(__('candidate.vacancies.si_aceptar_oferta'))
                 ->visible(fn (Vacancy $record) => $record->applications()
                     ->where('candidate_id', Auth::user()->candidate?->id)
                     ->where('is_offer', true)
@@ -37,20 +37,20 @@ class ViewVacancy extends ViewRecord
                         ->update(['status' => 'accepted']);
 
                     Notification::make()
-                        ->title('Oferta aceptada')
-                        ->body("Has aceptado la oferta para {$record->title}. ¡Felicidades!")
+                        ->title(__('candidate.vacancies.oferta_aceptada'))
+                        ->body(__('candidate.vacancies.has_aceptado_la_oferta_para_title_felici', ['title' => $record->title]))
                         ->success()
                         ->send();
                 }),
 
             Action::make('reject_offer')
-                ->label('Rechazar Oferta')
+                ->label(__('candidate.vacancies.rechazar_oferta'))
                 ->color('danger')
                 ->icon('heroicon-o-x-mark')
                 ->requiresConfirmation()
-                ->modalHeading('Rechazar Oferta')
-                ->modalDescription('¿Estás seguro de que deseas rechazar esta oferta? Esta acción no se puede deshacer.')
-                ->modalSubmitActionLabel('Sí, rechazar')
+                ->modalHeading(__('candidate.vacancies.rechazar_oferta'))
+                ->modalDescription(__('candidate.vacancies.estas_seguro_de_que_deseas_rechazar_esta'))
+                ->modalSubmitActionLabel(__('candidate.vacancies.si_rechazar'))
                 ->visible(fn (Vacancy $record) => $record->applications()
                     ->where('candidate_id', Auth::user()->candidate?->id)
                     ->where('is_offer', true)
@@ -64,18 +64,18 @@ class ViewVacancy extends ViewRecord
                         ->update(['status' => 'rejected']);
 
                     Notification::make()
-                        ->title('Oferta rechazada')
+                        ->title(__('candidate.vacancies.oferta_rechazada'))
                         ->danger()
                         ->send();
                 }),
 
             Action::make('apply')
-                ->label('Postularse')
+                ->label(__('candidate.vacancies.postularse'))
                 ->color('success')
                 ->icon('heroicon-o-paper-airplane')
                 ->requiresConfirmation()
-                ->modalHeading('Confirmar Postulación')
-                ->modalDescription('¿Estás seguro de que deseas postularte a esta vacante?')
+                ->modalHeading(__('candidate.vacancies.confirmar_postulacion'))
+                ->modalDescription(__('candidate.vacancies.estas_seguro_de_que_deseas_postularte_a'))
                 ->hidden(fn (Vacancy $record) => $record->applications()->where('candidate_id', Auth::user()->candidate?->id)->exists())
                 ->disabled(fn () => Auth::user()->candidate?->is_blocked)
                 ->action(function (Vacancy $record) {
@@ -83,8 +83,8 @@ class ViewVacancy extends ViewRecord
 
                     if (! $candidate) {
                         Notification::make()
-                            ->title('Error')
-                            ->body('Debes completar tu perfil antes de postularte.')
+                            ->title(__('candidate.vacancies.error'))
+                            ->body(__('candidate.vacancies.debes_completar_tu_perfil_antes_de_postu'))
                             ->danger()
                             ->send();
 
@@ -97,8 +97,8 @@ class ViewVacancy extends ViewRecord
                     );
 
                     Notification::make()
-                        ->title('Postulación enviada')
-                        ->body("Te has postulado exitosamente a {$record->title}")
+                        ->title(__('candidate.vacancies.postulacion_enviada'))
+                        ->body(__('candidate.vacancies.te_has_postulado_exitosamente_a_title', ['title' => $record->title]))
                         ->success()
                         ->send();
                 }),
