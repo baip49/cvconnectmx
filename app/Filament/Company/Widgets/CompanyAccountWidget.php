@@ -7,5 +7,6 @@ use Filament\Widgets\AccountWidget;
 class CompanyAccountWidget extends AccountWidget
 {
     protected static ?int $sort = -1;
-    protected int | string | array $columnSpan = 'full';
+
+    protected int|string|array $columnSpan = 'full';
 }

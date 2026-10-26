@@ -45,6 +45,8 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $input['password'],
             'role_id' => $role->id,
             'is_active' => true,
+            // The language the visitor was browsing in becomes their saved preference (emails included).
+            'locale' => app()->getLocale(),
         ]);
 
         if ($roleName === 'candidate') {

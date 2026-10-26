@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Notifications\ActivityMail;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -19,10 +21,18 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, HasAvatar, HasLocalePreference, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, SoftDeletes, TwoFactorAuthenticatable;
+
+    /**
+     * Laravel sends every email to this user in this language (verification, password reset, activity).
+     */
+    public function preferredLocale(): ?string
+    {
+        return $this->locale;
+    }
 
     protected $fillable = [
         'email',
@@ -35,6 +45,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         'failed_login_attempts',
         'locked_until',
         'is_active',
+        'locale',
     ];
 
     /**
@@ -56,6 +67,8 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
     {
         return [
             'email_verified_at' => 'datetime',
+            'verified_at' => 'datetime',
+            'verification_requested_at' => 'datetime',
             'password' => 'hashed',
             'locked_until' => 'datetime',
             'is_active' => 'boolean',
@@ -148,6 +161,69 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
     public function isAdmin(): bool
     {
         return $this->role?->name === 'admin';
+    }
+
+    /**
+     * Blue check granted by an admin (unrelated to email verification).
+     */
+    public function isVerifiedAccount(): bool
+    {
+        return $this->verified_at !== null;
+    }
+
+    public function hasPendingVerificationRequest(): bool
+    {
+        return $this->verification_requested_at !== null && ! $this->isVerifiedAccount();
+    }
+
+    /**
+     * Asks the admins for the verified check; repeated requests are ignored.
+     */
+    public function requestVerification(): void
+    {
+        if ($this->isVerifiedAccount() || $this->hasPendingVerificationRequest()) {
+            return;
+        }
+
+        $this->forceFill(['verification_requested_at' => now()])->save();
+
+        $admins = self::query()->whereHas('role', fn ($query) => $query->where('name', 'admin'))->get();
+
+        foreach ($admins as $admin) {
+            $locale = $admin->locale ?? config('app.locale');
+
+            ActivityMail::deliver(
+                $admin,
+                __('notifications.verification.requested.title', [], $locale),
+                __('notifications.verification.requested.body', ['name' => $this->name, 'email' => $this->email], $locale),
+                url('/admin/users'),
+                'heroicon-o-check-badge',
+            );
+        }
+    }
+
+    public function grantVerification(User $admin): void
+    {
+        abort_unless($admin->isAdmin(), 403);
+
+        $this->forceFill(['verified_at' => now(), 'verification_requested_at' => null])->save();
+
+        $locale = $this->locale ?? config('app.locale');
+
+        ActivityMail::deliver(
+            $this,
+            __('notifications.verification.granted.title', [], $locale),
+            __('notifications.verification.granted.body', [], $locale),
+            url($this->panelPath().'/account'),
+            'heroicon-o-check-badge',
+        );
+    }
+
+    public function revokeVerification(User $admin): void
+    {
+        abort_unless($admin->isAdmin(), 403);
+
+        $this->forceFill(['verified_at' => null, 'verification_requested_at' => null])->save();
     }
 
     public function isSupport(): bool

@@ -18,6 +18,14 @@ class Company extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * A company carries its owner's verified check.
+     */
+    public function isVerifiedAccount(): bool
+    {
+        return (bool) $this->user?->isVerifiedAccount();
+    }
+
     public function vacancies(): HasMany
     {
         return $this->hasMany(Vacancy::class);

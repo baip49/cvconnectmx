@@ -16,6 +16,9 @@ return [
         'a_vacancy' => 'una vacante',
         'received' => ['title' => 'Nueva postulación recibida', 'body' => ':name aplicó a ":vacancy".'],
         'status_changed' => ['title' => 'Tu postulación cambió de estado', 'body' => 'Tu postulación a ":vacancy" ahora está :status.'],
+        'offer_received' => ['title' => 'Recibiste una oferta de trabajo', 'body' => ':company te ofreció la vacante ":vacancy".'],
+        'offer_accepted' => ['title' => 'Oferta aceptada', 'body' => ':name aceptó tu oferta para ":vacancy".'],
+        'offer_declined' => ['title' => 'Oferta rechazada', 'body' => ':name rechazó tu oferta para ":vacancy".'],
         'statuses' => [
             'pending' => 'pendiente',
             'interview' => 'en entrevista',
@@ -23,5 +26,9 @@ return [
             'rejected' => 'rechazada',
             'offered' => 'con oferta',
         ],
+    ],
+    'verification' => [
+        'requested' => ['title' => 'Nueva solicitud de verificación', 'body' => ':name (:email) solicitó la verificación de su cuenta.'],
+        'granted' => ['title' => 'Tu cuenta fue verificada', 'body' => 'Ahora tu nombre muestra la insignia de cuenta verificada en toda la plataforma.'],
     ],
 ];

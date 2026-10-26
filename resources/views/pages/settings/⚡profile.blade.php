@@ -1,6 +1,7 @@
 <?php
 
 use App\Concerns\ProfileValidationRules;
+use Filament\Notifications\Notification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -70,6 +71,16 @@ new class extends Component {
     }
 
     /**
+     * Ask the admins for the verified-account check.
+     */
+    public function requestVerification(): void
+    {
+        Auth::user()->requestVerification();
+
+        Notification::make()->title(__('shared.verification.request_sent'))->success()->send();
+    }
+
+    /**
      * Send an email verification notification to the current user.
      */
     public function resendVerificationNotification(): void
@@ -105,13 +116,39 @@ new class extends Component {
     <flux:heading size="lg">{{ __('Profile') }}</flux:heading>
     <flux:subheading>{{ __('Update your name and email address') }}</flux:subheading>
 
-    <div class="my-6 flex items-center gap-4">
+    <div class="my-6 flex flex-wrap items-center gap-4">
         <flux:avatar size="lg" circle :src="Auth::user()->getFilamentAvatarUrl() ?? (new \App\Filament\AvatarProviders\InitialsAvatarProvider)->get(Auth::user())" :name="Auth::user()->name" />
-        <div>
-            <flux:text class="font-medium">{{ Auth::user()->name }}</flux:text>
-            <flux:text class="text-sm">{{ Auth::user()->email }}</flux:text>
+        <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-1">
+                <flux:text class="font-medium">{{ Auth::user()->name }}</flux:text>
+                <x-verified-badge :account="Auth::user()" />
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <flux:text class="text-sm">{{ Auth::user()->email }}</flux:text>
+                @if ($this->hasUnverifiedEmail)
+                    <flux:badge size="sm" color="amber" icon="exclamation-triangle">{{ __('Email not verified') }}</flux:badge>
+                @else
+                    <flux:badge size="sm" color="emerald" icon="check-badge">{{ __('Email verified') }}</flux:badge>
+                @endif
+            </div>
         </div>
+
+        @if ($this->hasUnverifiedEmail)
+            <flux:button size="sm" variant="primary" icon="envelope" wire:click="resendVerificationNotification" data-test="resend-verification-button">
+                {{ __('Resend verification email') }}
+            </flux:button>
+        @elseif (Auth::user()->hasPendingVerificationRequest())
+            <flux:badge size="sm" icon="clock">{{ __('shared.verification.requested') }}</flux:badge>
+        @elseif (! Auth::user()->isVerifiedAccount())
+            <flux:button size="sm" variant="filled" icon="check-badge" wire:click="requestVerification" data-test="request-verification-button">
+                {{ __('shared.verification.request') }}
+            </flux:button>
+        @endif
     </div>
+
+    @if (session('status') === 'verification-link-sent')
+        <flux:callout variant="success" icon="envelope" class="mb-6" :heading="__('A new verification link has been sent to your email address.')" />
+    @endif
 
     <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
         <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus autocomplete="name" />
@@ -153,24 +190,6 @@ new class extends Component {
 
         <div>
             <flux:input wire:model="email" :label="__('Email')" type="email" required autocomplete="email" />
-
-            @if ($this->hasUnverifiedEmail)
-                <div>
-                    <flux:text class="mt-4">
-                        {{ __('Your email address is unverified.') }}
-
-                        <flux:link class="text-sm cursor-pointer" wire:click.prevent="resendVerificationNotification">
-                            {{ __('Click here to re-send the verification email.') }}
-                        </flux:link>
-                    </flux:text>
-
-                    @if (session('status') === 'verification-link-sent')
-                        <flux:text class="mt-2 font-medium !text-emerald-600 dark:!text-emerald-400">
-                            {{ __('A new verification link has been sent to your email address.') }}
-                        </flux:text>
-                    @endif
-                </div>
-            @endif
         </div>
 
         <div class="flex items-center gap-4">

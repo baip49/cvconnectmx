@@ -40,4 +40,16 @@ return [
         'page_title' => 'Your Professional Community',
         'rights' => 'All rights reserved.',
     ],
+    'verification' => [
+        'badge' => 'Verified account',
+        'column' => 'Verified',
+        'request' => 'Request verification',
+        'request_sent' => 'We sent your request. An administrator will review it.',
+        'requested' => 'Verification request sent',
+        'requests_filter' => 'Verification requests',
+        'unverified_done' => 'Verification removed',
+        'unverify' => 'Remove verification',
+        'verified_done' => 'Account verified',
+        'verify' => 'Verify account',
+    ],
 ];

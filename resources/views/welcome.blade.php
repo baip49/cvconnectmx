@@ -13,6 +13,7 @@
 
             @if (Route::has('login'))
                 <nav class="flex items-center gap-2">
+                    @include('partials.locale-switch')
                     @if ($isAuthenticated)
                         <flux:button variant="primary" :href="$dashboardRoute">{{ __('shared.welcome.go_to_panel') }}</flux:button>
                     @else

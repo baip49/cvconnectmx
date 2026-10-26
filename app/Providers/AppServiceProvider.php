@@ -20,16 +20,21 @@ use App\Observers\AuditObserver;
 use App\Observers\UserObserver;
 use Carbon\CarbonImmutable;
 use Filament\FontProviders\LocalFontProvider;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Navigation\MenuItem;
 use Filament\Panel;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\IconPosition;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\TextColumn;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Contracts\RegisterResponse;
@@ -96,6 +101,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureVerifiedBadge();
 
         User::observe(AuditObserver::class);
         User::observe(UserObserver::class);
@@ -110,6 +116,37 @@ class AppServiceProvider extends ServiceProvider
         TicketReply::observe(AuditObserver::class);
         BackupLog::observe(AuditObserver::class);
         Application::observe(ApplicationObserver::class);
+    }
+
+    /**
+     * Every Filament column or entry showing a user's or company's name ("name", "company.name", "candidate.user.name"...)
+     * gets the blue check when that account is verified, including columns added later.
+     */
+    protected function configureVerifiedBadge(): void
+    {
+        $addBadge = function (TextColumn|TextEntry $component): void {
+            $name = $component->getName();
+
+            if ($name !== 'name' && ! str_ends_with($name, '.name')) {
+                return;
+            }
+
+            // shortcut: resolves the owner per row (one query for company.user), eager load it if a list grows past a few hundred rows.
+            $isVerified = function (?Model $record) use ($name): bool {
+                $owner = str_contains($name, '.') ? data_get($record, Str::beforeLast($name, '.')) : $record;
+
+                return ($owner instanceof User || $owner instanceof Company) && $owner->isVerifiedAccount();
+            };
+
+            $component
+                ->icon(fn (?Model $record): ?Heroicon => $isVerified($record) ? Heroicon::CheckBadge : null)
+                ->iconColor('primary')
+                ->iconPosition(IconPosition::After)
+                ->tooltip(fn (?Model $record): ?string => $isVerified($record) ? __('shared.verification.badge') : null);
+        };
+
+        TextColumn::configureUsing($addBadge);
+        TextEntry::configureUsing($addBadge);
     }
 
     /**

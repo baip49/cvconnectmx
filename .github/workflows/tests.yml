@@ -13,8 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: Testing
     strategy:
+      # One failing PHP version should not cancel the others.
+      fail-fast: false
       matrix:
-        php-version: ['8.3', '8.4', '8.5']
+        # composer.lock pins Symfony 8, which needs PHP >= 8.4.1.
+        php-version: ['8.4', '8.5']
 
     steps:
       - name: Checkout code
@@ -25,7 +28,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           tools: composer:v2
-          coverage: xdebug
+          coverage: none
 
       - name: Setup Node
         uses: actions/setup-node@v6
@@ -35,12 +38,6 @@ jobs:
 
       - name: Install Node Dependencies
         run: npm ci
-
-      - name: Add Flux Credentials Loaded From ENV
-        env:
-          FLUX_USERNAME: ${{ secrets.FLUX_USERNAME }}
-          FLUX_LICENSE_KEY: ${{ secrets.FLUX_LICENSE_KEY }}
-        run: composer config http-basic.composer.fluxui.dev "$FLUX_USERNAME" "$FLUX_LICENSE_KEY"
 
       - name: Install Dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader

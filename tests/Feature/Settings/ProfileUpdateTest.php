@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
 
 test('profile page is displayed', function () {
@@ -74,4 +76,25 @@ test('correct password must be provided to delete account', function () {
     $response->assertHasErrors(['password']);
 
     expect($user->fresh())->not->toBeNull();
+});
+
+test('the account page shows the email as verified next to the avatar', function () {
+    $this->actingAs(User::factory()->candidate()->create());
+
+    Livewire::test('pages::settings.profile')
+        ->assertSee(__('Email verified'))
+        ->assertDontSee(__('Resend verification email'));
+});
+
+test('an unverified email can be verified again from the account page', function () {
+    Notification::fake();
+
+    $user = User::factory()->candidate()->unverified()->create();
+    $this->actingAs($user);
+
+    Livewire::test('pages::settings.profile')
+        ->assertSee(__('Email not verified'))
+        ->call('resendVerificationNotification');
+
+    Notification::assertSentTo($user, VerifyEmail::class);
 });

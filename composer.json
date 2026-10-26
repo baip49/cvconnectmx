@@ -6,7 +6,7 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "aws/aws-sdk-php": "^3.380",
         "filament/filament": "*",
         "laravel-notification-channels/telegram": "^7.0",

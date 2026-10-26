@@ -3,7 +3,6 @@
 namespace App\Filament\Company\Resources\Companies\Pages;
 
 use App\Filament\Company\Resources\Companies\CompanyResource;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
 

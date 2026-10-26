@@ -16,6 +16,9 @@ return [
         'a_vacancy' => 'a vacancy',
         'received' => ['title' => 'New application received', 'body' => ':name applied to ":vacancy".'],
         'status_changed' => ['title' => 'Your application status changed', 'body' => 'Your application to ":vacancy" is now :status.'],
+        'offer_received' => ['title' => 'You received a job offer', 'body' => ':company offered you the ":vacancy" job.'],
+        'offer_accepted' => ['title' => 'Offer accepted', 'body' => ':name accepted your offer for ":vacancy".'],
+        'offer_declined' => ['title' => 'Offer declined', 'body' => ':name declined your offer for ":vacancy".'],
         'statuses' => [
             'pending' => 'pending',
             'interview' => 'in interview',
@@ -23,5 +26,9 @@ return [
             'rejected' => 'rejected',
             'offered' => 'offered',
         ],
+    ],
+    'verification' => [
+        'requested' => ['title' => 'New verification request', 'body' => ':name (:email) requested account verification.'],
+        'granted' => ['title' => 'Your account was verified', 'body' => 'Your name now shows the verified account badge across the platform.'],
     ],
 ];

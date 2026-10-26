@@ -40,4 +40,16 @@ return [
         'page_title' => 'Tu Comunidad Profesional',
         'rights' => 'Todos los derechos reservados.',
     ],
+    'verification' => [
+        'badge' => 'Cuenta verificada',
+        'column' => 'Verificada',
+        'request' => 'Solicitar verificación',
+        'request_sent' => 'Enviamos tu solicitud. Un administrador la revisará.',
+        'requested' => 'Solicitud de verificación enviada',
+        'requests_filter' => 'Solicitudes de verificación',
+        'unverified_done' => 'Verificación retirada',
+        'unverify' => 'Quitar verificación',
+        'verified_done' => 'Cuenta verificada',
+        'verify' => 'Verificar cuenta',
+    ],
 ];

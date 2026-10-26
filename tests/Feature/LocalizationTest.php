@@ -1,12 +1,15 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
+use function Pest\Laravel\post;
 
 /**
  * @return list<string>
@@ -79,4 +82,35 @@ test('guests keep the chosen language in their session', function () {
 
 test('unsupported languages are rejected', function () {
     get(route('locale.switch', 'fr'))->assertNotFound();
+});
+
+test('guests can switch language from the home and login pages', function () {
+    get(route('home'))->assertOk()->assertSee(route('locale.switch', 'es'), false)->assertSee('Español');
+    get(route('login'))->assertOk()->assertSee(route('locale.switch', 'es'), false);
+
+    get(route('locale.switch', 'es'));
+
+    get(route('login'))->assertOk()->assertSee(route('locale.switch', 'en'), false)->assertSee('English');
+});
+
+test('the language chosen before registering is saved and used for their emails', function () {
+    Notification::fake();
+
+    get(route('locale.switch', 'es'));
+
+    post('/register', [
+        'name' => 'Lucía',
+        'last_name' => 'Pérez',
+        'email' => 'lucia@example.com',
+        'password' => 'Password@123',
+        'password_confirmation' => 'Password@123',
+        'user_type' => 'candidate',
+    ]);
+
+    $user = User::query()->where('email', 'lucia@example.com')->firstOrFail();
+
+    expect($user->locale)->toBe('es')
+        ->and($user->preferredLocale())->toBe('es');
+
+    Notification::assertSentTo($user, VerifyEmail::class, fn ($notification, array $channels, object $notifiable): bool => $notifiable->preferredLocale() === 'es');
 });

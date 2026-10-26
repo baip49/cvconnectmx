@@ -4,8 +4,7 @@ namespace App\Services;
 
 use App\Models\Ticket;
 use App\Models\User;
-use Filament\Actions\Action;
-use Filament\Notifications\Notification;
+use App\Notifications\ActivityMail;
 
 class TicketNotifier
 {
@@ -44,29 +43,31 @@ class TicketNotifier
         $this->sendToMany($this->interestedParties($ticket, $reopener), 'reopened', $reopener, 'heroicon-o-arrow-path', $ticket);
     }
 
+    /**
+     * The assignee is told the ticket is theirs; everyone else, that someone is now handling it.
+     */
     public function assigned(Ticket $ticket, User $assignee): void
     {
-        $this->sendToMany($this->interestedParties($ticket, $assignee), 'assigned', $assignee, 'heroicon-o-inbox-arrow-down', $ticket);
+        $this->sendToMany([$assignee], 'assigned', $assignee, 'heroicon-o-inbox-arrow-down', $ticket);
+        $this->sendToMany($this->interestedParties($ticket, $assignee), 'claimed', $assignee, 'heroicon-o-user-plus', $ticket);
     }
 
     /**
      * Notifications are stored already written, so each one uses its recipient's language.
+     * Every one goes to the bell and by email.
      */
     protected function sendToMany(iterable $users, string $event, User $actor, string $icon, Ticket $ticket): void
     {
         foreach ($users as $user) {
             $locale = $user->locale ?? config('app.locale');
 
-            Notification::make()
-                ->title(__("notifications.tickets.{$event}.title", [], $locale))
-                ->body(__("notifications.tickets.{$event}.body", ['name' => $actor->name, 'title' => $ticket->title], $locale))
-                ->icon($icon)
-                ->actions([
-                    Action::make('view')
-                        ->label(__('notifications.view', [], $locale))
-                        ->url($this->ticketUrl($user, $ticket)),
-                ])
-                ->sendToDatabase($user);
+            ActivityMail::deliver(
+                $user,
+                __("notifications.tickets.{$event}.title", [], $locale),
+                __("notifications.tickets.{$event}.body", ['name' => $actor->name, 'title' => $ticket->title], $locale),
+                $this->ticketUrl($user, $ticket),
+                $icon,
+            );
         }
     }
 
