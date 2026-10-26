@@ -118,13 +118,14 @@ new class extends Component {
 
     <div class="my-6 flex flex-wrap items-center gap-4">
         <flux:avatar size="lg" circle :src="Auth::user()->getFilamentAvatarUrl() ?? (new \App\Filament\AvatarProviders\InitialsAvatarProvider)->get(Auth::user())" :name="Auth::user()->name" />
-        <div class="min-w-0 flex-1">
+        {{-- min-w keeps name and email readable: on narrow screens the button wraps below instead of covering them. --}}
+        <div class="min-w-48 flex-1">
             <div class="flex items-center gap-1">
                 <flux:text class="font-medium">{{ Auth::user()->name }}</flux:text>
                 <x-verified-badge :account="Auth::user()" />
             </div>
             <div class="flex flex-wrap items-center gap-2">
-                <flux:text class="text-sm">{{ Auth::user()->email }}</flux:text>
+                <flux:text class="text-sm break-all">{{ Auth::user()->email }}</flux:text>
                 @if ($this->hasUnverifiedEmail)
                     <flux:badge size="sm" color="amber" icon="exclamation-triangle">{{ __('Email not verified') }}</flux:badge>
                 @else
@@ -134,13 +135,13 @@ new class extends Component {
         </div>
 
         @if ($this->hasUnverifiedEmail)
-            <flux:button size="sm" variant="primary" icon="envelope" wire:click="resendVerificationNotification" data-test="resend-verification-button">
+            <flux:button size="sm" variant="primary" icon="envelope" class="w-full sm:w-auto" wire:click="resendVerificationNotification" data-test="resend-verification-button">
                 {{ __('Resend verification email') }}
             </flux:button>
         @elseif (Auth::user()->hasPendingVerificationRequest())
             <flux:badge size="sm" icon="clock">{{ __('shared.verification.requested') }}</flux:badge>
         @elseif (Auth::user()->accountBadge() === null)
-            <flux:button size="sm" variant="filled" icon="check-badge" wire:click="requestVerification" data-test="request-verification-button">
+            <flux:button size="sm" variant="filled" icon="check-badge" class="w-full sm:w-auto" wire:click="requestVerification" data-test="request-verification-button">
                 {{ __('shared.verification.request') }}
             </flux:button>
         @endif
