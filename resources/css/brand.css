@@ -62,6 +62,13 @@
     [data-flux-card] {
         @apply bg-zinc-50 dark:bg-white/5;
     }
+
+    /* Flux leaves input focus to the browser, which Edge draws as a near-black outline even in dark mode. */
+    input:focus[data-flux-control],
+    textarea:focus[data-flux-control],
+    select:focus[data-flux-control] {
+        @apply outline-hidden ring-2 ring-(--color-accent);
+    }
 }
 
 @layer theme {
