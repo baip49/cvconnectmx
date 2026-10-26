@@ -3,6 +3,7 @@
 use App\Filament\Candidate\Widgets\Candidate\WelcomeBanner;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Vite;
 use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
@@ -18,8 +19,8 @@ test('candidate dashboard loads the welcome banner widget first', function () {
 
     $html = get('/dashboard')->assertOk()->getContent();
 
-    // The panel must serve its Vite theme, otherwise custom widget styling is lost.
-    expect((string) $html)->toContain('filament/theme');
+    // The panel must serve its Vite theme. Vite gives the URL for either mode (dev server locally, hashed build in CI).
+    expect((string) $html)->toContain(Vite::asset('resources/css/filament/theme.css'));
 
     // Widgets are lazy-loaded, so assert on their render order in the page.
     expect(strpos((string) $html, 'WelcomeBanner-0'))->toBeLessThan(strpos((string) $html, 'RecentApplications-2'))
