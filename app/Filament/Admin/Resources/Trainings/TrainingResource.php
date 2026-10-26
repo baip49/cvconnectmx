@@ -20,6 +20,16 @@ class TrainingResource extends Resource
 {
     protected static ?string $model = Training::class;
 
+    public static function getModelLabel(): string
+    {
+        return __('admin.trainings.model_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.trainings.plural_model_label');
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedAcademicCap;
 
     public static function getNavigationLabel(): string

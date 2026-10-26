@@ -19,6 +19,16 @@ class CompanyResource extends Resource
 {
     protected static ?string $model = Company::class;
 
+    public static function getModelLabel(): string
+    {
+        return __('admin.companies.model_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.companies.plural_model_label');
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
 
     public static function getNavigationGroup(): ?string

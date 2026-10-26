@@ -20,6 +20,16 @@ class SystemAlertResource extends Resource
 {
     protected static ?string $model = SystemAlert::class;
 
+    public static function getModelLabel(): string
+    {
+        return __('admin.system_alerts.model_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.system_alerts.plural_model_label');
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBellAlert;
 
     public static function getNavigationLabel(): string

@@ -254,7 +254,7 @@ test('ticket chat sends messages and shows new ones without reload', function ()
 
     Livewire::test(TicketChat::class, ['ticketId' => $ticket->id])
         ->assertSee('Ya casi está listo.')
-        ->assertSee('favicon.svg', false);
+        ->assertSee('logo.svg', false);
 });
 
 test('outsiders cannot claim reply or close foreign tickets', function () {

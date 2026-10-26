@@ -20,6 +20,16 @@ class UserTrainingResource extends Resource
 {
     protected static ?string $model = UserTraining::class;
 
+    public static function getModelLabel(): string
+    {
+        return __('admin.user_trainings.model_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.user_trainings.plural_model_label');
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentCheck;
 
     public static function getNavigationLabel(): string

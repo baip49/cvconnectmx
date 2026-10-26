@@ -19,6 +19,16 @@ class CandidateResource extends Resource
 {
     protected static ?string $model = Candidate::class;
 
+    public static function getModelLabel(): string
+    {
+        return __('admin.candidates.model_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.candidates.plural_model_label');
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
     public static function getNavigationGroup(): ?string

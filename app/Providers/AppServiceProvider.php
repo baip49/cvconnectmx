@@ -69,7 +69,7 @@ class AppServiceProvider extends ServiceProvider
             ->font('Roboto', provider: LocalFontProvider::class)
             ->brandName('CVConnectMX')
             ->brandLogo(fn (): View => view('filament.components.brand-logo'))
-            ->favicon(asset('favicon.ico'))
+            ->favicon(asset('logo.svg'))
             ->defaultAvatarProvider(InitialsAvatarProvider::class)
             ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()

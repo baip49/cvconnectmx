@@ -123,6 +123,8 @@ return [
         'estado' => 'Status',
         'media' => 'Medium',
         'mis_tickets' => 'My tickets',
+        'model_label' => 'Ticket',
+        'plural_model_label' => 'Tickets',
         'reabrir_ticket' => 'Reopen ticket',
         'sin_asignar' => 'Unassigned',
         'ticket_cerrado' => 'Ticket closed',

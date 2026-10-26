@@ -21,6 +21,16 @@ class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
 
+    public static function getModelLabel(): string
+    {
+        return __('admin.roles.model_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.roles.plural_model_label');
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedLockClosed;
 
     public static function getNavigationGroup(): ?string

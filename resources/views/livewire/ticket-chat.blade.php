@@ -125,7 +125,7 @@
             @if ($reply->performed_by === null)
                 <div class="flex justify-center">
                     <div class="inline-flex max-w-[85%] items-center gap-2 rounded-full bg-black/10 px-4 py-1 text-center text-[11px] font-medium text-gray-600 dark:bg-white/10 dark:text-gray-300">
-                        <img src="{{ asset('favicon.svg') }}" alt="Sistema" class="h-3.5 w-3.5 shrink-0" />
+                        <img src="{{ asset('logo.svg') }}" alt="Sistema" class="h-3.5 w-3.5 shrink-0" />
                         <span>{{ $reply->message }} · {{ $reply->created_at?->format('d/m H:i') }}</span>
                     </div>
                 </div>

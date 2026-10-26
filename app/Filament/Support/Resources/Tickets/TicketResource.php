@@ -17,6 +17,16 @@ class TicketResource extends Resource
 {
     protected static ?string $model = Ticket::class;
 
+    public static function getModelLabel(): string
+    {
+        return __('support.tickets.model_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('support.tickets.plural_model_label');
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTicket;
 
     public static function getNavigationLabel(): string

@@ -18,6 +18,16 @@ class AuditLogResource extends Resource
 {
     protected static ?string $model = AuditLog::class;
 
+    public static function getModelLabel(): string
+    {
+        return __('admin.audit_logs.model_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.audit_logs.plural_model_label');
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
     public static function getNavigationGroup(): ?string

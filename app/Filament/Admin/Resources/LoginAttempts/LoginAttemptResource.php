@@ -17,6 +17,16 @@ class LoginAttemptResource extends Resource
 {
     protected static ?string $model = LoginAttempt::class;
 
+    public static function getModelLabel(): string
+    {
+        return __('admin.login_attempts.model_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.login_attempts.plural_model_label');
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedLockClosed;
 
     public static function getNavigationLabel(): string

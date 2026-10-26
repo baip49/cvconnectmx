@@ -21,6 +21,16 @@ class PermissionResource extends Resource
 {
     protected static ?string $model = Permission::class;
 
+    public static function getModelLabel(): string
+    {
+        return __('admin.permissions.model_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.permissions.plural_model_label');
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedKey;
 
     public static function getNavigationGroup(): ?string
