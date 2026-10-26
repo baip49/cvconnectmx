@@ -3,7 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\AvatarProviders\InitialsAvatarProvider;
-use Filament\Http\Middleware\Authenticate;
+use App\Http\Middleware\RedirectToOwnPanel;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -71,9 +71,9 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                Authenticate::class,
+                RedirectToOwnPanel::class,
                 'verified',
-                'role:admin,support',
+                'role:admin',
             ]);
     }
 }

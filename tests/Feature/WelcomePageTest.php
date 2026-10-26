@@ -28,12 +28,12 @@ test('authenticated users see the dashboard entry on the welcome page', function
         ->assertDontSee('Iniciar sesión');
 });
 
-test('users with an incorrect role are redirected to the home page', function () {
+test('users with an incorrect role are redirected to their own panel', function () {
     Route::middleware('role:admin')->get('/role-redirect-test', fn () => 'secret');
 
     $user = User::factory()->candidate()->create();
 
     $response = $this->actingAs($user)->get('/role-redirect-test');
 
-    $response->assertRedirect(route('home'));
+    $response->assertRedirect('/dashboard');
 });

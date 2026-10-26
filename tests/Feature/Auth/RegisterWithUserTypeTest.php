@@ -1,7 +1,11 @@
 <?php
 
+use App\Livewire\Auth\Register;
 use App\Models\User;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
+use Livewire\Livewire;
 
 use function Pest\Laravel\assertDatabaseMissing;
 
@@ -55,6 +59,27 @@ test('registration fails with the retired contractor user type', function () {
 
     $response->assertSessionHasErrors('user_type');
     assertDatabaseMissing(User::class, ['email' => 'contractor@example.com']);
+});
+
+test('the register form creates the account, sends the verification email and asks to verify it', function () {
+    Notification::fake();
+
+    Livewire::test(Register::class)
+        ->set('name', 'Ana')
+        ->set('last_name', 'López')
+        ->set('email', 'ana@example.com')
+        ->set('password', 'Password@123')
+        ->set('password_confirmation', 'Password@123')
+        ->set('user_type', 'company')
+        ->call('register')
+        ->assertRedirect('/company');
+
+    $user = User::query()->where('email', 'ana@example.com')->firstOrFail();
+
+    Notification::assertSentTo($user, VerifyEmail::class);
+
+    $this->get('/company')->assertRedirect(route('verification.notice'));
+    $this->get(route('verification.notice'))->assertOk();
 });
 
 test('registration fails without user type', function () {

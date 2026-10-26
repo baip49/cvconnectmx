@@ -2,6 +2,7 @@
 
 use App\Models\Application;
 use App\Models\AuditLog;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Vacancy;
 use Database\Seeders\PermissionSeeder;
@@ -68,7 +69,36 @@ test('support staff cannot open the audit log', function () {
 
     actingAs(User::factory()->support()->create());
 
-    get('/admin/audit-logs')->assertForbidden();
+    get('/admin/audit-logs')->assertRedirect('/support');
+});
+
+test('a user sent to another panel before logging in lands on their own panel', function () {
+    $user = User::factory()->company()->create();
+
+    get('/dashboard')->assertRedirect(route('login'));
+
+    post(route('login.store'), ['email' => $user->email, 'password' => 'password'])
+        ->assertRedirect('/dashboard');
+
+    get('/dashboard')->assertRedirect('/company');
+    get('/company')->assertOk();
+});
+
+test('logged in users opening the login or register page go to their own panel', function () {
+    actingAs(User::factory()->company()->create());
+
+    get(route('login'))->assertRedirect('/company');
+    get(route('register'))->assertRedirect('/company');
+});
+
+test('the home page is never stored, so the back button cannot show the guest version', function () {
+    expect(get(route('home'))->headers->get('Cache-Control'))->toContain('no-store');
+});
+
+test('a user without a valid role gets a 403 instead of a redirect loop', function () {
+    $user = User::factory()->create(['role_id' => Role::create(['name' => 'auditor', 'description' => 'Rol sin panel', 'active' => true])->id]);
+
+    actingAs($user)->get('/dashboard')->assertForbidden();
 });
 
 test('candidates only see published vacancies', function () {
