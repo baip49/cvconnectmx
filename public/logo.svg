@@ -1,56 +1,41 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="40 40 320 320" width="100%" height="100%">
-  <!-- Estilos base para fácil personalización mediante CSS/Tailwind -->
-  <style>
-    .brand-primary-stroke {
-      stroke: #51a2ff;
-    }
-    .brand-primary-fill {
-      fill: #51a2ff;
-    }
-    .brand-base-bg {
-      fill: #ffffff;
-    }
-    .brand-grid-lines {
-      stroke: #cbd5e1;
-    }
-  </style>
 
   <g transform="translate(0, 0)">
     <!-- 1. Borde Principal del Globo Terráqueo (Mundo), con fondo para que se lea sobre cualquier color -->
-    <circle cx="200" cy="200" r="150" fill="#eff6ff" class="brand-primary-stroke" stroke-width="12" />
+    <circle cx="200" cy="200" r="150" fill="#eff6ff" stroke="#51a2ff" stroke-width="12" />
 
     <!-- 2. Rejilla Geográfica Interna (Paralelos y Meridianos) -->
     <!-- Ecuador y Meridianos Principales -->
-    <line x1="50" y1="200" x2="350" y2="200" class="brand-primary-stroke" stroke-width="5" opacity="0.4" />
-    <line x1="200" y1="50" x2="200" y2="350" class="brand-primary-stroke" stroke-width="5" opacity="0.4" />
+    <line x1="50" y1="200" x2="350" y2="200" stroke="#51a2ff" stroke-width="5" opacity="0.4" />
+    <line x1="200" y1="50" x2="200" y2="350" stroke="#51a2ff" stroke-width="5" opacity="0.4" />
 
     <!-- Paralelos (Latitud) -->
-    <path d="M 70 125 Q 200 155 330 125" fill="none" class="brand-grid-lines" stroke-width="4" />
-    <path d="M 70 275 Q 200 245 330 275" fill="none" class="brand-grid-lines" stroke-width="4" />
+    <path d="M 70 125 Q 200 155 330 125" fill="none" stroke="#cbd5e1" stroke-width="4" />
+    <path d="M 70 275 Q 200 245 330 275" fill="none" stroke="#cbd5e1" stroke-width="4" />
 
     <!-- Meridianos (Longitud) -->
-    <path d="M 200 50 C 120 110, 120 290, 200 350" fill="none" class="brand-grid-lines" stroke-width="4" />
-    <path d="M 200 50 C 280 110, 280 290, 200 350" fill="none" class="brand-grid-lines" stroke-width="4" />
+    <path d="M 200 50 C 120 110, 120 290, 200 350" fill="none" stroke="#cbd5e1" stroke-width="4" />
+    <path d="M 200 50 C 280 110, 280 290, 200 350" fill="none" stroke="#cbd5e1" stroke-width="4" />
 
     <!-- 3. Red de Conexiones de Talento (Líneas Punteadas Internas) -->
-    <line x1="130" y1="125" x2="250" y2="160" class="brand-primary-stroke" stroke-width="6" stroke-dasharray="8 8" stroke-linecap="round" />
-    <line x1="250" y1="160" x2="160" y2="270" class="brand-primary-stroke" stroke-width="6" stroke-dasharray="8 8" stroke-linecap="round" />
-    <line x1="250" y1="160" x2="290" y2="250" class="brand-primary-stroke" stroke-width="6" stroke-dasharray="8 8" stroke-linecap="round" />
+    <line x1="130" y1="125" x2="250" y2="160" stroke="#51a2ff" stroke-width="6" stroke-dasharray="8 8" stroke-linecap="round" />
+    <line x1="250" y1="160" x2="160" y2="270" stroke="#51a2ff" stroke-width="6" stroke-dasharray="8 8" stroke-linecap="round" />
+    <line x1="250" y1="160" x2="290" y2="250" stroke="#51a2ff" stroke-width="6" stroke-dasharray="8 8" stroke-linecap="round" />
 
     <!-- 4. Nodos Internos (Puntos de Red/Conexión) -->
     <!-- Nodo Superior Izquierdo -->
-    <circle cx="130" cy="125" r="14" class="brand-primary-fill" />
-    <circle cx="130" cy="125" r="6" class="brand-base-bg" />
+    <circle cx="130" cy="125" r="14" fill="#51a2ff" />
+    <circle cx="130" cy="125" r="6" fill="#ffffff" />
 
     <!-- Nodo Central Principal -->
-    <circle cx="250" cy="160" r="18" class="brand-primary-fill" />
-    <circle cx="250" cy="160" r="8" class="brand-base-bg" />
+    <circle cx="250" cy="160" r="18" fill="#51a2ff" />
+    <circle cx="250" cy="160" r="8" fill="#ffffff" />
 
     <!-- Nodo Inferior Izquierdo -->
-    <circle cx="160" cy="270" r="14" class="brand-primary-fill" />
-    <circle cx="160" cy="270" r="6" class="brand-base-bg" />
+    <circle cx="160" cy="270" r="14" fill="#51a2ff" />
+    <circle cx="160" cy="270" r="6" fill="#ffffff" />
 
     <!-- Nodo Inferior Derecho -->
-    <circle cx="290" cy="250" r="12" class="brand-primary-fill" />
+    <circle cx="290" cy="250" r="12" fill="#51a2ff" />
   </g>
 </svg>
