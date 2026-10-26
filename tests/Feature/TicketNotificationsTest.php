@@ -5,10 +5,13 @@ use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Vacancy;
 use App\Notifications\ActivityMail;
+use App\Notifications\SystemAlertMail;
+use App\Services\TelegramNotifier;
 use Database\Seeders\PermissionSeeder;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 
 uses(RefreshDatabase::class);
@@ -150,4 +153,20 @@ test('offers email the candidate and their answer emails the company', function 
 
     Notification::assertSentTo($companyUser, ActivityMail::class, 1);
     Notification::assertSentTo($candidateUser, ActivityMail::class, 1);
+});
+
+test('operations alerts sent to Telegram are also emailed to every admin', function () {
+    Notification::fake();
+    Http::fake(['api.telegram.org/*' => Http::response(['ok' => true])]);
+    config()->set('services.telegram.token', 'test-token');
+    config()->set('services.telegram.chat_id', '123');
+
+    $admin = User::factory()->admin()->create();
+    $support = User::factory()->support()->create();
+
+    app(TelegramNotifier::class)->send("✅ <b>Respaldo completado</b>\nTamaño: 2 MB");
+
+    Notification::assertSentTo($admin, SystemAlertMail::class, fn (SystemAlertMail $mail, array $channels, object $notifiable): bool => $mail->toMail($notifiable)->subject === '✅ Respaldo completado');
+    Notification::assertNotSentTo($support, SystemAlertMail::class);
+    Http::assertSentCount(1);
 });

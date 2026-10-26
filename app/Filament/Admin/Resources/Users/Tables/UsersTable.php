@@ -58,7 +58,8 @@ class UsersTable
                     ->icon(Heroicon::CheckBadge)
                     ->color('primary')
                     ->requiresConfirmation()
-                    ->visible(fn (User $record): bool => auth()->user()?->isAdmin() && ! $record->isVerifiedAccount())
+                    // Staff already carry the gold check.
+                    ->visible(fn (User $record): bool => auth()->user()?->isAdmin() && $record->accountBadge() === null)
                     ->action(function (User $record): void {
                         $record->grantVerification(auth()->user());
 

@@ -46,6 +46,7 @@ return [
         'request' => 'Solicitar verificación',
         'request_sent' => 'Enviamos tu solicitud. Un administrador la revisará.',
         'requested' => 'Solicitud de verificación enviada',
+        'staff_badge' => 'Staff de CVConnectMX',
         'requests_filter' => 'Solicitudes de verificación',
         'unverified_done' => 'Verificación retirada',
         'unverify' => 'Quitar verificación',

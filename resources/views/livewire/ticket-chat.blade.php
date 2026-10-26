@@ -111,7 +111,7 @@
             @endunless
             <div class="max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm {{ $descriptionIsMine ? 'rounded-br-sm bg-(--color-accent) text-(--color-accent-foreground)' : 'rounded-bl-sm bg-white text-gray-800 dark:bg-zinc-700 dark:text-gray-100' }}">
                 <p class="mb-1 text-[11px] font-semibold {{ $descriptionIsMine ? 'text-(--color-accent-foreground)/80' : 'text-(--color-accent-content)' }}">
-                    {{ $ticket->creator?->name ?? 'Sistema' }}<x-verified-badge :account="$ticket->creator" size="size-3.5" :color="$descriptionIsMine ? 'text-current' : 'text-(--color-accent-content)'" class="ms-0.5 align-text-bottom" /> · {{ $ticket->created_at?->format('d/m H:i') }}
+                    {{ $ticket->creator?->name ?? 'Sistema' }}<x-verified-badge :account="$ticket->creator" size="size-3.5" :color="$descriptionIsMine ? 'text-current' : null" class="ms-0.5 align-text-bottom" /> · {{ $ticket->created_at?->format('d/m H:i') }}
                 </p>
                 <p class="whitespace-pre-line">{{ $ticket->description }}</p>
             </div>
@@ -141,7 +141,7 @@
                 @endunless
                 <div class="max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm {{ $isMine ? 'rounded-br-sm bg-(--color-accent) text-(--color-accent-foreground)' : 'rounded-bl-sm bg-white text-gray-800 dark:bg-zinc-700 dark:text-gray-100' }}">
                     <p class="mb-1 text-[11px] font-semibold {{ $isMine ? 'text-(--color-accent-foreground)/80' : 'text-(--color-accent-content)' }}">
-                        {{ $reply->performedBy?->name ?? 'Sistema' }}<x-verified-badge :account="$reply->performedBy" size="size-3.5" :color="$isMine ? 'text-current' : 'text-(--color-accent-content)'" class="ms-0.5 align-text-bottom" /> · {{ $reply->created_at?->format('d/m H:i') }}
+                        {{ $reply->performedBy?->name ?? 'Sistema' }}<x-verified-badge :account="$reply->performedBy" size="size-3.5" :color="$isMine ? 'text-current' : null" class="ms-0.5 align-text-bottom" /> · {{ $reply->created_at?->format('d/m H:i') }}
                     </p>
                     <p class="whitespace-pre-line">{{ $reply->message }}</p>
                 </div>

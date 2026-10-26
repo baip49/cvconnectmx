@@ -139,7 +139,7 @@ new class extends Component {
             </flux:button>
         @elseif (Auth::user()->hasPendingVerificationRequest())
             <flux:badge size="sm" icon="clock">{{ __('shared.verification.requested') }}</flux:badge>
-        @elseif (! Auth::user()->isVerifiedAccount())
+        @elseif (Auth::user()->accountBadge() === null)
             <flux:button size="sm" variant="filled" icon="check-badge" wire:click="requestVerification" data-test="request-verification-button">
                 {{ __('shared.verification.request') }}
             </flux:button>

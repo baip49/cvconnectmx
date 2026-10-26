@@ -101,3 +101,17 @@ test('unverified accounts show no badge', function () {
 
     get('/dashboard/vacancies')->assertOk()->assertDontSee(__('shared.verification.badge'));
 });
+
+test('staff get the gold check automatically and do not need to request one', function () {
+    $support = User::factory()->support()->create();
+
+    expect($support->accountBadge())->toBe('staff')
+        ->and(User::factory()->candidate()->create()->accountBadge())->toBeNull()
+        ->and(User::factory()->candidate()->create(['verified_at' => now()])->accountBadge())->toBe('verified');
+
+    actingAs($support);
+
+    Livewire::test('pages::settings.profile')
+        ->assertSee(__('shared.verification.staff_badge'))
+        ->assertDontSee(__('shared.verification.request'));
+});

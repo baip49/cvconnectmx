@@ -26,6 +26,11 @@ class Company extends Model
         return (bool) $this->user?->isVerifiedAccount();
     }
 
+    public function accountBadge(): ?string
+    {
+        return $this->isVerifiedAccount() ? 'verified' : null;
+    }
+
     public function vacancies(): HasMany
     {
         return $this->hasMany(Vacancy::class);

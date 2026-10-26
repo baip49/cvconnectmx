@@ -61,7 +61,7 @@ return [
         'enabled' => true,
 
         'notifications' => [
-            HealthCheckTelegramNotification::class => ['telegram'],
+            HealthCheckTelegramNotification::class => ['telegram', 'mail'],
         ],
 
         /*

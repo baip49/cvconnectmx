@@ -46,6 +46,7 @@ return [
         'request' => 'Request verification',
         'request_sent' => 'We sent your request. An administrator will review it.',
         'requested' => 'Verification request sent',
+        'staff_badge' => 'CVConnectMX staff',
         'requests_filter' => 'Verification requests',
         'unverified_done' => 'Verification removed',
         'unverify' => 'Remove verification',

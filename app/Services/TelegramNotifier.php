@@ -2,16 +2,36 @@
 
 namespace App\Services;
 
+use App\Models\User;
+use App\Notifications\SystemAlertMail;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Throwable;
 
 class TelegramNotifier
 {
     /**
-     * Send a message through the Telegram Bot API. Never throws.
+     * Send a message through the Telegram Bot API, with a copy to the admins' email. Never throws.
      */
     public function send(string $htmlMessage): bool
+    {
+        $this->emailAdmins($htmlMessage);
+
+        return $this->sendToTelegram($htmlMessage);
+    }
+
+    protected function emailAdmins(string $htmlMessage): void
+    {
+        try {
+            // Sent per admin so the email's frame follows each admin's language.
+            Notification::send(User::query()->admins()->get(), new SystemAlertMail($htmlMessage));
+        } catch (Throwable $e) {
+            Log::warning('TelegramNotifier: no se pudo enviar la copia por correo: '.$e->getMessage());
+        }
+    }
+
+    protected function sendToTelegram(string $htmlMessage): bool
     {
         $token = (string) config('services.telegram.token');
         $chatId = (string) config('services.telegram.chat_id');

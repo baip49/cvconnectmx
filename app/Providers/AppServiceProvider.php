@@ -120,7 +120,7 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Every Filament column or entry showing a user's or company's name ("name", "company.name", "candidate.user.name"...)
-     * gets the blue check when that account is verified, including columns added later.
+     * gets the account check (gold for staff, blue for verified), including columns added later.
      */
     protected function configureVerifiedBadge(): void
     {
@@ -132,17 +132,21 @@ class AppServiceProvider extends ServiceProvider
             }
 
             // shortcut: resolves the owner per row (one query for company.user), eager load it if a list grows past a few hundred rows.
-            $isVerified = function (?Model $record) use ($name): bool {
+            $badge = function (?Model $record) use ($name): ?string {
                 $owner = str_contains($name, '.') ? data_get($record, Str::beforeLast($name, '.')) : $record;
 
-                return ($owner instanceof User || $owner instanceof Company) && $owner->isVerifiedAccount();
+                return ($owner instanceof User || $owner instanceof Company) ? $owner->accountBadge() : null;
             };
 
             $component
-                ->icon(fn (?Model $record): ?Heroicon => $isVerified($record) ? Heroicon::CheckBadge : null)
-                ->iconColor('primary')
+                ->icon(fn (?Model $record): ?Heroicon => $badge($record) ? Heroicon::CheckBadge : null)
+                ->iconColor(fn (?Model $record): string => $badge($record) === 'staff' ? 'warning' : 'primary')
                 ->iconPosition(IconPosition::After)
-                ->tooltip(fn (?Model $record): ?string => $isVerified($record) ? __('shared.verification.badge') : null);
+                ->tooltip(fn (?Model $record): ?string => match ($badge($record)) {
+                    'staff' => __('shared.verification.staff_badge'),
+                    'verified' => __('shared.verification.badge'),
+                    default => null,
+                });
         };
 
         TextColumn::configureUsing($addBadge);

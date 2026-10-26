@@ -9,6 +9,8 @@ use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Translation\HasLocalePreference;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -164,11 +166,32 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasLocale
     }
 
     /**
+     * @param  Builder<User>  $query
+     */
+    #[Scope]
+    protected function admins(Builder $query): void
+    {
+        $query->whereHas('role', fn (Builder $role) => $role->where('name', 'admin'));
+    }
+
+    /**
      * Blue check granted by an admin (unrelated to email verification).
      */
     public function isVerifiedAccount(): bool
     {
         return $this->verified_at !== null;
+    }
+
+    /**
+     * Which check goes next to this name: gold for staff (automatic), blue for admin-verified accounts.
+     */
+    public function accountBadge(): ?string
+    {
+        return match (true) {
+            $this->isAdmin() || $this->isSupport() => 'staff',
+            $this->isVerifiedAccount() => 'verified',
+            default => null,
+        };
     }
 
     public function hasPendingVerificationRequest(): bool
@@ -187,9 +210,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasLocale
 
         $this->forceFill(['verification_requested_at' => now()])->save();
 
-        $admins = self::query()->whereHas('role', fn ($query) => $query->where('name', 'admin'))->get();
-
-        foreach ($admins as $admin) {
+        foreach (self::query()->admins()->get() as $admin) {
             $locale = $admin->locale ?? config('app.locale');
 
             ActivityMail::deliver(

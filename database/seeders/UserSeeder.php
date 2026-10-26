@@ -68,7 +68,7 @@ class UserSeeder extends Seeder
                 'email' => 'soporte@unach.mx',
                 'password' => bcrypt('123456789'),
                 'name' => 'Soporte',
-                'last_name' => 'CVConnect',
+                'last_name' => 'CVConnectMX',
             ]);
         }
 
